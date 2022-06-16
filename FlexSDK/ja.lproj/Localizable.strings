@@ -1,0 +1,240 @@
+/*
+ Localizable.strings
+ MobileERP
+ 
+ Created by osbaek on 2016. 1. 14..
+ Copyright (c) 2016년 Sunil Luitel. All rights reserved.
+ */
+
+"CompanyName" = "（株）永林院ソフトラボ";
+"VersionComment_current" = "最新バージョン";
+"VersionComment_update" = "最新バージョンが必要です。";
+"Year_Text" = "the very year";
+"Month_Text" = "the very month";
+"Day_Text" = "the very day";
+"Firstmonth_Text" = "first month";
+"Lastmonth_Text" = "last month";
+"Firstday_Text" = "月初";
+"Lastday_Text" = "月末";
+"SetMonthTo_Text" = "set month to";
+"SetDayTo_Text" = "set day to";
+"Before 1 year" = "Before 1 year";
+"Before 1 month" = "Before 1 month";
+"Before 1 week" = "Before 1 week";
+"Before 1 day" = "Before 1 day";
+"After 1 year" = "After 1 year";
+"After 1 month" = "After 1 month";
+"After 1 week" = "After 1 week";
+"After 1 day" = "After 1 day";
+"First Month" = "First Month";
+"First day" = "月初";
+"The very date" = "The very date";
+"date dialog" = "date dialog";
+"Last month" = "Last month";
+"Last day" = "月末";
+"Back step" = "Back step";
+"Enter" = "確認";
+
+//2016.05.10 osbaek
+"Increase" = "increase";
+"Decrease" = "decrease";
+"Date" = "Date";
+"Today" = "Today";
+"Year" = "年度";
+"Error" = "Error";
+"Edit" = "編集";
+"Sheet Settings" = "シート設定";//==
+"Column Name" = "コラム名称";
+"Fixed" = "固定";
+"Hidden" = "非表示";
+"Sheet Fix limit" = "3個までの項目のみ固定することが可能です。";
+"Copy" = "コピー";
+"Paste" = "貼り付け";
+"Delete" = "削除";
+"Cancel" = "Cancel";
+"Controls not Registered" = "Not Registered";
+"Wait text" = "しばらくお待ちください。";
+"NoCaptureData" = "キャプチャしたデータがありません。";
+"Input mode event cancel" = "只今、入力中です。当該イベントを実行することができません。";
+"Pgm loaded" = "オープン画面";
+"Pls select text" = "There's no selected item. \n Please, select item on <b>SelectedItem</b> list";
+"NoActiveRow" = "Active rowがないです。";
+"NoCheckedRow" = "チェックしたrowが存在しません。";
+"NoSelectedRow" = "選択したrowが存在しません。";
+"NoDblClickedRow" = "Double Click rowがないです。";
+"Svc err" = "サービス失敗";
+"Time out" = "Time-out";
+"Time out retry" = "タイムアウトです。再度実行しますか？";
+"Data capture success" = "現在の状態がキャプチャされました。";
+"Data limit title" = "照会データ容量制限";
+"Data limit message 1" = "全て ";
+"Data limit message 2" = "件のデータが検索されましたが、 サイズの制限により、 ";
+"Data limit message 3" = "件のデータが表示されます。\ n照会条件を確認して照会してください。";
+"SelectedItem" = "SelectedItem";
+
+
+"Control Settings" = "コントロール設定";
+"Control Settings Hidden" = "非表示";
+"Control Settings ColName" = "コラム名称";
+"Control Settings DefValue" = "デフォルト値";
+"Setting" = "設定";
+"Done" = "完了";
+
+
+"Login Bis" = "業務情報";
+"Login Oper" = "運営情報";
+"Login Language" = "言語";
+"Login Server Url" = "サーバーアドレス";
+"Login Server Info" = "サーバー情報";
+"Login Server Info Setting" = "アクセス情報を設定してください。";
+"Login Scan QR" = "QRコードにてサーバーへのアクセス情報を設定します。";
+"AutoLogin" = "自動ログイン";
+"PatternLogin" = "パターンログイン";
+"Login Text" = "ログイン";
+"Wrong pattern" = "正しくないパターンです。もう一度入力してください。";
+"ID Text" = "ID";
+
+"Welcome Text" = " ようこそ！\ n初めてのアクセスの方はダウンロード時間が10秒ほどかかります。 \ nこれからもよろしくお願い致します。";
+"NewForm Text" = "Get a new form data";
+"ResetColumnSet" = "Reset Column Set";
+"Recent" = "最近";
+"Favorite" = "お気に入り";
+"Enter Server Info Msg" = "アクセス情報を設定してください。";
+"Alert Title" = "確認機能";
+"Confirm ID Msg" = "Please confirm login ID.";
+
+//hwon.kim add
+"User Access Error Msg" = "Only authorizeduser accessible";
+"Device Access Error Msg" = "This Device is rejected to access this server";
+"Wrong Password Msg" = "Wrong Password";
+//180402
+"Wrong Password Msg TouchID" = "A new fingerprint has been registered with the device,\nso password verification is required.";
+
+
+//16.9.20 osbaek
+"UserDisableLandScape" = "使用しない。";
+"UserDisableLandScapeText" = "横モード使用しない。";
+"SheetTitleText" = "シートタイトル";
+
+//16.11.10 hwon.kim
+"Draw Pattern" = "パターンを入力してください。";
+"Draw Confirm Pattern" = "先ほど入力したパターンをもう一度入力して下さい。";
+"Release Finger" = "パターンの入力後指先を離してください。";
+"Pattern Requirement" = "最低4個以上の点を連結してください。";
+"Pattern Retry" = "再実行";
+"Pattern Confirm" = "パターン登録";
+"new PatternLock" = "新しく登録されたパターンです。";
+"Password Required" = "パターンログイン";
+"Draw Unlock Pattern" = "旧パターンを入力してください。";
+"Call Service" = "サーバーへのアクセス中です。少々お待ちください。";
+"Connection Failure" = "正しくないパターンです。もう一度入力してください。";
+"Experience" = "ERP 体験してみる";
+"QRCode Explain" = "四角の中にスキャンしたい対象コードを移動してください。";
+"Register Pattern" = "パターン登録";
+"Remove Pattern" = "パターンロックを解除";
+"Input Password" = "パスワード入力";
+"Change ID" = "ID変更";
+
+"Experience" = "体験してみる";
+"ERP Experiencing" = "ERP 体験してみる";
+
+//17.02.15 demo
+"ERP Pain" = "ERPの悩み";
+"Modules" = "業務別特徴";
+"Guide" = "使用説明";
+"demoStartButtonTitle" = "スタートする";
+
+"demo_save_msg" = "デモ環境ではデータの修正や保存作業ができません。";
+
+//MARK: Demo Feedback Dialog Strings
+"demo_feedbackDialog_askingExperience" = "体験は如何でしたか？";
+"demo_feedbackDialog_reviewAsGood" = "良い";
+"demo_feedbackDialog_reviewAsSoso" = "普通";
+"demo_feedbackDialog_reviewAsBad" = "悪い";
+"demo_feedbackDialog_Submit" = "体験完了";
+"demo_feedbackDialog_askingDetails" = "もっと詳しく知りたい！";
+
+
+//17.02.19
+"ERP Start" = "ERPをスタートする";
+"Welcome" = "ようこそ！";
+"explain_start" = "アカウントのお持ちの方は\n直ちに使用して見てください。";
+"explain_experience" = "ERPの悩みはなんですか？\n体験を通して解決してみませんか？";
+
+//17.04.03
+"Success70001" = "完了";
+"Success70002" = "完了";
+"Success70003" = "完了";
+"Success70004" = "完了";
+"Success70005" = "完了";
+"Success70006" = "完了";
+"Success70017" = "完了";
+
+"Success" = "完了";
+
+//17.02.22
+"NoDataToJump" = "No Data to jump!";
+"noQueryData" = "There is no queried item.";
+"sheetSettingFixedColumnsIssue"="Too many records are there in grid, creating fixed columns will cause instability to the sheet functionality";
+
+"data_changed_check_1" = "Content has changed. Would you like to save it?";
+"data_changed_check_2" = "All input data will be lost, you still want to clear the form";
+"alert_sheetcut" = "Are you sure you want to delete the selected row?";
+"alert_before_save" = "Do you want to save?";
+"alert_after_save" = "It has been saved.";
+"alert_before_delete" = "Are you sure you want to delete?";
+"alert_after_delete" = "It has been deleted.";
+"login_demo_txt" = "login_demo_txt_en";
+"serversetting_changed" = "Server setting will be changed. Do you want to continue?";
+"shareWaitMessage" = "Preparing data for sharing, please wait.";
+
+//170719 demo connection info
+"DEMO_SERVER_IP" = "https://abcjpninit.systemevererp.com/mobile/";//"http://abcjpninit.cloudapp.net:8585/ksystemSvc/";
+"DEMO_DSN_OPER_S" = "abcjpninit_oper";
+"DEMO_DSN_BIS_S" = "abcjpninit_bis";
+"DEMO_ID_S" = "skkim2013@ksystem.co.kr";
+"DEMO_PW_S" = "skkim2013";
+"DEMO_LANGUAGE_SEQ" = "3";
+
+
+//18.01.23 touch id
+"touchid_putfinger" = "Put your finger on the home button.";
+"touchid_error_verify" = "There was a problem verifying your identity.";
+"touchid_error_cancel" = "Authentication was canceled by user.";
+"touchid_error_fallback" = "The user tapped the fallback button (Fuu!)";
+"touchid_error_systemCancel" = "Authentication was canceled by system.";
+"touchid_error_passcodeNotSet" = "Passcode is not set on the device.";
+"touchid_error_notAvailable" = "Touch ID is not available on the device.";
+"touchid_error_notEnrolled" = "Touch ID has no enrolled fingers.";
+"touchid_error_lockout" = "There were too many failed Touch ID attempts and Touch ID is now locked.";
+"touchid_error_appCalcel" = "Authentication was canceled by application.";
+"touchid_error_invalidContext" = "LAContext passed to this call has been previously invalidated.";
+"touchid_error_default" = "Touch ID may not be configured.";
+"touchid_success" = "Touch ID Login successful!";
+//pw confirm view
+"pwAuth" = "Confirm Password";
+"authConfirm" = "Confirm Authentication";
+"input_pw" = "Please input password.";
+"input_confirm_pw" = "Please confirm password.";
+//lockscreen
+"program_auto_lock" = "Program auto lock.";
+"input_pattern" = "Pattern Login";
+"register_pattern" = "Register Pattern";
+"input_touchid" = "TouchID Login";
+"register_touchid" = "Register TouchID";
+"unlock" = "Unlock";
+"title_inputPw" = "Password Input";
+"status_message" = "status message label";
+"Draw_New_Pattern" = "Draw new pattern.";
+"Draw_New_Pattern_ForPw" = "Draw new pattern use for password.";
+"ResetPattern" = "Reset";
+"UsePattern" = "Use Pattern";
+"AskRegisterTouchID" = "Would you like to register TouchID?";
+"Unlocking" = "Unlocking...";
+
+"changedFingerprint" = "The fingerprint is changed on the device.";
+
+"dateFormatLocalizedCompanity" = "yyyy年 M月 d日 EEE";
+"dateTimeFormatLocalizedCompanity" = "yyyy年 M月 d日 EEE h:mm a";
+"ChangeAccount" = "アカウントを変更";
+"checkInvites" = "! Please check the invitation message.";

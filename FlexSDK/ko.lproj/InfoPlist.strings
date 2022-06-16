@@ -1,0 +1,26 @@
+"NSCameraUsageDescription" = "사진, 동영상 촬영 및 바코드 인식을 위해 필요합니다.";
+
+"NSLocationAlwaysUsageDescription" = "현재 위치에서 알림을 받기 위해 필요합니다.";
+
+"NSLocationWhenInUseUsageDescription" = "현재 위치 확인을 위해서 필요합니다.";
+
+"NSMicrophoneUsageDescription" = "동영상 촬영시 소리를 녹음하기 위해서 필요합니다.";
+
+"NSPhotoLibraryUsageDescription" = "사진, 동영상을 사용하기 위해서 필요합니다.";
+
+"NSCalendarsUsageDescription" = "일정 등록을 위해 권한을 요청합니다.";
+
+//NSCameraUsageDescription
+//Used to take picture and barcode
+//
+//NSLocationAlwaysUsageDescription
+//Used to get gps for beacon
+//
+//NSLocationWhenInUseUsageDescription
+//Used to get gps for map
+//
+//NSMicrophoneUsageDescription
+//App needs to access your micophone for video recording
+//
+//NSPhotoLibraryUsageDescription
+//Used to get images

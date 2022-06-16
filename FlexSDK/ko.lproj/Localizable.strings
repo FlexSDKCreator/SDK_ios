@@ -1,0 +1,634 @@
+/*
+ Localizable.strings
+ MobileERP
+ 
+ Created by osbaek on 2016. 1. 14..
+ Copyright (c) 2016년 Sunil Luitel. All rights reserved.
+ */
+
+"CompanyName" = "(주)영림원소프트랩";
+"VersionComment_current" = "최신 버전입니다.";
+"VersionComment_update" = "최신 버전으로 업데이트 할 수 있습니다.";
+"Year_Text" = "당해";
+"Month_Text" = "당월";
+"Day_Text" = "당일";
+"Firstmonth_Text" = "1월";
+"Lastmonth_Text" = "12월";
+"Firstday_Text" = "월초";
+"Lastday_Text" = "월말";
+"SetMonthTo_Text" = "월 지정";
+"SetDayTo_Text" = "일 지정";
+"Before 1 year" = "1년 전";
+"Before 1 month" = "1달 전";
+"Before 1 week" = "1주 전";
+"Before 1 day" = "1일 전";
+"After 1 year" = "1년 후";
+"After 1 month" = "1달 후";
+"After 1 week" = "1주 후";
+"After 1 day" = "1일 후";
+"First Month" = "1월";
+"First day" = "월초";
+"The very date" = "당일";
+"date dialog" = "date dialog";
+"Last month" = "12월";
+"Last day" = "월말";
+"Back step" = "Back step";
+"Enter" = "확인";
+
+//2016.05.10 osbaek
+"Increase" = "증가";
+"Decrease" = "감소";
+"Date" = "날짜";
+"Today" = "오늘";
+"Year" = "연도";
+"Error" = "오류";
+"Edit" = "편집";
+"Sheet Settings" = "시트 설정";//==
+"Column Name" = "컬럼 명";
+"Fixed" = "고정";
+"Hidden" = "숨김";
+"Sheet Fix limit" = "컬럼은 최대 3개까지 고정 가능합니다.";
+"Copy" = "복사";
+"Paste" = "붙여넣기";
+"Delete" = "삭제";
+"Cancel" = "취소";
+"Controls not Registered" = "필수항목이 누락되었습니다.";
+"Wait text" = "잠시만 기다려주세요...";
+"NoCaptureData" = "캡쳐된 데이터가 없습니다.";
+"Input mode event cancel" = "입력 모드에서 해당 이벤트를 실행할 수 없습니다.";
+"Pgm loaded" = "해당 프로그램은 이미 열려있습니다.";
+"Pls select text" = "선택된 항목이 없습니다. \n <b>보이는 항목</b>에서 선택하세요.";
+"NoActiveRow" = "활성화된 행이 없습니다.";
+"NoCheckedRow" = "체크된 행이 없습니다.";
+"NoSelectedRow" = "선택된 행이 없습니다.";
+"NoDblClickedRow" = "더블클릭된 행이 없습니다.";
+"Svc err" = "서비스 에러";
+"Time out" = "시간 초과";
+"Time out retry" = "시간이 초과되었습니다.\n다시 시도하시겠습니까?";
+"Data capture success" = "데이터 캡쳐를 성공하였습니다.";
+"Data limit title" = "조회 데이터 용량 제한";
+"Data limit message 1" = "전체 ";
+"Data limit message 2" = "개의 데이터가 조회되었지만 용량 문제로 그 중 ";
+"Data limit message 3" = "개의 데이터만 받아왔습니다.\n조회조건을 바꿔서 조회해주세요.";
+"Data limit message" = " [경고] 많은 데이터가 한번에 조회되었습니다. \n 조회조건을 바꿔서 조회해주세요. \n ";
+"SelectedItem" = "선택된 항목";
+
+
+"Control Settings" = "컨트롤 설정";
+"Control Settings Hidden" = "숨김";
+"Control Settings ColName" = "컬럼명";
+"Control Settings DefValue" = "기본값";
+"Setting" = "설정";
+"Done" = "완료";
+
+
+"Login Bis" = "업무정보";
+"Login Oper" = "운영정보";
+"Login Language" = "언어";
+"Login Server Url" = "서버주소";
+"Login Server Info" = "서버연결정보";
+"Login Server Info Setting" = "연결정보를 설정하세요.";
+"Login Scan QR" = "QR코드로 서버 연결정보 설정하기";
+"AutoLogin" = "자동 로그인";
+"ESSLogin" = "ESS 로그인";
+"PatternLogin" = "패턴 로그인";
+"Login Text" = "로그인";
+"Wrong pattern" = "잘못된 패턴입니다. 다시 그려주세요.";
+"ID Text" = "아이디";
+
+"Welcome Text" = "님 환영합니다.\n처음 접속시 설정정보를 다운 받는데 10초 정도 소요됩니다.\n앞으로 많은 이용 부탁드립니다.";
+"NewForm Text" = "새로운 화면 정보를 받고 있습니다.";
+"ResetColumnSet" = "컬럼 재설정";
+"Recent" = "최근";
+"Favorite" = "즐겨찾기";
+"Enter Server Info Msg" = "서버 연결정보를 입력하세요.";
+"Alert Title" = "알림";
+"Confirm ID Msg" = "아이디를 다시 확인해 주세요.";
+
+//hwon.kim add
+"User Access Error Msg" = "인가된 사용자만 가능";
+"Device Access Error Msg" = "사용정지 된 기기";
+"Wrong Password Msg" = "패스워드 불일치";
+//180402
+"Wrong Password Msg TouchID" = "기기에 새로운 지문이 등록되어\n비밀번호 확인이 필요합니다.";
+
+//16.9.20 osbaek
+"UserDisableLandScape" = "사용안함";
+"UserDisableLandScapeText" = "가로모드 사용안함";
+"SheetTitleText" = "시트 제목";
+
+//16.11.10 hwon.kim
+"Draw Pattern" = "패턴을 그려주세요.";
+"Draw Confirm Pattern" = "방금 입력한 패턴을 다시 그려주세요.";
+"Release Finger" = "패턴이 완성되면 손가락을 떼어주세요.";
+"Pattern Requirement" = "최소 4개 이상의 점을 연결해주세요.";
+"Pattern Retry" = "다시 시도";
+"Pattern Confirm" = "패턴 등록";
+"new PatternLock" = "새로 등록된 패턴입니다.";
+"Password Required" = "패턴 로그인";
+"Draw Unlock Pattern" = "기존에 입력한 패턴을 그려주세요.";
+"Call Service" = "서버 연결 중입니다. 잠시 기다려 주세요.";
+"Connection Failure" = "잘못된 패턴입니다. 다시 그려주세요.";
+"ERP Experiencing" = "ERP 체험하기";
+"QRCode Explain" = "이 사각형 안으로 스캔할 코드를 가져오세요.";
+"Register Pattern" = "패턴 등록";
+"Remove Pattern" = "패턴잠금 해제";
+"Input Password" = "비밀번호 입력";
+"Change ID" = "ID 변경";
+
+"Experience" = "체험하기";
+
+//16.11.16 about Bug Report. osbaek
+"BugTitleText_0" = "중지됨";
+"BugTitleText_1" = "잘못된값이 입력됨";
+"BugTitleText_2" = "저장이 되지 않음";
+"BugTitleText_3" = "조회가 되지 않음";
+"BugTitleText_4" = "삭제가 되지 않음";
+"BugTitleText_5" = "시트삭제가 되지 않음";
+"BugTitleText_6" = "점프가 되지 않음";
+"BugTitleText_7" = "기타";
+"SelectButTitleText" = "오류내역을 선택해 주세요.";
+"DescriptionText" = "추가설명";
+"EmailAddressText" = "메일주소";
+"PhoneNoText" = "전화번호";
+"PhoneNoDescText" = "전화번호 기재시, 서비스 진행 상황에 따른 연락을 받으실 수 있습니다.";
+"PrivacyAgreeText" = "개인정보 수집 및 이용 동의";
+"ShowPrivacyContentText" = "내용보기";
+"SendBugReportText" = "접수";
+"BugReportTitleText" = "서비스 접수";
+"PrivacyContentTitleText" = "개인정보 수집 및 이용에 대한 안내";
+"PrivacyContentText" = "개인정보 수집 내용 및 이용안내 입니다. (추후 수정예정)";
+"NoBugReportListText" = "접수한 내역이 없습니다.";
+"AddBugReportGuideText" = "서비스 신청은 화면에서 바로 신청할 수 있습니다.";
+"BugReportListTitleText" = "서비스 접수 내역";
+"ProcessStatusText_0" = "미확인";
+"ProcessStatusText_1" = "처리중";
+"ProcessStatusText_2" = "처리완료";
+"ProcessStatusText_3" = "처리완료(즉시처리)";
+"ProcessStatusText_4" = "지원불가";
+"ProcessStatusText_5" = "버그재현불가";
+"ProcessStatusText_6" = "기타";
+"BugReportDetailTitleText" = "서비스 접수 확인";
+"BugReportUpdateText" = "재등록";
+"PgmNamePrePositionText" = "에서";
+"CompletedDateText" = "완료일";
+"AppliedVersionText" = "적용버전";
+"ReleaseDateTitleText" = "완료일";
+"ReleaseVersionTitleText" = "적용버전";
+
+
+"DeviceNotSupportCamera" = "카메라가 지원되지 않습니다.";
+"RequestCameraPermission" = "카메라접근 허용이 필요합니다. 설정으로 이동하시겠습니까?";
+"ConfirmText" = "확인";
+"RestrictedGPSPermission" = "위치접근이 불가능합니다.";
+"RequestGPSPermission" = "위치 접근 허용이 필요합니다.";
+"Fail to get GPS information." = "GPS 정보를 가져오는데 실패했습니다.\n설정에서 위치 접근을 허용해주세요.";
+"OK" = "확인";
+"YES" = "네";
+"NO" = "아니오";
+
+//17.02.15 demo
+"ERP Pain" = "ERP고민";
+"Modules" = "업무별특장점";
+"Guide" = "모바일사용법";
+"demoStartButtonTitle" = "시작하기";
+
+"demo_save_msg" = "죄송합니다.\n데모버전에서는 데이터를 수정, 저장 하실 수 없습니다.";
+
+//MARK: Demo Feedback Dialog Strings
+"demo_feedbackDialog_askingExperience" = "체험이 어떠셨나요?";
+"demo_feedbackDialog_reviewAsGood" = "좋아요";
+"demo_feedbackDialog_reviewAsSoso" = "보통이에요";
+"demo_feedbackDialog_reviewAsBad" = "별로에요";
+"demo_feedbackDialog_Submit" = "체험완료";
+"demo_feedbackDialog_askingDetails" = "좀 더 자세히 알고 싶어요!";
+
+//17.02.19
+"ERP Start" = "ERP 시작하기";
+"Welcome" = "반갑습니다.";
+"explain_start" = "계정을 갖고 계시다면\n바로 사용해 보세요.";
+"explain_experience" = "ERP, 무엇을 고민하세요?\n체험을 통하여 해결해 보세요.";
+
+//17.02.22
+"NoDataToJump" = "점프할 데이터가 없습니다.";
+"noQueryData" = "조회된 데이터가 없습니다.";
+"sheetSettingFixedColumnsIssue"="시트에 너무 많은 데이터가있는 경우 고정컬럼을 많이 만들면 시트 기능이 불안정 해집니다.";
+
+//17.04.03
+"Success70001" = "조회 되었습니다.";
+"Success70002" = "저장이 완료되었습니다.";
+"Success70003" = "저장이 완료되었습니다.";
+"Success70004" = "수정이 완료되었습니다.";
+"Success70005" = "데이터가 삭제되었습니다.";
+"Success70006" = "처리가 완료되었습니다.";
+"Success70017" = "해당 데이터가 삭제되었습니다.";
+
+"Success" = "성공";
+
+"data_changed_check_1" = "콘텐츠가 변경되었습니다. 저장 하시겠습니까?";
+"data_changed_check_2" = "입력한 데이터가 사라질 수 있습니다. 계속 진행하시겠습니까?";
+"alert_sheetcut" = "선택한 행을 삭제 하시겠습니까?";
+"alert_before_save" = "저장 하시겠습니까?";
+"alert_after_save" = "저장되었습니다.";
+"alert_before_delete" = "삭제 하시겠습니까?";
+"alert_after_delete" = "삭제되었습니다.";
+"login_demo_txt" = "login_demo_txt";
+"serversetting_changed" = "서버 설정이 변경됩니다. 계속 하시겠습니까?";
+"shareWaitMessage" = "공유 할 데이터를 준비 중입니다. 잠시 기다려주십시오.";
+
+//170719 demo connection info
+"DEMO_SERVER_IP" = "http://211.253.14.184/ksystemmobileAppsvc/";
+"DEMO_DSN_OPER_S" = "genitft_oper";
+"DEMO_DSN_BIS_S" = "genitft_bis";
+"DEMO_ID_S" = "genitfttest";
+"DEMO_PW_S" = "genitft";
+"DEMO_LANGUAGE_SEQ" = "1";
+
+//18.08.31
+"apiOpenError"="유효하지 않습니다.";
+
+//File Input Control
+"attached_text" = "첨부파일";
+"fileUploading" = "저장 중....";
+"fileDownloading" = "다운로드 중....";
+
+"Success_Uploading" = "저장이 완료되었습니다.";
+"Success_Downloading" = "다운로드가 완료되었습니다.";
+"Success_Deleting" = "파일이 삭제되었습니다.";
+
+"Error_Uploading" = "Error: 저장 실패하였습니다.";
+"Error_Downloading" = "Error: 다운로드 실패하였습니다.";
+"Error_Deleting" = "Error: 삭제 실패하였습니다.";
+
+"UploadLimit_exceeded" = "더 이상 저장할 수 없습니다.";
+"NoFileService" = "모바일 파일서비스가 존재하지 않습니다.";
+"NoFileServerDir" = "서버 파일 경로가 없습니다.";
+
+
+//0919 change password
+"password_check_rules_msg" = "비밀번호 규칙을 확인해주세요.";
+"password_no_respond_msg" = "서버 응답 없음.";
+"password_check_loginpassword_msg" = "로그인 비밀번호를 확인해주세요.";
+"password_change_success" = "비밀번호가 변경 되었습니다.";
+"password_notmatch_msg" = "새 비밀번호가 일치하지 않습니다.";
+"password_encrypt_error_msg" = "비밀번호가 암호화되지 않았습니다.";
+
+"password_change_title" = "비밀번호 변경";
+"password_prev_text" = "이전 비밀번호";
+"password_prev_input" = "이전 비밀번호 입력";
+"password_new_text" = "신규 비밀번호";
+"password_new_input" = "신규 비밀번호 입력";
+"password_confirm_text" = "신규 비밀번호 확인";
+"password_confirm_input" = "신규 비밀번호 재입력";
+"password_rules_text" = "비밀번호 규칙";
+"password_expired_text" = "비밀번호가 만료 되었습니다.";
+"password_askchange_text" = "비밀번호를 변경하시겠습니까?";
+"password_plzchange_text" = "비밀번호를 변경해주세요.";
+
+//17.11.10
+"image_text" = "이미지";
+"camera_text" = "카메라";
+"MyMenu" = "나의 메뉴";
+
+"ProgramSearchPlaceholder" = "검색어를 입력해주세요";
+
+"SearchResultsUnavailable" = "등록된 글이 없습니다.";
+
+"officialReceiversDisabled" = "전사 공지입니다.";
+
+"Description" = "그룹원들과 공유하고 싶은 소식을 남겨보세요.";
+"Board" = "게시판";
+"Companity" = "커뮤니티";
+"Contact" = "연락처";
+"Attendance" = "근태관리";
+
+//MARK: Companity project
+"Archive" = "보관하기";
+"Hide" = "숨기기";
+"CopyAndWrite" = "복사하여 작성하기";
+"CopyAndCreate" = "복사하여 작성하기";
+"replyPaper" = "답장";
+
+//Email signup and signin
+"EmailAlreadyLink" = "이 이메일 ID는 다른 계정과 연결되어 있습니다.";
+
+//18.01.23 touch id
+"touchid_putfinger" = "홈 버튼에 손가락을 올려주세요.";
+"touchid_error_verify" = "신원을 확인하는 중에 문제가 발생했습니다.";
+"touchid_error_cancel" = "사용자가 인증을 취소했습니다.";
+"touchid_error_fallback" = "사용자가 취소했습니다.";
+"touchid_error_systemCancel" = "시스템이 인증을 취소했습니다.";
+"touchid_error_passcodeNotSet" = "암호가 설정되어 있지 않습니다.";
+"touchid_error_notAvailable" = "Touch ID는 기기에서 사용할 수 없습니다.";
+"touchid_error_notEnrolled" = "등록된 Touch ID가 없습니다.";
+"touchid_error_lockout" = "터치 ID 실패 횟수가 너무 많아 터치 ID가 잠겼습니다.";
+"touchid_error_appCalcel" = "응용프로그램에서 인증을 취소했습니다.";
+"touchid_error_invalidContext" = "무효화된 인증정보입니다.";
+"touchid_error_default" = "Touch ID가 구성되지 않았을 수 있습니다.";
+"touchid_success" = "Touch ID 로그인 성공!";
+
+//pw confirm view
+"pwAuth" = "비밀번호 인증";
+"authConfirm" = "인증확인";
+"input_pw" = "비밀번호를 입력해주세요.";
+"input_confirm_pw" = "비밀번호를 확인해주세요.";
+
+//lockscreen
+"program_auto_lock" = "프로그램 자동잠김";
+"input_pattern" = "패턴입력";
+"register_pattern" = "패턴등록";
+"input_touchid" = "지문입력";
+"register_touchid" = "지문등록";
+"unlock" = "잠금해제";
+"title_inputPw" = "암호입력";
+"status_message" = "상태메세지 라벨";
+"Draw_New_Pattern" = "새로운 패턴을 그려주세요.";
+"Draw_New_Pattern_ForPw" = "로그인 암호로 사용하실 패턴을 등록해주세요.";
+"ResetPattern" = "다시설정";
+"UsePattern" = "사용";
+"AskRegisterTouchID" = "지문등록하시겠습니까?";
+"Unlocking" = "잠금해제중입니다...";
+
+"changedFingerprint" = "디바이스에 등록된 지문이 변경되었습니다.";
+
+//10509 multi codehelp
+"multiCodehelp_resetValuesConfirm" = "선택한 값들을 모두 초기화하시겠습니까?";
+"multiCombo_selectedValueConfirm" = "선택한 값을 반영하시겠습니까?";
+
+//ChooseReceiversVC
+"receiverLblTxt" = "받는사람 :";
+"receiverSearchPlaceHolderText" = "이름을 검색해 주세요.";
+
+
+//"OfficialPaper" = "공무원";
+
+
+"AllPaper" = "전체";
+"ReceivedPaper" = "받은 글";
+"OfficialPaper" = "공지";
+"IWrotePaper" = "내가 쓴 글";
+
+"Create" = "글쓰기";
+"Vote" = "투표";
+
+"Alert" = "알림";
+"Ok" = "확인";
+"Cancel" = "취소";
+
+"MapPicker" = "장소 선택";
+"MapAccessMsg" = "위치 접근이 가능하도록 확인해주세요.";
+
+"ImagePicker" = "Image picker";
+"ImageAccessMsg" = "App needs to access your photos";
+
+"VideoPicker" = "Video picker";
+"VideoAccessMsg" = "App needs to access your videos";
+
+"NoCamera" = "Sorry, camera not available!";
+"NoCameraMsg" = "Sorry, this device has no camera!";
+
+"PleaseWait" = "잠시만 기다려주세요";
+//"PleaseWait" = "Please wait...";
+
+"videoSaveSuccessMsg" = "Your video was successfully saved";
+"VideoCorrupt" = "CorruptedVideo";
+"VideoUnavailableMsg" = "Sorry, content is corrupted or unavailable!";
+"paperCreatedWithMissingAttach" = "Paper created with some missing attachments!";
+
+//MainViewController Messages
+"paperNotiTitle" = "메세지가 도착했습니다.";
+"PinnedMsg" = "메세지를 상단 고정하였습니다..";
+"newPapers" = "새 메세지";
+
+"ArchivesVCTitle" = "보관한 메세지들";
+"HiddenVCTitle" = "숨긴 메세지들";
+
+"hidePaperSuccessMsg" = "메세지를 숨겼습니다.";
+"unhidePaperSuccessMsg" = "메세지를 숨김 취소하였습니다.";
+"archivePaperSuccessMsg" = "메세지를 보관하였습니다.";
+"deletePaperSuccessMsg" = "메세지를 삭제하였습니다.";
+
+"deletePaperFailMsg" = "삭제 실패하였습니다.";
+"deletePaperPermissionDeniedMsg" = "삭제 권한이 없습니다.";
+
+
+
+"RequestPaperDescription" = "내용을 입력해주세요.";
+"RequestMembers" = "받는 사람을 선택해주세요.";
+"ImageUploadFailed" = "업로드 실패하였습니다.";
+"ServerNotReachable" = "서버에 접근이 불가능합니다. 다시 시도하시겠습니까?";
+"PaperCreateSuccess" = "전송되었습니다.";
+
+//SearchResult
+"NoResult" = "검색 결과가 없습니다.";
+
+"NoPapers" = "No papers!";
+
+//ChooseReceiversVC
+"selectReceivers" = "받는 사람을 선택해주세요.";
+"receiverLblTxt" = "받는 사람 :";
+"receiverSearchPlaceHolderText" = "사원 이름을 입력해주세요.";
+"recentUsersTxt" = "최근";
+"allUsersText" = "전체";
+
+
+//Edit Paper
+"updatePaperConfirmMsg" = "메세지를 전송하시겠습니까?";
+"updatePaperSuccessMsg" = "수정되었습니다.";
+"updatePaperWithMissingAttach" = "첨부파일이 누락되었습니다.";
+"paperNotChangeMsg" = "변경 사항이 없습니다.";
+"votePaperEditNotAllowed" = "투표는 수정할 수 없습니다.";
+"paperEditByOwnerMsg" = "작성자만 수정이 가능합니다.";
+"editPaperTitleTxt" = "수정하기";
+"createPaperTitleTxt" = "글쓰기";
+
+//Employee List View
+"noEmployeeData" = "사원을 찾을 수 없습니다.";
+
+//PhotoChangeView
+"ProfilePhoto" =  "프로필 사진";
+"AlbumPhoto" = "사진 앨범에서 선택";
+"TakePhoto" = "사진 촬영";
+"DeleteMyPhoto" = "내 사진 삭제";
+"BackgroundPhoto" = "배경 사진";
+
+//EmpProfileManageViewController
+"ProfileDefaultMsg" = "기본 이미지로 변경";
+//mapviewcontroller
+"mapTitleMsg" = "지도 첨부하기";
+"mapSearchBoxPlaceHolderMsg" = "장소, 주소를 입력하세요.";
+
+//EmpProfileManageViewController
+"ProfileDefaultMsg" = "프로필 메시지를 입력해 주세요.";
+"OrgMemberDetail" = "상세보기";
+
+//Archiveviewcontroller
+"unarchiveAllPaperConfirmMsg" = "보관함의 모든 메세지를 삭제하시겠습니까?";
+"unarchiveConfirmMsg" = "보관함에서 해당 메세지를 삭제하시겠습니까?";
+
+//mainviewcontroller
+"companyName" = "삼일회계법인";
+
+//createwriteview
+"writeToPlaceholder" = "받는 사람";
+"ReceiveGroup" = "받는 사람";
+
+//attachmentPreviewController
+"attachmentPreviewTitleTxt" = "투표 등록";
+
+"currentUser" = "나";
+
+"dateFormatLocalizedCompanity" = "yyyy 년 M월 d일 EEE";
+"dateTimeFormatLocalizedCompanity" = "yyyy 년 M월 d일 EEE h:mm a";
+
+"addVoteItemRequest" = "투표 항목을 추가해주세요.";
+
+"deletePaperAlert" = "메세지를 지우시겠습니까?";
+
+//MARK: Companity Vote
+"AddVoteItem" = "+ 항목 추가";
+"VoteDetailPlaceHolderTxt" = "투표 내용을 입력하세요.";
+
+//For Vote alerts
+"VoteConfirmTitle" = "투표되었습니다.";
+"CloseVoteConfirmTitle" = "투표가 마감되었습니다.";
+
+"VoteConfirmMsg" = "투표 하시겠습니까?";
+"CloseVoteConfirmMsg" = "투표를 마감하겠습니까?";
+"cannotCloseVote" = "투표 마감 권한이 없습니다.";
+"noVoters" = "No voters available!";
+"voteClosed" = "투표가 마감되었습니다.";
+"readOnly_cantVote" = "투표 권한이 없습니다.";
+"noTitleInVoteItem" = "투표 항목을 입력해주세요.";
+"voteLimitExceeded" = "선착순 마감되었습니다.";
+
+//VoteHeaderView
+"Deadline" = "마감시간";
+"MultiSelection" = "복수선택";
+"AnonymousText" = "익명투표";
+
+//CreateVoteView
+"NoOptions" = "No option items";
+"AttachmentNoText" = "Attachments but no text present";
+"DeadlineError" = "마감시간은 지금으로부터 최소 1시간 이후로 설정할 수 있습니다.";
+"SelectClosinDateTime" = "투표 마감시간을 설정해주세요.";
+"Limit" = "선착순";
+"enterTheContent" = "내용을 입력해주세요.";
+
+"limitGreaterThanZero" = "Set a Valid Limit Value.";
+"limitCannotBeEmpty" = "Limit cannot be empty.";
+"atLeastTwoVoteOptionsRequired" = "투표 항목을 두 개 이상 추가해주세요.";
+"and" = "외";
+"other" = "명.";
+"others" = "명.";
+"andOthers" = "등..";
+
+//MainDetailTableViewCell
+//"voter_info_disable_msg" = "투표 현황을 ";
+
+"all" = "전체";
+"All" = "전체";
+
+//SeenUnSeenUserListVC
+"SeenUnSeenUserListTitleTxt" =  "메세지 확인";
+"SeenTabLblTxt" = "읽음";
+"UnSeenTabLblTxt" = "읽지 않음";
+"selectedPeopleCounttxt" = "명 선택";
+"totalPeopleCountTxt" = "명";
+"selectAllBtnTxt" = "전체선택";
+"unSelectAllBtnTxt" = "모두 선택 해제";
+"resendBtnTxt" = "재전송";
+"selectedUserNotifyTxt" = "선택한 사용자에게 알림";
+"readTxt" = "읽음";
+"unReadTxt" = "읽지않음";
+"officialAllTxt" = "전사";
+"receiverTxt" = "받는 사람: ";
+
+"Unsuccessful" = "실패하였습니다.";
+
+
+"modifiedTxt" = " - 수정 됨";
+"schedule_modifiedText" = "일정이 수정되었습니다";
+"deadline_modifiedText" = "마감시간이 수정되었습니다";
+
+"ReceiverListTitle" = "받는 사람";
+
+"delete_attachment" = "삭제하였습니다.";
+
+
+"AnonymousText" = "익명 투표";
+"HideVotersText" = "투표 현황 숨기기";
+"HideCountText" = "투표 결과 숨기기";
+
+"voteText" = "(투표) ";
+
+//VoteDatePickerView
+"DateSelected" = "이미 선택된 날짜입니다.";
+"MinDayToday" = "오늘 이후 날짜를 선택해주세요.";
+"More" = "더 보기..";
+
+
+//CompanityPhotoRegisterVC
+"photoUploadWithMissingAttach" = "이미지가 등록되지 않았습니다.";
+"photoUploadSuccess" = "이미지가 등록되었습니다.";
+"deletePhotoConfirm" = "삭제하시겠습니까?";
+
+"OrgChartTitleTxt" = "조직도";
+
+"ContactListText" = "연락처";
+
+"LogoutConfirmMsg" = "로그아웃을 하면\n메세지 알림을 받을 수 없게 됩니다.\n로그아웃 하시겠습니까?";
+
+
+// ScheduleRegisterView
+"noEventTitle" = "일정을 입력해주세요.";
+"invalidScheduleDate" = "유효한 날짜 및 시간이 아닙니다.";
+"inputStartDate" = "시작일을 입력해주세요.";
+"inputEndDate" = "종료일을 입력해주세요.";
+"inputStartTime" = "시작시간을 입력해주세요.";
+"inputEndTime" = "종료시간을 입력해주세요.";
+"inputGreaterEndDateTime" = "종료시간이 시작시간보다 늦어야 합니다.";
+"inputGre뒤terThanCurrentTime" = "현재 시간보다 최소 15분 이후로 설정해주세요.";
+"attendOptionNotSelected" = "참석여부 선택지를 추가해주세요.";
+
+"scheduleInUse" = "이미 등록된 일정입니다.";
+
+"attending" = "참석";
+"notAttending" = "불참";
+"late" = "지각";
+"early" = "조퇴";
+
+"enterEventTitle" = "일정을 입력하세요.";
+"allDay" = "종일";
+"chooseAttend" = "참석여부 선택";
+"enterRemarks" = "비고 입력";
+"selectLocation" = "장소를 선택해주세요.";
+"noPlaceText" = "장소";
+
+"calenderAccessNotGranted" = "캘린더 접근 권한이 없습니다.";
+
+"Schedule" = "일정등록";
+"RemarksLblTxt" = "비고";
+
+"ScannerServerTitle" = "서버정보등록";
+"ScannerServerSubTitle" = "아래 영역에 QR코드를 찍어 주세요.";
+"ChangeAccount" = "계정 변경";
+"Input Phone" = "휴대폰 번호";
+"Input Pin" = "인증번호 입력";
+"Re Request Pin" = "인증번호 재요청";
+"Request Pin" = "인증번호 요청";
+// SubModuleTableViewCell
+"recentAndFavorites" = "최근 및 즐겨 찾기";
+"noModulesAvailable" = "발견 된 프로그램 항목이 없습니다";
+"checkInvites" = "님! 초대 메세지를 확인하세요.";
+"noInvitation" = "죄송합니다, 해당 번호로는 초대된 사용자가 없습니다.";
+"smsSuccessful" = "초대된 사용자임을 확인 하였습니다. 인증번호를 확인해주세요.";
+"wrongCode" = "잘못된 인증번호입니다. 전송된 문자를 확인해주세요.";
+"loginSuccess" = "로그인 되었습니다.";
+"sessionExpired" = "인증이 만료되었습니다. 다시 로그인 해주세요.";
+"scanarioLoadFailed" = "프로그램을 열지 못했습니다. 네트워크를 확인하십시오.";
+"allowedUsers" = " allowed users";
+"of" = " of ";
+"samePhone" = " have same phone numbers. Please contact your administrator.";
+"AccuracyRequired" = "사용자의 정확한 위치가 필요합니다. ";
+"LocationServiceOff" = "Settings > Privacy 에서 Location Services 를 켜주세요.";

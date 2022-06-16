@@ -1,0 +1,631 @@
+/*
+ Localizable.strings
+ MobileERP
+ 
+ Created by osbaek on 2016. 1. 14..
+ Copyright (c) 2016년 Sunil Luitel. All rights reserved.
+ */
+
+"CompanyName" = "Young Lim Won Soft Lab.";
+"VersionComment_current" = "This is current version.";
+"VersionComment_update" = "Please update.";
+"Year_Text" = "the very year";
+"Month_Text" = "the very month";
+"Day_Text" = "the very day";
+"Firstmonth_Text" = "first month";
+"Lastmonth_Text" = "last month";
+"Firstday_Text" = "first day";
+"Lastday_Text" = "last day";
+"SetMonthTo_Text" = "set month to";
+"SetDayTo_Text" = "set day to";
+"Before 1 year" = "Before 1 year";
+"Before 1 month" = "Before 1 month";
+"Before 1 week" = "Before 1 week";
+"Before 1 day" = "Before 1 day";
+"After 1 year" = "After 1 year";
+"After 1 month" = "After 1 month";
+"After 1 week" = "After 1 week";
+"After 1 day" = "After 1 day";
+"First Month" = "First Month";
+"First day" = "First day";
+"The very date" = "The very date";
+"date dialog" = "date dialog";
+"Last month" = "Last month";
+"Last day" = "Last day";
+"Back step" = "Back step";
+"Enter" = "Enter";
+
+//2016.05.10 osbaek
+"Increase" = "increase";
+"Decrease" = "decrease";
+"Date" = "Date";
+"Today" = "Today";
+"Year" = "year";
+"Error" = "Error";
+"Edit" = "Edit";
+"Sheet Settings" = "Sheet Settings";
+"Column Name" = "Column Name";
+"Fixed" = "Fixed";
+"Hidden" = "Hidden";
+"Sheet Fix limit" = "Only 3 columns can be fixed";
+"Copy" = "Copy";
+"Paste" = "Paste";
+"Delete" = "Delete";
+"Cancel" = "Cancel";
+"Controls not Registered" = "Not Registered";
+"Wait text" = "Please Wait...";
+"NoCaptureData" = "There is no Captured Data.";
+"Input mode event cancel" = "Cannot execute this event on input mode";
+"Pgm loaded" = "Program Already Loaded";
+"Pls select text" = "There's no selected item. \n Please, select item on <b>SelectedItem</b> list";
+"NoActiveRow" = "There is no active row.";
+"NoCheckedRow" = "There is no checked row.";
+"NoSelectedRow" = "There is no selected row.";
+"NoDblClickedRow" = "There is no double clicked row.";
+"Svc err" = "Service error";
+"Time out" = "Time-out";
+"Time out retry" = "Time-out! Try again?";
+"Data capture success" = "Data captured successfully";
+"Data limit title" = "Too many Queried data";
+"Data limit message 1" = "Total ";
+"Data limit message 2" = "s of data is queried. But, due to size, only ";
+"Data limit message 3" = "s of data is received. \nPlease change the query condition to receive adaptable size of data.";
+"Data limit message" = " [Warning] too much data is queried. \n Please change the query condition to receive adaptable size of data. \n ";
+"SelectedItem" = "Selected Item";
+
+"Control Settings" = "Control Settings";
+"Control Settings Hidden" = "Hidden";
+"Control Settings ColName" = "Column Name";
+"Control Settings DefValue" = "Default Value";
+"Setting" = "Setting";
+"Done" = "Done";
+
+"Login Bis" = "Bis";
+"Login Oper" = "Oper";
+"Login Language" = "Language";
+"Login Server Url" = "URL";
+"Login Server Info" = "Server information";
+"Login Server Info Setting" = "Please set the server information";
+"Login Scan QR" = "Please scan QR code";
+
+"AutoLogin" = "Remember Password";
+"ESSLogin" = "ESS Login";
+"PatternLogin" = "Pattern Login";
+"Login Text" = "Login";
+
+"Wrong pattern" = "Wrong pattern, please try again.";
+
+"ID Text" = "ID";
+//"Welcome Text" = "님 환영합니다.\n처음 접속시 설정정보를 다운 받는데 10초 정도 소요됩니다.\n앞으로 많은 이용 부탁드립니다.";
+"Welcome Text" = " welcome.\nIt takes about 10 seconds during the initial connection setup..";
+"NewForm Text" = "Get a new form data";
+"ResetColumnSet" = "Reset Column Set";
+
+
+
+"Recent" = "Recent";
+"Favorite" = "Favorite";
+
+"Enter Server Info Msg" = "Please set the server information.";
+"Alert Title" = "Note";
+"Confirm ID Msg" = "Please confirm login ID.";
+
+//hwon.kim add
+"User Access Error Msg" = "Only authorizeduser accessible";
+"Device Access Error Msg" = "This Device is rejected to access this server";
+"Wrong Password Msg" = "Wrong Password";
+//180402
+"Wrong Password Msg TouchID" = "A new fingerprint has been registered with the device,\nso password verification is required.";
+
+//16.9.20 osbaek
+"UserDisableLandScape" = "Disabled";
+"UserDisableLandScapeText" = "Disable Landscape";
+"SheetTitleText" = "Sheet Title";
+
+//16.11.10 hwon.kim
+
+"Draw Pattern" = "Draw a Pattern.";
+"Draw Confirm Pattern" = "Draw Pattern again to confirm.";
+"Release Finger" = "Release finger when done.";
+"new PatternLock" = "Your new unlock pattern.";
+"Password Required" = "Password Required.";
+"Draw Unlock Pattern" = "Draw Pattern to unlock";
+"Call Service" = "Calling Service, Please wait.";
+"Connection Failure" = "Connection failure";
+"ERP Experiencing" = "ERP Experiencing";
+"QRCode Explain" = "Place a barcode inside the viewfinder rectangle to scan it.";
+"Pattern Requirement" = "Connect at least 4 dots. Try Again.";
+"Pattern Retry" = "Retry";
+"Pattern Confirm" = "Confirm";
+"Register Pattern" = "Register Pattern";
+"Remove Pattern" = "Remove pattern Lock";
+"Input Password" = "Password";
+"Change ID" = "ChangeID";
+
+"Experience" = "Experience";
+//16.11.16 about Bug Report. osbaek
+//English version will be added later.
+"BugTitleText_0" = "중지됨";
+"BugTitleText_1" = "잘못된값이 입력됨";
+"BugTitleText_2" = "저장이 되지 않음";
+"BugTitleText_3" = "조회가 되지 않음";
+"BugTitleText_4" = "삭제가 되지 않음";
+"BugTitleText_5" = "시트삭제가 되지 않음";
+"BugTitleText_6" = "점프가 되지 않음";
+"BugTitleText_7" = "기타";
+"SelectButTitleText" = "오류내역을 선택해 주세요.";
+"DescriptionText" = "추가설명";
+"EmailAddressText" = "메일주소";
+"PhoneNoText" = "전화번호";
+"PhoneNoDescText" = "전화번호 기재시, 서비스 진행 상황에 따른 연락을 받으실 수 있습니다.";
+"PrivacyAgreeText" = "개인정보 수집 및 이용 동의";
+"ShowPrivacyContentText" = "내용보기";
+"SendBugReportText" = "접수";
+"BugReportTitleText" = "서비스 접수";
+"PrivacyContentTitleText" = "개인정보 수집 및 이용에 대한 안내";
+"PrivacyContentText" = "개인정보 수집 내용 및 이용안내 입니다. (추후 수정예정)";
+"NoBugReportListText" = "접수한 내역이 없습니다.";
+"AddBugReportGuideText" = "서비스 신청은 화면에서 바로 신청할 수 있습니다.";
+"BugReportListTitleText" = "서비스 접수 내역";
+"ProcessStatusText_0" = "미확인";
+"ProcessStatusText_1" = "처리중";
+"ProcessStatusText_2" = "처리완료";
+"ProcessStatusText_3" = "처리완료(즉시처리)";
+"ProcessStatusText_4" = "지원불가";
+"ProcessStatusText_5" = "버그재현불가";
+"ProcessStatusText_6" = "기타";
+"BugReportDetailTitleText" = "서비스 접수 확인";
+"BugReportUpdateText" = "재등화";
+"PgmNamePrePositionText" = "에서";
+"CompletedDateText" = "완료일";
+"AppliedVersionText" = "적용버전";
+"ReleaseDateTitleText" = "Complete date";
+"ReleaseVersionTitleText" = "Current Version";
+"DeviceNotSupportCamera" = "The camera is not supported.";
+"RequestCameraPermission" = "You need access permission for the camera. Do you want to go to the settings?";
+"ConfirmText" = "Confirm";
+"RestrictedGPSPermission" = "GPS disable";
+"RequestGPSPermission" = "You need access permission for the GPS.";
+"Fail to get GPS information." = "Fail to get GPS information.\nYou need access permission for the GPS.";
+"OK" = "OK";
+"YES" = "YES";
+"NO" = "NO";
+
+//17.02.15 demo
+"ERP Pain" = "ERP Pain";
+"Modules" = "Modules";
+"Guide" = "Guide";
+"demoStartButtonTitle" = "Getting Started";
+
+"demo_save_msg" = "Because it's Demo version, data can't be modified.";
+
+//MARK: Demo Feedback Dialog Strings
+"demo_feedbackDialog_askingExperience" = "How was the experience?";
+"demo_feedbackDialog_reviewAsGood" = "Good!";
+"demo_feedbackDialog_reviewAsSoso" = "Soso!";
+"demo_feedbackDialog_reviewAsBad" = "Bad!";
+"demo_feedbackDialog_Submit" = "Submit";
+"demo_feedbackDialog_askingDetails" = "Want more details!";
+
+//17.02.19
+"ERP Start" = "ERP Start";
+"Welcome" = "Welcome";
+"explain_start" = "If you have an account\nTry it right away.";
+"explain_experience" = "ERP, Why hesitate?\nExperience and Resolve.";
+
+//17.02.22
+"NoDataToJump" = "No Data to jump!";
+"noQueryData" = "There is no queried item.";
+"sheetSettingFixedColumnsIssue"="Too many records are there in grid, creating fixed columns will cause instability to the sheet functionality";
+
+"data_changed_check_1" = "Content has changed. Would you like to save it?";
+"data_changed_check_2" = "All input data will be lost, you still want to clear the form";
+"alert_sheetcut" = "Are you sure you want to delete the selected row?";
+"alert_before_save" = "Do you want to save?";
+"alert_after_save" = "It has been saved.";
+"alert_before_delete" = "Are you sure you want to delete?";
+"alert_after_delete" = "It has been deleted.";
+"login_demo_txt" = "login_demo_txt_en";
+"serversetting_changed" = "Server setting will be changed. Do you want to continue?";
+"shareWaitMessage" = "Preparing data for sharing, please wait.";
+"shareSuccessfulMessage" = "ERP에서 보고 있는 내용을 공유하였습니다";
+
+//170719 demo connection info
+"DEMO_SERVER_IP" = "http://211.253.14.184/ksystemmobileAppsvc/";
+"DEMO_DSN_OPER_S" = "genitfteng_oper";
+"DEMO_DSN_BIS_S" = "genitfteng_bis";
+"DEMO_ID_S" = "genitfttest";
+"DEMO_PW_S" = "genitft";
+"DEMO_LANGUAGE_SEQ" = "2";
+
+
+//18.08.31
+"apiOpenError"="This is unavailable.";
+
+//File Input Control
+"attached_text" = "Attached File";
+"fileUploading" = "Uploading....";
+"fileDownloading" = "Downloading....";
+
+"Success_Uploading" = "Upload is successful!";
+"Success_Downloading" = "Download is successful!";
+"Success_Deleting" = "File removed from the server!";
+
+"Error_Uploading" = "Error: something went wrong while uploading file to the server!";
+"Error_Downloading" = "Error: something went wrong while downloading file from the server!";
+"Error_Deleting" = "Error: something went wrong while deleting the file in the server!";
+
+"UploadLimit_exceeded" = "Sorry! The upload limit has been exceeded!";
+"NoFileService" = "File service URL not present!";
+"NoFileServerDir" = "File Server Directory not present !";
+
+"multiCodehelp_resetValuesConfirm" = "Are you sure you want to reset all the selected values?";
+"multiCombo_selectedValueConfirm" = "Do you want to apply the selected values?";
+
+//MARK: Companity Project
+//SignUp and Login Messages
+"EmailFieldEmpty" = "Email field cannot be empty!";
+"EmailInvalid" = "Your email in not valid. Please re-enter your email!";
+
+"PasswordEmpty" = "Password field cannot be empty!";
+"PasswordMismatch" = "Passwords don't match. Please re-enter the password!";
+"LoginCredentialsWrong" = "Your login cedentials are incorrect. Please re-enter!";
+
+//MainViewController Messages
+"paperNotiTitle" = "New Paper";
+"PinnedMsg" = "Pin Successful!";
+"newPapers" = "new papers";
+
+"ArchivesVCTitle" = "Archive Papers";
+"HiddenVCTitle" = "Hidden Papers";
+
+"hidePaperSuccessMsg" = "Paper hidden successfully.";
+"unhidePaperSuccessMsg" = "Paper is visible now.";
+"archivePaperSuccessMsg" = "Paper archived successfully.";
+"deletePaperSuccessMsg" = "Paper deleted successfully.";
+
+"deletePaperFailMsg" = "Sorry! Paper wasn't deleted!";
+"deletePaperPermissionDeniedMsg" = "Sorry! You don't have enough permission to delete this paper.";
+
+"ReceivedPaper" = "Received";
+"OfficialPaper" = "Official";
+"IWrotePaper" = "IWrote";
+"Hidden" = "Hidden";
+"AllPaper" = "All";
+
+"Archive" = "Archive";
+"Unarchive" = "Unarchive";
+"Hide" = "Hide";
+"Unhide" = "Unhide";
+"CopyAndWrite" = "Copy and create";
+"CopyAndCreate" = "Copy and create";
+"replyPaper" = "Reply";
+"Edit" = "Edit";
+"Delete" = "Delete";
+"More" = "...View More";
+
+//0919 change password
+"password_check_rules_msg" = "Please check password rules.";
+"password_no_respond_msg" = "Server not responding.";
+"password_check_loginpassword_msg" = "Your password has been changed.";
+"password_change_success" = "Please check your login password.";
+"password_notmatch_msg" = "The new password does not match.";
+"password_encrypt_error_msg" = "The password does not encrypt.";
+
+
+"Notice" = "Notice";
+"Create" = "Create";
+"Official" = "Official Board";
+"Vote" = "Vote";
+"Choose" = "Choose between two";
+
+"Alert" = "Alert";
+"Ok" = "Ok";
+"Cancel" = "Cancel";
+
+"MapPicker" = "Map picker";
+"MapAccessMsg" = "App needs to access the map";
+"mapTitleMsg" = "Attach a map";
+"mapSearchBoxPlaceHolderMsg" = "Please enter a location and address.";
+"selectLocation" = "Please select a location.";
+"unknownLocation" = "Unknown Place";
+
+"ImagePicker" = "Image picker";
+"ImageAccessMsg" = "App needs to access your photos";
+
+"VideoPicker" = "Video picker";
+"VideoAccessMsg" = "App needs to access your videos";
+
+"NoCamera" = "Sorry, camera not available!";
+"NoCameraMsg" = "Sorry, this device has no camera!";
+
+"PleaseWait" = "Please wait...";
+
+"videoSaveSuccessMsg" = "Your video was successfully saved";
+"VideoCorrupt" = "CorruptedVideo";
+"VideoUnavailableMsg" = "Sorry, content is corrupted or unavailable!";
+"paperCreatedWithMissingAttach" = "Paper created with some missing attachments!";
+
+"ProgramSearchPlaceholder" = "Please input search text";
+"SearchResultsUnavailable" = "There are no contents.";
+"MyMenu" = "My Menu";
+
+"officialReceiversDisabled" = "This is an official paper. Cannot show receivers!";
+
+"Description" = "Leave the news you want to share with group members.";
+
+"RequestPaperDescription" = "Please input description";
+"RequestMembers" = "Please select receiver list";
+"ImageUploadFailed" = "Could not upload image";
+"ServerNotReachable" = "Sorry, server is currently unreachable. Try again later.";
+"PaperCreateSuccess" = "Paper created successfully.";
+"createPaperTitleTxt" = "Write";
+
+"password_change_title" = "Change Password";
+"password_prev_text" = "Previous password";
+"password_prev_input" = "input previous password";
+"password_new_text" = "New password";
+"password_new_input" = "input new password";
+"password_confirm_text" = "Confirm new password";
+"password_confirm_input" = "input new password";
+"password_rules_text" = "password rules";
+"password_expired_text"   = "Password is expired.";
+"password_askchange_text" = "Do you want to change your password?";
+"password_plzchange_text" = "Please change your password.";
+
+
+//MARK: Companity Vote
+"AddVoteItem" = "+ Add item";
+"VoteDetailPlaceHolderTxt" = "Please enter your vote.";
+
+//For Vote alerts
+"VoteConfirmTitle" = "Confirm Vote";
+"CloseVoteConfirmTitle" = "Confirm Vote Close";
+
+"VoteConfirmMsg" = "Are you sure to vote this item?";
+"CloseVoteConfirmMsg" = "Are you sure to close the paper vote? Members including you won't be able to vote this paper once closed.";
+"cannotCloseVote" = "Sorry, you don't have authority to close this vote poll.";
+"noVoters" = "No voters available!";
+"voteClosed" = "Vote is closed!";
+"eventClosed" = "Event is closed!";
+"deadlineCrossed" = "Deadline crossed!";
+"readOnly_cantVote" = "Sorry, you can't vote. You're in a Read-only paper mode!";
+"noTitleInVoteItem" = "Please input a title for the added vote items!";
+"voteLimitExceeded" = "Sorry, cannot vote! Vote limit has exceeded.";
+
+//17.11.10
+"image_text" = "Image";
+"camera_text" = "Camera";
+"Board" = "Board";
+"Companity" = "Companity";
+"Contact" = "Contact";
+"Attendance" = "Attendance";
+//SearchResult
+"NoResult" = "There's no searched result.";
+
+"NoPapers" = "No papers!";
+
+
+//VoteHeaderView
+"Deadline" = "Deadline";
+"MultiSelection" = "Multiple choice";
+"AnonymousText" = "Anonymous";
+"HideVotersText" = "Hide Voters";
+"HideCountText" = "Hide Count";
+
+//CreateVoteView
+"NoOptions" = "No option items";
+"AttachmentNoText" = "Attachments but no text present";
+"DeadlineError" = "Deadline must be atleast 15 minutes more than current time.";
+"SelectClosinDateTime" = "Please select the vote closing date and time";
+"Limit" = "Limit";
+"enterTheContent" = "Enter the content";
+"ReceiveGroup" = "Receive Group";
+"limitGreaterThanZero" = "Set a Valid Limit Value.";
+"limitCannotBeEmpty" = "Limit cannot be empty.";
+"atLeastTwoVoteOptionsRequired" = "Atleast Two Options required.";
+"and" = "and";
+"other" = "other.";
+"others" = "others.";
+"andOthers" = "& others.";
+
+//ChooseReceiversVC
+"selectReceivers" = "You have not selected any receivers, please select one or more.";
+"receiverLblTxt" = "Recipient :";
+"receiverSearchPlaceHolderText" = "Please search for your name.";
+"recentUsersTxt" = "Recent";
+"allUsersText" = "All";
+
+//VoteDatePickerView
+"DateSelected" = "This Date is already selected on previous option, please select another";
+"MinDayToday" = "Minimum day is today";
+
+//Paper and Vote attachments errors
+"UrlLoadError" = "Cannot load URL!";
+
+//Email signup and signin
+"EmailAlreadyLink" = "This email id is linked with another account";
+
+//18.01.23 touch id
+"touchid_putfinger" = "Put your finger on the home button.";
+"touchid_error_verify" = "There was a problem verifying your identity.";
+"touchid_error_cancel" = "Authentication was canceled by user.";
+"touchid_error_fallback" = "The user tapped the fallback button (Fuu!)";
+"touchid_error_systemCancel" = "Authentication was canceled by system.";
+"touchid_error_passcodeNotSet" = "Passcode is not set on the device.";
+"touchid_error_notAvailable" = "Touch ID is not available on the device.";
+"touchid_error_notEnrolled" = "Touch ID has no enrolled fingers.";
+"touchid_error_lockout" = "There were too many failed Touch ID attempts and Touch ID is now locked.";
+"touchid_error_appCalcel" = "Authentication was canceled by application.";
+"touchid_error_invalidContext" = "LAContext passed to this call has been previously invalidated.";
+"touchid_error_default" = "Touch ID may not be configured.";
+"touchid_success" = "Touch ID Login successful!";
+//pw confirm view
+"pwAuth" = "Confirm Password";
+"authConfirm" = "Confirm Authentication";
+"input_pw" = "Please input password.";
+"input_confirm_pw" = "Please confirm password.";
+//lockscreen
+"program_auto_lock" = "Program auto lock.";
+"input_pattern" = "Pattern Login";
+"register_pattern" = "Register Pattern";
+"input_touchid" = "TouchID Login";
+"register_touchid" = "Register TouchID";
+"unlock" = "Unlock";
+"title_inputPw" = "Password Input";
+"status_message" = "status message label";
+"Draw_New_Pattern" = "Draw new pattern.";
+"Draw_New_Pattern_ForPw" = "Draw new pattern use for password.";
+"ResetPattern" = "Reset";
+"UsePattern" = "Use Pattern";
+"AskRegisterTouchID" = "Would you like to register TouchID?";
+"Unlocking" = "Unlocking...";
+
+//Edit Paper
+"updatePaperConfirmMsg" = "Do you want to save changes?";
+"updatePaperSuccessMsg" = "Paper edited successfully.";
+"updatePaperWithMissingAttach" = "Paper edited with missing attachments.";
+"paperNotChangeMsg" = "No Changes made.";
+"votePaperEditNotAllowed" = "cannot edit vote paper.";
+"paperEditByOwnerMsg" = "Only sender can edit paper.";
+"editPaperTitleTxt" = "Update Paper";
+
+"changedFingerprint" = "The fingerprint is changed on the device.";
+
+//Employee List View
+"noEmployeeData" = "No employees found.";
+
+//PhotoChangeView
+"ProfilePhoto" =  "Profile photo";
+"AlbumPhoto" = "Choice photo in album.";
+"TakePhoto" = "Take photo";
+"DeleteMyPhoto" = "Delete my photo";
+"BackgroundPhoto" = "Background photo";
+
+//EmpProfileManageViewController
+"ProfileDefaultMsg" = "Please register profile message.";
+"OrgMemberDetail" = "Member Details";
+
+//Archiveviewcontroller
+"unarchiveAllPaperConfirmMsg" = "Do you want to delete all instances of the archive paper?";
+"unarchiveConfirmMsg" = "Do you want to delete this archive paper instance ?";
+
+//mainviewcontroller
+"companyName" = "Samil Accounting Firm";
+
+//createwriteview
+"writeToPlaceholder" = "Name of receipent group";
+
+//attachmentPreviewController
+"attachmentPreviewTitleTxt" = "Vote Registration";
+
+"currentUser" = "Me";
+
+"dateFormatLocalizedCompanity" = "EEEE, MMMM d, yyyy";
+"dateTimeFormatLocalizedCompanity" = "EEEE, MMMM d, yyyy h:mm a";
+
+"addVoteItemRequest" = "Please add VoteItem first.";
+
+"deletePaperAlert" = "Do you want to delete the paper?";
+"all" = "all";
+"All" = "All";
+
+//MainDetailTableViewCell
+"voter_info_disable_msg" = "Voter Information cannot be Displayed.";
+
+//SeenUnSeenUserListVC
+"SeenUnSeenUserListTitleTxt" = "Seen status";
+"SeenTabLblTxt" = "Read";
+"UnSeenTabLblTxt" = "Unread";
+"RemarksLblTxt" = "Remarks";
+"selectedPeopleCounttxt" = "People Selected";
+"totalPeopleCountTxt" = "people";
+"selectAllBtnTxt" = "Select All";
+"unSelectAllBtnTxt" = "UnSelect All";
+"resendBtnTxt" = "re-send";
+"selectedUserNotifyTxt" = "Selected user notified";
+
+"voteText" = "(Vote) ";
+"readTxt" = "READ";
+"unReadTxt" = "UNREAD";
+"receiverTxt" = "RECEIVERS";
+"officialAllTxt" = "All";
+"delete_attachment" = "delete success.";
+
+"modifiedTxt" = "Modified";
+"schedule_modifiedText" = "Schedule is changed";
+"deadline_modifiedText" = "Deadline is changed";
+
+"ReceiverListTitle" = "Receivers";
+
+//CompanityPhotoRegisterVC
+"photoUploadWithMissingAttach" = "Some photos upload failed";
+"photoUploadSuccess" = "photo uploaded successfully";
+"deletePhotoConfirm" = "Are you sure you want to delete photos?";
+
+//ReceiverInterfaceChooseView
+"OrgChartTitleTxt" = "Organization Chart";
+
+"ContactListText" = "Contact";
+
+"LogoutConfirmMsg" = "Log out will prevent you from receiving message notifications.\nAre you sure you want to log out?";
+
+// ScheduleRegisterView
+"noEventTitle" = "Please input event title.";
+"invalidScheduleDate" = "Please input valid schedule date and time!";
+"inputStartDate" = "Please input start date";
+"inputEndDate" = "Please input end date";
+"inputStartTime" = "Please input start time";
+"inputEndTime" = "Please input end time";
+"inputGreaterEndDateTime" = "Please input greater end datetime.";
+"inputGreaterThanCurrentTime" = "Please input date time atleast 15 minutes later than the curren time.";
+"attendOptionNotSelected" = "Please select vote options.";
+
+"scheduleInUse" = "Schedule already in use";
+
+"attending" = "Attend";
+"notAttending" = "Not Attend";
+"late" = "Late";
+"early" = "Early";
+
+"enterEventTitle" = "Please enter an event";
+"allDay" = "Day";
+"chooseAttend" = "Choose whether to attend";
+"enterRemarks" = "Enter the remarks";
+"noPlaceText" = "Place";
+
+"calenderAccessNotGranted" = "Calender access not granted.";
+
+//SelectDepartmentVC
+"noMembersInDept" = "Sorry! There are no members selected departments.";
+
+// Companity Login
+"serverSettingTitle" = "Server connection information";
+"serverSettingSubtitle" = "Please set up connection information.";
+
+"company" = "Company";
+"userId" = "User ID";
+
+"ScannerServerTitle" = "서버정보등록";
+"ScannerServerSubTitle" = "아래 영역에 QR코드를 찍어 주세요.";
+"ChangeAccount" = "Change Account";
+"Input Phone" = "Mobile Number";
+"Input Pin" = "Input Pin";
+"Request Pin" = "Request Pin";
+"Re Request Pin" = "Re Request Pin";
+
+// SubModuleTableViewCell
+"recentAndFavorites" = "Recent And Favorites";
+"noModulesAvailable" = "No Program Items Found!";
+"checkInvites" = "! Please check the invitation message.";
+"noInvitation" = "Sorry, Your phone number is not invited";
+"smsSuccessful" = "We certified that you’re invited. Please check the verification code.";
+"wrongCode" = "Sorry, It’s wrong verification Code. Check your received SMS.";
+"loginSuccess" = "Login Success";
+"sessionExpired" = "Your session has expired. Please, log in again.";
+"scanarioLoadFailed" = "Failed to open program. Please check network.";
+"allowedUsers" = " allowed users";
+"of" = " of ";
+"samePhone" = " have same phone numbers. Please contact your administrator.";
+"AccuracyRequired" = "This app needs accurate location";
+"LocationServiceOff" = "Please turn on Location Services in Settings > Privacy";
