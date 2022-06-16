@@ -1,6 +1,0 @@
-framework module Pods_FlexSDK {
-  umbrella header "Pods-FlexSDK-umbrella.h"
-
-  export *
-  module * { export * }
-}
