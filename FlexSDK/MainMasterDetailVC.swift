@@ -404,7 +404,15 @@ public class MainMasterDetailVC: UIViewController,WKScriptMessageHandler, WKNavi
             self.moduleMenuCollectionView.reloadData()
         }
     }
-    
+
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return .portrait
+        } else {
+            return .all
+        }
+    }
+
     @objc func rotated() {
         //menuViewTopConstraint.constant = -UIApplication.shared.statusBarFrame.size.height
 //        if let mainNC = children.first as? UINavigationController, let mainVC = mainNC.viewControllers.first as? MainViewController {
