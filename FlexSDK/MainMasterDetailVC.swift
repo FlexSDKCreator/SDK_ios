@@ -232,7 +232,7 @@ public class MainMasterDetailVC: UIViewController,WKScriptMessageHandler, WKNavi
         profileImage.layer.borderWidth = 2
         profileImage.layer.cornerRadius = 6
         profileImage.clipsToBounds = true
-        profileImage.sd_setImage(with: MainMasterDetailVC.getUserProfileImageURL(empSeq: String(BaseUserValue.EmpSeq)), placeholderImage:  #imageLiteral(resourceName: "test_icon_profile"), completed: nil)
+        //profileImage.sd_setImage(with: MainMasterDetailVC.getUserProfileImageURL(empSeq: String(BaseUserValue.EmpSeq)), placeholderImage:  #imageLiteral(resourceName: "test_icon_profile"), completed: nil)
         
         if let imgUrl = Bundle.main.url(forResource: "loading-dot", withExtension: "gif"){
             var imageData = Foundation.Data()
@@ -295,7 +295,7 @@ public class MainMasterDetailVC: UIViewController,WKScriptMessageHandler, WKNavi
     
     func setupReloadBtn() {
         reloadBtn = UIButton(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
-        reloadBtn.setImage(UIImage(named: "perm_group_sync_settings"), for: .normal)
+        //reloadBtn.setImage(UIImage(named: "perm_group_sync_settings"), for: .normal)
         reloadBtn.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
         reloadBtn.layer.cornerRadius = reloadBtn.frame.width/2
         reloadBtn.layer.masksToBounds = true
@@ -1167,7 +1167,7 @@ extension MainMasterDetailVC: UICollectionViewDataSource, UICollectionViewDelega
         cell.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
         let moduleLabelText = menuModuleData[indexPath.item].title
         cell.moduleLabel.text = moduleLabelText
-        cell.moduleImgView.image = UIImage(named: menuModuleData[indexPath.item].iconName ?? "")
+        //cell.moduleImgView.image = UIImage(named: menuModuleData[indexPath.item].iconName ?? "")
         
         return cell
     }
