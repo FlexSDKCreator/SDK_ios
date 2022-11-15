@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		266306D12897EF6000572937 /* NotiConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266306D02897EF6000572937 /* NotiConstants.swift */; };
 		26BDFB202893F7D30015BBB4 /* AssetsSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BDFB1F2893F7D30015BBB4 /* AssetsSchemeHandler.swift */; };
+		26E7B81D292341F1001ECF1C /* S3Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E7B81C292341F1001ECF1C /* S3Downloader.swift */; };
 		9683507B285B385B0068B903 /* FlexSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 9683507A285B385B0068B903 /* FlexSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		968350C0285B39CC0068B903 /* GoogleService-Info-myDesk_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96835082285B39CA0068B903 /* GoogleService-Info-myDesk_dev.plist */; };
 		968350C1285B39CC0068B903 /* file_upload.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96835084285B39CA0068B903 /* file_upload.gif */; };
@@ -66,6 +67,7 @@
 		2446C808C57FE62B2E98455D /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
 		266306D02897EF6000572937 /* NotiConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotiConstants.swift; sourceTree = "<group>"; };
 		26BDFB1F2893F7D30015BBB4 /* AssetsSchemeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsSchemeHandler.swift; sourceTree = "<group>"; };
+		26E7B81C292341F1001ECF1C /* S3Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Downloader.swift; sourceTree = "<group>"; };
 		96835077285B385B0068B903 /* FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9683507A285B385B0068B903 /* FlexSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexSDK.h; sourceTree = "<group>"; };
 		96835082285B39CA0068B903 /* GoogleService-Info-myDesk_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-myDesk_dev.plist"; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				9683509A285B39CA0068B903 /* GPSModule.swift */,
 				9683509B285B39CA0068B903 /* FirebaseUtils.swift */,
 				9683509C285B39CA0068B903 /* Toast.swift */,
+				26E7B81C292341F1001ECF1C /* S3Downloader.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				968350EA285B39CC0068B903 /* DimenConstants.swift in Sources */,
 				968350CD285B39CC0068B903 /* YlwMessageBox.swift in Sources */,
 				968350D5285B39CC0068B903 /* LocationModule.swift in Sources */,
+				26E7B81D292341F1001ECF1C /* S3Downloader.swift in Sources */,
 				968350E7285B39CC0068B903 /* ColorConstants.swift in Sources */,
 				968350DC285B39CC0068B903 /* BaseUserValue.swift in Sources */,
 				968350CF285B39CC0068B903 /* Reachability.swift in Sources */,
