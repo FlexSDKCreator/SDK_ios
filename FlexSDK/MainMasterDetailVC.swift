@@ -1015,21 +1015,21 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             webFileDownload(id: id, serviceURL:serviceURL, bis:bis, filePath: filePath,callback:systemCallback)
                         }
                     case "s3down":
-                        let partUrls = messageObject["partUrls"] as? [String]
+                        let partUrls = param?["partUrls"] as? [String]
 //                        let partsCount = messageObject["partsCount"] as? Int
-                        let partPositions = messageObject["partPositions"] as? [UInt64]
-                        let filename = (messageObject["filename"] as? String) ?? ""
-                        let parallelDownloadCount = messageObject["parallelDownloadCount"] as? Int
+                        let partPositions = param?["partPositions"] as? [UInt64]
+                        let filename = (param?["filename"] as? String) ?? ""
+                        let parallelDownloadCount = param?["parallelDownloadCount"] as? Int
                         if let function = callback?["function"] as? String {
                             let delegate = getDownloadDelegate(function)
                             _ = S3Downloader(downloadUrls :partUrls!, filename: filename, partPositions: partPositions, uivc: self, concurrentCount: parallelDownloadCount, delegate: delegate)
                         }
                     case "s3range":
-                        let key = messageObject["key"] as! String
-                        let rangeArr = messageObject["rangeArr"] as! [String]
-                        let filename = (messageObject["filename"] as? String) ?? ""
-                        let partPositions = messageObject["partPositions"] as? [UInt64]
-                        let parallelDownloadCount = messageObject["parallelDownloadCount"] as? Int
+                        let key = param?["key"] as! String
+                        let rangeArr = param?["rangeArr"] as! [String]
+                        let filename = (param?["filename"] as? String) ?? ""
+                        let partPositions = param?["partPositions"] as? [UInt64]
+                        let parallelDownloadCount = param?["parallelDownloadCount"] as? Int
                         if let function = callback?["function"] as? String {
                             let delegate = getDownloadDelegate(function)
                             _ = S3Downloader(key: key, range: rangeArr, filename : filename, partPositions: partPositions, uivc: self, concurrentCount: parallelDownloadCount, delegate: delegate)
@@ -1078,7 +1078,19 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             self.webView.evaluateJavaScript(js)
                         }
                         break;
-
+                        
+                    case "openlinkapp", "OpenLinkApp":
+                        if let urlPath = param?["ios"] as? String {
+                            let url = URL(string: urlPath)
+                            UIApplication.shared.open(url!) { (result) in
+                                if result {
+                                   // The URL was delivered successfully!
+                                    print(result)
+                                }
+                            }
+                        }
+                        break;
+                        
                     default:
                         print(action)
                     }
