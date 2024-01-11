@@ -60,13 +60,12 @@
 		968350EE285B39CC0068B903 /* ServiceRequestParamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */; };
 		968350EF285B39CC0068B903 /* LoginSvcDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BC285B39CC0068B903 /* LoginSvcDTO.swift */; };
 		968350F0285B39CC0068B903 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 968350BE285B39CC0068B903 /* Localizable.strings */; };
-		A6AE619D802423C2880C1288 /* Pods_FlexSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A639AA1C283391D405CB554 /* Pods_FlexSDK.framework */; };
+		B4DD320AC27F74FA948CFF97 /* Pods_FlexSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E120EB56AD8817050F7E9F6C /* Pods_FlexSDK.framework */; };
 		C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D32B440D2C0040C802 /* CameraViewController.swift */; };
 		C8E029D62B440D560040C802 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D52B440D560040C802 /* UIUtilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0A639AA1C283391D405CB554 /* Pods_FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		266306D02897EF6000572937 /* NotiConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotiConstants.swift; sourceTree = "<group>"; };
 		26BDFB1F2893F7D30015BBB4 /* AssetsSchemeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsSchemeHandler.swift; sourceTree = "<group>"; };
 		26E7B81C292341F1001ECF1C /* S3Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Downloader.swift; sourceTree = "<group>"; };
@@ -123,8 +122,9 @@
 		968350BF285B39CC0068B903 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
 		C8E029D32B440D2C0040C802 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C8E029D52B440D560040C802 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
-		EB28AF96A23716E81DBE05AD /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
-		FBFD7B1286A01FEAB7BAE424 /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		E120EB56AD8817050F7E9F6C /* Pods_FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E585177A4CB3FCC24C7891DC /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
+		FD012B156D7943F02772E47C /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,26 +132,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6AE619D802423C2880C1288 /* Pods_FlexSDK.framework in Frameworks */,
+				B4DD320AC27F74FA948CFF97 /* Pods_FlexSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4F3E07E50518E96F21378EEC /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0A639AA1C283391D405CB554 /* Pods_FlexSDK.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		6B4FFEABBD3BFE5A8485CE38 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FBFD7B1286A01FEAB7BAE424 /* Pods-FlexSDK.debug.xcconfig */,
-				EB28AF96A23716E81DBE05AD /* Pods-FlexSDK.release.xcconfig */,
+				FD012B156D7943F02772E47C /* Pods-FlexSDK.debug.xcconfig */,
+				E585177A4CB3FCC24C7891DC /* Pods-FlexSDK.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -162,7 +154,7 @@
 				96835079285B385B0068B903 /* FlexSDK */,
 				96835078285B385B0068B903 /* Products */,
 				6B4FFEABBD3BFE5A8485CE38 /* Pods */,
-				4F3E07E50518E96F21378EEC /* Frameworks */,
+				A4A517C7513FEF6CF1319346 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -316,6 +308,14 @@
 			path = ja.lproj;
 			sourceTree = "<group>";
 		};
+		A4A517C7513FEF6CF1319346 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E120EB56AD8817050F7E9F6C /* Pods_FlexSDK.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -334,7 +334,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9683507E285B385B0068B903 /* Build configuration list for PBXNativeTarget "FlexSDK" */;
 			buildPhases = (
-				85D6796CE433681EF576BD46 /* [CP] Check Pods Manifest.lock */,
+				3E6EA047B6E1EB94DCBCF1A7 /* [CP] Check Pods Manifest.lock */,
 				96835072285B385B0068B903 /* Headers */,
 				96835073285B385B0068B903 /* Sources */,
 				96835074285B385B0068B903 /* Frameworks */,
@@ -414,7 +414,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		85D6796CE433681EF576BD46 /* [CP] Check Pods Manifest.lock */ = {
+		3E6EA047B6E1EB94DCBCF1A7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -643,7 +643,7 @@
 		};
 		9683507F285B385B0068B903 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FBFD7B1286A01FEAB7BAE424 /* Pods-FlexSDK.debug.xcconfig */;
+			baseConfigurationReference = FD012B156D7943F02772E47C /* Pods-FlexSDK.debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -676,7 +676,7 @@
 		};
 		96835080285B385B0068B903 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EB28AF96A23716E81DBE05AD /* Pods-FlexSDK.release.xcconfig */;
+			baseConfigurationReference = E585177A4CB3FCC24C7891DC /* Pods-FlexSDK.release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
