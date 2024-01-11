@@ -187,6 +187,7 @@
 "RestrictedGPSPermission" = "GPS disable";
 "RequestGPSPermission" = "You need access permission for the GPS.";
 "Fail to get GPS information." = "Fail to get GPS information.\nYou need access permission for the GPS.";
+"ScannerDismissed" = "Scanner was dismissed";
 "OK" = "OK";
 "YES" = "YES";
 "NO" = "NO";

@@ -12,6 +12,8 @@ import ObjectMapper
 import FirebaseMessaging
 import SDWebImage
 import Network
+import AVFoundation
+import MLKitVision
 
 enum Module: Int {
     case none = 5000, companity, attendence, board, contact
@@ -998,6 +1000,50 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         let systemCallback = (callback?["function"] as? String) ?? ""
                         let module = GPSModule(id:id,systemCallback:systemCallback,param:param, isAccurate: true)
                         module.start()
+                    case "loadbarcode":
+                        let systemCallback = (callback?["function"] as? String) ?? ""
+                        let afterEventName = (param?["afterEventName"] as? String) ?? ""
+                        let isMulti : Bool
+                        if !afterEventName.isEmpty, let afterEventObject = try? JSONSerialization.jsonObject(with: afterEventName.data(using: .utf8)!, options: []) as? [String:Any] {
+                            isMulti = afterEventObject["ismulti"] as? Bool ?? false
+                        } else {
+                            isMulti = false
+                        }
+                        let onScannerResult: (Bool, String?, String?) -> Void = { success, code, message in
+                            if success {
+                                let script =  "\(systemCallback)('\(id)',{'status':{'succeed' : true},'data':'\(code ?? "")', 'afterEventName':'\(afterEventName)'});"
+                                self.webView.evaluateJavaScript(script)
+                            } else {
+                                let script = "\(systemCallback)('\(id)',{'status':{'succeed' : false,'message':'\(message ?? NSLocalizedString("ScannerDismissed", comment: "Scanner was dismissed"))'},'data':{'afterEventName':'\(afterEventName)'}});"
+                                self.webView.evaluateJavaScript(script)
+                            }
+                        }
+                        func onCameraPermission(_ granted: Bool) {
+                            if granted {
+                                DispatchQueue.main.async {
+                                    let scannerVC = CameraViewController()
+                                    scannerVC.onScannerResult = onScannerResult
+                                    scannerVC.isMulti = isMulti
+                                    scannerVC.modalPresentationStyle = .overFullScreen
+                                    self.present(scannerVC, animated: true, completion: nil)
+                                }
+
+                            } else {
+                                onScannerResult(false, nil, NSLocalizedString("RequestCameraPermission", comment: "You need access permission for the camera"))
+                            }
+                        }
+                        switch AVCaptureDevice.authorizationStatus(for: .video) {
+                            case .authorized:
+                                onCameraPermission(true)
+                            case .notDetermined:
+                                AVCaptureDevice.requestAccess(for: .video) { granted in
+                                    onCameraPermission(granted)
+                                }
+                            case .denied, .restricted:
+                                onCameraPermission(false)
+                            @unknown default:
+                                onCameraPermission(false)
+                        }
                     case "loadbeacon":
                         //systemCallback need id
                         //let systemCallback = (callback?["function"] as? String) ?? ""

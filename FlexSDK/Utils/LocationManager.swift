@@ -17,6 +17,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     private var locationModule:LocationModule?
     static let shared = LocationManager()
+    private var accuracyDesired:Bool?
     
     private override init() {
         super.init()
@@ -28,6 +29,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
         self.locationModule = locationModule
     }
     func deinitModule(){
+        self.locationManager.delegate = nil
         self.locationModule = nil
     }
     func start(isAccurate: Bool = false){
@@ -79,6 +81,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
 //                else {
 //                    locationModule?.setAuthRequestType(authType: .first)
                     locationModule?.fail(.noAuth)
+                    deinitModule()
                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
 //                }
                 break;
@@ -89,7 +92,8 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
 //                }
 //                else {
 //                    locationModule?.setAuthRequestType(authType: .first)
-                    locationModule?.fail(.noAuth)
+//                    locationModule?.fail(.noAuth)
+                    accuracyDesired = isAccurate
                     locationManager.requestWhenInUseAuthorization()
 //                }
                 break;
@@ -100,6 +104,20 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
         deinitModule()
     }
     
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        onPermissionChange()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        onPermissionChange()
+    }
+    
+    func onPermissionChange() {
+        if let accuracy = accuracyDesired, CLLocationManager.authorizationStatus() != .notDetermined {
+            accuracyDesired = nil
+            start(isAccurate: accuracy)
+        }
+    }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.locationModule?.fail()
         deinitModule()

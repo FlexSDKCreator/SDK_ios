@@ -60,11 +60,13 @@
 		968350EE285B39CC0068B903 /* ServiceRequestParamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */; };
 		968350EF285B39CC0068B903 /* LoginSvcDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BC285B39CC0068B903 /* LoginSvcDTO.swift */; };
 		968350F0285B39CC0068B903 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 968350BE285B39CC0068B903 /* Localizable.strings */; };
-		CE4004E94D788361F6D62532 /* Pods_FlexSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA50DBCF522CB35B39576F30 /* Pods_FlexSDK.framework */; };
+		A6AE619D802423C2880C1288 /* Pods_FlexSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A639AA1C283391D405CB554 /* Pods_FlexSDK.framework */; };
+		C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D32B440D2C0040C802 /* CameraViewController.swift */; };
+		C8E029D62B440D560040C802 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D52B440D560040C802 /* UIUtilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2446C808C57FE62B2E98455D /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
+		0A639AA1C283391D405CB554 /* Pods_FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		266306D02897EF6000572937 /* NotiConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotiConstants.swift; sourceTree = "<group>"; };
 		26BDFB1F2893F7D30015BBB4 /* AssetsSchemeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsSchemeHandler.swift; sourceTree = "<group>"; };
 		26E7B81C292341F1001ECF1C /* S3Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Downloader.swift; sourceTree = "<group>"; };
@@ -119,8 +121,10 @@
 		968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceRequestParamModel.swift; sourceTree = "<group>"; };
 		968350BC285B39CC0068B903 /* LoginSvcDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSvcDTO.swift; sourceTree = "<group>"; };
 		968350BF285B39CC0068B903 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
-		BA50DBCF522CB35B39576F30 /* Pods_FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F5C061F47FD24614F99900AD /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		C8E029D32B440D2C0040C802 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		C8E029D52B440D560040C802 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
+		EB28AF96A23716E81DBE05AD /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
+		FBFD7B1286A01FEAB7BAE424 /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,17 +132,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE4004E94D788361F6D62532 /* Pods_FlexSDK.framework in Frameworks */,
+				A6AE619D802423C2880C1288 /* Pods_FlexSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27F32BC3153D2BAE0E912A76 /* Frameworks */ = {
+		4F3E07E50518E96F21378EEC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BA50DBCF522CB35B39576F30 /* Pods_FlexSDK.framework */,
+				0A639AA1C283391D405CB554 /* Pods_FlexSDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -146,8 +150,8 @@
 		6B4FFEABBD3BFE5A8485CE38 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F5C061F47FD24614F99900AD /* Pods-FlexSDK.debug.xcconfig */,
-				2446C808C57FE62B2E98455D /* Pods-FlexSDK.release.xcconfig */,
+				FBFD7B1286A01FEAB7BAE424 /* Pods-FlexSDK.debug.xcconfig */,
+				EB28AF96A23716E81DBE05AD /* Pods-FlexSDK.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -158,7 +162,7 @@
 				96835079285B385B0068B903 /* FlexSDK */,
 				96835078285B385B0068B903 /* Products */,
 				6B4FFEABBD3BFE5A8485CE38 /* Pods */,
-				27F32BC3153D2BAE0E912A76 /* Frameworks */,
+				4F3E07E50518E96F21378EEC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,6 +185,7 @@
 				968350AF285B39CB0068B903 /* CustomCells */,
 				968350AA285B39CB0068B903 /* Images.xcassets */,
 				968350A9285B39CA0068B903 /* MainMasterDetailVC.swift */,
+				C8E029D32B440D2C0040C802 /* CameraViewController.swift */,
 				968350B9285B39CC0068B903 /* Models */,
 				968350B2285B39CC0068B903 /* Consts */,
 				9683508F285B39CA0068B903 /* Utils */,
@@ -227,6 +232,7 @@
 				96835093285B39CA0068B903 /* Reachability.swift */,
 				96835094285B39CA0068B903 /* SharedPreferenceUtil.swift */,
 				96835095285B39CA0068B903 /* Util.swift */,
+				C8E029D52B440D560040C802 /* UIUtilities.swift */,
 				96835096285B39CA0068B903 /* YLWColorUtils.swift */,
 				96835097285B39CA0068B903 /* CommonServices.swift */,
 				96835098285B39CA0068B903 /* LocationManager.swift */,
@@ -328,7 +334,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9683507E285B385B0068B903 /* Build configuration list for PBXNativeTarget "FlexSDK" */;
 			buildPhases = (
-				6DD9BD4EC6A5EA1F64289E40 /* [CP] Check Pods Manifest.lock */,
+				85D6796CE433681EF576BD46 /* [CP] Check Pods Manifest.lock */,
 				96835072285B385B0068B903 /* Headers */,
 				96835073285B385B0068B903 /* Sources */,
 				96835074285B385B0068B903 /* Frameworks */,
@@ -408,7 +414,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6DD9BD4EC6A5EA1F64289E40 /* [CP] Check Pods Manifest.lock */ = {
+		85D6796CE433681EF576BD46 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -440,6 +446,7 @@
 				968350D8285B39CC0068B903 /* Toast.swift in Sources */,
 				968350DA285B39CC0068B903 /* Data.swift in Sources */,
 				968350E5285B39CC0068B903 /* ModuleMenuCollectionViewCell.swift in Sources */,
+				C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */,
 				968350DD285B39CC0068B903 /* AwsApiService.swift in Sources */,
 				968350EF285B39CC0068B903 /* LoginSvcDTO.swift in Sources */,
 				266306D12897EF6000572937 /* NotiConstants.swift in Sources */,
@@ -455,6 +462,7 @@
 				968350E1285B39CC0068B903 /* MainMasterDetailVC.swift in Sources */,
 				968350D1285B39CC0068B903 /* Util.swift in Sources */,
 				968350D0285B39CC0068B903 /* SharedPreferenceUtil.swift in Sources */,
+				C8E029D62B440D560040C802 /* UIUtilities.swift in Sources */,
 				968350D3285B39CC0068B903 /* CommonServices.swift in Sources */,
 				968350EA285B39CC0068B903 /* DimenConstants.swift in Sources */,
 				968350CD285B39CC0068B903 /* YlwMessageBox.swift in Sources */,
@@ -635,7 +643,7 @@
 		};
 		9683507F285B385B0068B903 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F5C061F47FD24614F99900AD /* Pods-FlexSDK.debug.xcconfig */;
+			baseConfigurationReference = FBFD7B1286A01FEAB7BAE424 /* Pods-FlexSDK.debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -649,7 +657,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -668,7 +676,7 @@
 		};
 		96835080285B385B0068B903 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2446C808C57FE62B2E98455D /* Pods-FlexSDK.release.xcconfig */;
+			baseConfigurationReference = EB28AF96A23716E81DBE05AD /* Pods-FlexSDK.release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -682,7 +690,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

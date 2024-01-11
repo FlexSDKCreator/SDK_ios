@@ -12,6 +12,7 @@ target 'FlexSDK' do
   pod 'Firebase/Messaging'
   pod 'ObjectMapper’
   pod 'SDWebImage'
+  pod 'GoogleMLKit/BarcodeScanning', '3.2.0'
 
 
 end

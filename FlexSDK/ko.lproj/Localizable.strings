@@ -183,6 +183,7 @@
 "RestrictedGPSPermission" = "위치접근이 불가능합니다.";
 "RequestGPSPermission" = "위치 접근 허용이 필요합니다.";
 "Fail to get GPS information." = "GPS 정보를 가져오는데 실패했습니다.\n설정에서 위치 접근을 허용해주세요.";
+"ScannerDismissed" = "스캔이 불가능합니다.";
 "OK" = "확인";
 "YES" = "네";
 "NO" = "아니오";
