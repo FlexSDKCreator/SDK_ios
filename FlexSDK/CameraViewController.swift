@@ -518,11 +518,11 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         )
         visionImage.orientation = orientation
         
-        guard let inputImage = MLImage(sampleBuffer: sampleBuffer) else {
-            print("Failed to create MLImage from sample buffer.")
-            return
-        }
-        inputImage.orientation = orientation
+//        guard let inputImage = MLImage(sampleBuffer: sampleBuffer) else {
+//            print("Failed to create MLImage from sample buffer.")
+//            return
+//        }
+//        inputImage.orientation = orientation
         
         let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
