@@ -16,7 +16,7 @@
 
 import AVFoundation
 import CoreVideo
-import MLImage
+//import MLImage
 import MLKit
 
 @objc(CameraViewController)
