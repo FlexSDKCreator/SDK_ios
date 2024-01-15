@@ -17,7 +17,9 @@
 import AVFoundation
 import CoreVideo
 //import MLImage
-import MLKit
+//import MLKit
+import MLKitBarcodeScanning
+import MLKitVision
 
 @objc(CameraViewController)
 class CameraViewController: UIViewController {
