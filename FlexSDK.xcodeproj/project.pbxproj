@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		171A6D6670DF9F7F620394E9 /* Pods_FlexSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95CAD35810E32026130D1C83 /* Pods_FlexSDK.framework */; };
 		266306D12897EF6000572937 /* NotiConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266306D02897EF6000572937 /* NotiConstants.swift */; };
 		26BDFB202893F7D30015BBB4 /* AssetsSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BDFB1F2893F7D30015BBB4 /* AssetsSchemeHandler.swift */; };
 		26E7B81D292341F1001ECF1C /* S3Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E7B81C292341F1001ECF1C /* S3Downloader.swift */; };
@@ -60,7 +61,6 @@
 		968350EE285B39CC0068B903 /* ServiceRequestParamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */; };
 		968350EF285B39CC0068B903 /* LoginSvcDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BC285B39CC0068B903 /* LoginSvcDTO.swift */; };
 		968350F0285B39CC0068B903 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 968350BE285B39CC0068B903 /* Localizable.strings */; };
-		B4DD320AC27F74FA948CFF97 /* Pods_FlexSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E120EB56AD8817050F7E9F6C /* Pods_FlexSDK.framework */; };
 		C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D32B440D2C0040C802 /* CameraViewController.swift */; };
 		C8E029D62B440D560040C802 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D52B440D560040C802 /* UIUtilities.swift */; };
 /* End PBXBuildFile section */
@@ -69,6 +69,7 @@
 		266306D02897EF6000572937 /* NotiConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotiConstants.swift; sourceTree = "<group>"; };
 		26BDFB1F2893F7D30015BBB4 /* AssetsSchemeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsSchemeHandler.swift; sourceTree = "<group>"; };
 		26E7B81C292341F1001ECF1C /* S3Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Downloader.swift; sourceTree = "<group>"; };
+		95CAD35810E32026130D1C83 /* Pods_FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96835077285B385B0068B903 /* FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9683507A285B385B0068B903 /* FlexSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexSDK.h; sourceTree = "<group>"; };
 		96835082285B39CA0068B903 /* GoogleService-Info-myDesk_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-myDesk_dev.plist"; sourceTree = "<group>"; };
@@ -120,11 +121,10 @@
 		968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceRequestParamModel.swift; sourceTree = "<group>"; };
 		968350BC285B39CC0068B903 /* LoginSvcDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSvcDTO.swift; sourceTree = "<group>"; };
 		968350BF285B39CC0068B903 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
+		A7D124BF7FC23046B5666B1A /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		C8E029D32B440D2C0040C802 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C8E029D52B440D560040C802 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
-		E120EB56AD8817050F7E9F6C /* Pods_FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E585177A4CB3FCC24C7891DC /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
-		FD012B156D7943F02772E47C /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		F148D3DA0893FEC452C509FE /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,18 +132,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4DD320AC27F74FA948CFF97 /* Pods_FlexSDK.framework in Frameworks */,
+				171A6D6670DF9F7F620394E9 /* Pods_FlexSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A979574197CBA5A4D29AE51 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				95CAD35810E32026130D1C83 /* Pods_FlexSDK.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6B4FFEABBD3BFE5A8485CE38 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FD012B156D7943F02772E47C /* Pods-FlexSDK.debug.xcconfig */,
-				E585177A4CB3FCC24C7891DC /* Pods-FlexSDK.release.xcconfig */,
+				A7D124BF7FC23046B5666B1A /* Pods-FlexSDK.debug.xcconfig */,
+				F148D3DA0893FEC452C509FE /* Pods-FlexSDK.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -154,7 +162,7 @@
 				96835079285B385B0068B903 /* FlexSDK */,
 				96835078285B385B0068B903 /* Products */,
 				6B4FFEABBD3BFE5A8485CE38 /* Pods */,
-				A4A517C7513FEF6CF1319346 /* Frameworks */,
+				2A979574197CBA5A4D29AE51 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -308,14 +316,6 @@
 			path = ja.lproj;
 			sourceTree = "<group>";
 		};
-		A4A517C7513FEF6CF1319346 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				E120EB56AD8817050F7E9F6C /* Pods_FlexSDK.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -334,7 +334,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9683507E285B385B0068B903 /* Build configuration list for PBXNativeTarget "FlexSDK" */;
 			buildPhases = (
-				3E6EA047B6E1EB94DCBCF1A7 /* [CP] Check Pods Manifest.lock */,
+				B3896EAA3AD770CAC4D6AAC2 /* [CP] Check Pods Manifest.lock */,
 				96835072285B385B0068B903 /* Headers */,
 				96835073285B385B0068B903 /* Sources */,
 				96835074285B385B0068B903 /* Frameworks */,
@@ -414,7 +414,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3E6EA047B6E1EB94DCBCF1A7 /* [CP] Check Pods Manifest.lock */ = {
+		B3896EAA3AD770CAC4D6AAC2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -643,7 +643,7 @@
 		};
 		9683507F285B385B0068B903 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD012B156D7943F02772E47C /* Pods-FlexSDK.debug.xcconfig */;
+			baseConfigurationReference = A7D124BF7FC23046B5666B1A /* Pods-FlexSDK.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -677,7 +677,7 @@
 		};
 		96835080285B385B0068B903 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E585177A4CB3FCC24C7891DC /* Pods-FlexSDK.release.xcconfig */;
+			baseConfigurationReference = F148D3DA0893FEC452C509FE /* Pods-FlexSDK.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
