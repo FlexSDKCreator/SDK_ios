@@ -645,7 +645,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A7D124BF7FC23046B5666B1A /* Pods-FlexSDK.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -679,7 +678,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F148D3DA0893FEC452C509FE /* Pods-FlexSDK.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
