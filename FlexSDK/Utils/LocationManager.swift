@@ -21,11 +21,10 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
     
     private override init() {
         super.init()
-        
-        locationManager.delegate = self
     }
     
     func initModule(locationModule : LocationModule){
+        self.locationManager.delegate = self
         self.locationModule = locationModule
     }
     func deinitModule(){
