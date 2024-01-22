@@ -24,6 +24,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
     }
     
     func initModule(locationModule : LocationModule){
+        //init delegate
         self.locationManager.delegate = self
         self.locationModule = locationModule
     }
