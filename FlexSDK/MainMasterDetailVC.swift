@@ -9,6 +9,7 @@
 import UIKit
 import WebKit
 import ObjectMapper
+import FirebaseInstallations
 import FirebaseMessaging
 import SDWebImage
 import Network
@@ -1117,6 +1118,22 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         if let loginFn = callback?["function"] as? String {
                             let js = loginFn + "('" + (Messaging.messaging().fcmToken ?? "") + "')"
                             self.webView.evaluateJavaScript(js)
+                            Installations.installations().installationID { (installationID, error) in
+                                if let error = error {
+                                    print("Error fetching Firebase installation ID: \(error.localizedDescription)")
+                                    let js = loginFn + "('" + (Messaging.messaging().fcmToken ?? "") + "')"
+                                    self.webView.evaluateJavaScript(js)
+                                    return
+                                }
+                                guard let installationID = installationID else {
+                                    print("Firebase installation ID is nil")
+                                    let js = loginFn + "('" + (Messaging.messaging().fcmToken ?? "") + "')"
+                                    self.webView.evaluateJavaScript(js)
+                                    return
+                                }
+                                let js = loginFn + "('" + (Messaging.messaging().fcmToken ?? "") + "', '" + installationID + "')"
+                                self.webView.evaluateJavaScript(js)
+                            }
                         }
                     case "invitedpackageid":
                         if let inviteFn = callback?["function"] as? String {
