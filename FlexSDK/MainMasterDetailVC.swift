@@ -263,23 +263,23 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         profileImage.clipsToBounds = true
         //profileImage.sd_setImage(with: MainMasterDetailVC.getUserProfileImageURL(empSeq: String(BaseUserValue.EmpSeq)), placeholderImage:  #imageLiteral(resourceName: "test_icon_profile"), completed: nil)
         
-        if let imgUrl = Bundle.main.url(forResource: "loading-dot", withExtension: "gif"){
-            var imageData = Foundation.Data()
-            // Data object to fetch image data
-            do {
-                imageData = try Foundation.Data(contentsOf: imgUrl)
-                print(imageData)
-            } catch {
-                print("error")
-            }
-            
-            if let gifImage = UIImage.sd_image(withGIFData: imageData) {
-                loadingDot.animationImages = gifImage.images
-                loadingDot.animationDuration = gifImage.duration
-                loadingDot.animationRepeatCount = 0
-                loadingDot.image = gifImage.images?.last
-            }
-        }
+//        if let imgUrl = Bundle.main.url(forResource: "loading-dot", withExtension: "gif"){
+//            var imageData = Foundation.Data()
+//            // Data object to fetch image data
+//            do {
+//                imageData = try Foundation.Data(contentsOf: imgUrl)
+//                print(imageData)
+//            } catch {
+//                print("error")
+//            }
+//            
+//            if let gifImage = UIImage.sd_image(withGIFData: imageData) {
+//                loadingDot.animationImages = gifImage.images
+//                loadingDot.animationDuration = gifImage.duration
+//                loadingDot.animationRepeatCount = 0
+//                loadingDot.image = gifImage.images?.last
+//            }
+//        }
         //TokenHandler().saveTokenToDB()
         
         addKeyboardNotification()
