@@ -1116,8 +1116,6 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         }
                     case "loginnotitoken":
                         if let loginFn = callback?["function"] as? String {
-                            let js = loginFn + "('" + (Messaging.messaging().fcmToken ?? "") + "')"
-                            self.webView.evaluateJavaScript(js)
                             Installations.installations().installationID { (installationID, error) in
                                 if let error = error {
                                     print("Error fetching Firebase installation ID: \(error.localizedDescription)")
