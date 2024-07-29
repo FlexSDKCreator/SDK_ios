@@ -9,6 +9,7 @@ target 'FlexSDK' do
   pod 'Firebase'
   pod 'Firebase/Core'
   pod 'Firebase/DynamicLinks'
+  pod 'Firebase/Installations'
   pod 'Firebase/Messaging'
   pod 'ObjectMapper’
   pod 'SDWebImage'
