@@ -722,7 +722,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         
         loadingView.isHidden = false
-        loadingDot.startAnimating()
+//        loadingDot.startAnimating()
     }
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -745,7 +745,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     
     func removeWebViewLoading() {
         loadingView.isHidden = true
-        loadingDot.stopAnimating()
+//        loadingDot.stopAnimating()
         scenarioLoadTimer?.invalidate()
         scenarioLoadTimer = nil
     }
