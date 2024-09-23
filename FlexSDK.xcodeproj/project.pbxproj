@@ -60,6 +60,7 @@
 		968350EE285B39CC0068B903 /* ServiceRequestParamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */; };
 		968350EF285B39CC0068B903 /* LoginSvcDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BC285B39CC0068B903 /* LoginSvcDTO.swift */; };
 		968350F0285B39CC0068B903 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 968350BE285B39CC0068B903 /* Localizable.strings */; };
+		C82C54662CA1494A008B6752 /* BluetoothHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C54652CA1494A008B6752 /* BluetoothHelper.swift */; };
 		C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D32B440D2C0040C802 /* CameraViewController.swift */; };
 		C8E029D62B440D560040C802 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D52B440D560040C802 /* UIUtilities.swift */; };
 /* End PBXBuildFile section */
@@ -120,6 +121,7 @@
 		968350BC285B39CC0068B903 /* LoginSvcDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSvcDTO.swift; sourceTree = "<group>"; };
 		968350BF285B39CC0068B903 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
 		A7D124BF7FC23046B5666B1A /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		C82C54652CA1494A008B6752 /* BluetoothHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothHelper.swift; sourceTree = "<group>"; };
 		C8E029D32B440D2C0040C802 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C8E029D52B440D560040C802 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		F148D3DA0893FEC452C509FE /* Pods-FlexSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.release.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.release.xcconfig"; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				C8E029D52B440D560040C802 /* UIUtilities.swift */,
 				96835096285B39CA0068B903 /* YLWColorUtils.swift */,
 				96835097285B39CA0068B903 /* CommonServices.swift */,
+				C82C54652CA1494A008B6752 /* BluetoothHelper.swift */,
 				96835098285B39CA0068B903 /* LocationManager.swift */,
 				96835099285B39CA0068B903 /* LocationModule.swift */,
 				9683509A285B39CA0068B903 /* GPSModule.swift */,
@@ -441,6 +444,7 @@
 			files = (
 				968350D8285B39CC0068B903 /* Toast.swift in Sources */,
 				968350DA285B39CC0068B903 /* Data.swift in Sources */,
+				C82C54662CA1494A008B6752 /* BluetoothHelper.swift in Sources */,
 				968350E5285B39CC0068B903 /* ModuleMenuCollectionViewCell.swift in Sources */,
 				C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */,
 				968350DD285B39CC0068B903 /* AwsApiService.swift in Sources */,

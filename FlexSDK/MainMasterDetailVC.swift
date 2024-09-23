@@ -15,6 +15,7 @@ import SDWebImage
 import Network
 import AVFoundation
 import MLKitVision
+import CoreNFC
 
 enum Module: Int {
     case none = 5000, companity, attendence, board, contact
@@ -27,7 +28,243 @@ protocol MasterDetailActionDelegate {
     func closeMenuDrawer()
 }
 
-public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNavigationDelegate {
+public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, BluetoothResults, NFCNDEFReaderSessionDelegate {
+    
+    //START nfc, bt code
+    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: any Error) {
+        // Check the invalidation reason from the returned error.
+        if let readerError = error as? NFCReaderError {
+            if (readerError.code == .readerSessionInvalidationErrorUserCanceled) {
+                DispatchQueue.main.async {
+                    if let nfcCallbackFn = self.nfcCallbackFn {
+                        self.webView.evaluateJavaScript("\(nfcCallbackFn)('\("Canceled")')")
+                    }
+                }
+            } else if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead) {
+                print("Session Invalidated: \(error.localizedDescription)")
+            }
+        }
+        self.session = nil
+    }
+    
+    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
+        for message in messages
+        {
+            for record in message.records
+            {
+                if record.typeNameFormat == .nfcWellKnown
+                {
+                    let val = record.wellKnownTypeTextPayload()
+                    print(val)
+                    if let s = val.0,!s.isEmpty,let v = val.0
+                    {
+                        DispatchQueue.main.async {
+                            print("didDetectNDEFs: \(v)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /// - Tag: processingNDEFTag
+    func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
+        if tags.count > 1 {
+            // Restart polling in 500ms
+            let retryInterval = DispatchTimeInterval.milliseconds(500)
+            session.alertMessage = "More than 1 tag is detected, please remove all tags and try again."
+            DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
+                session.restartPolling()
+            })
+            return
+        }
+        
+        // Connect to the found tag and perform NDEF message reading
+        let tag = tags.first!
+        session.connect(to: tag, completionHandler: { (error: Error?) in
+            if nil != error {
+                let errMsg = "Unable to connect to tag."
+                session.alertMessage = errMsg
+                session.invalidate()
+                DispatchQueue.main.async {
+                    if let nfcCallbackFn = self.nfcCallbackFn {
+                        self.webView.evaluateJavaScript("\(nfcCallbackFn)('\(errMsg)')")
+                    }
+                }
+                return
+            }
+            
+            tag.queryNDEFStatus(completionHandler: { (ndefStatus: NFCNDEFStatus, capacity: Int, error: Error?) in
+                if .notSupported == ndefStatus {
+                    let errMsg = "Tag is not NDEF compliant"
+                    session.alertMessage = errMsg
+                    session.invalidate()
+                    DispatchQueue.main.async {
+                        if let nfcCallbackFn = self.nfcCallbackFn {
+                            self.webView.evaluateJavaScript("\(nfcCallbackFn)('\(errMsg)')")
+                        }
+                    }
+                    return
+                } else if nil != error {
+                    let errMsg = "Unable to query NDEF status of tag"
+                    session.alertMessage = errMsg
+                    session.invalidate()
+                    DispatchQueue.main.async {
+                        if let nfcCallbackFn = self.nfcCallbackFn {
+                            self.webView.evaluateJavaScript("\(nfcCallbackFn)('\(errMsg)')")
+                        }
+                    }
+                    return
+                }
+                
+                tag.readNDEF(completionHandler: { (message: NFCNDEFMessage?, error: Error?) in
+                    var statusMessage: String
+                    if nil != error || nil == message {
+                        statusMessage = error?.localizedDescription ?? "Fail to read NDEF from tag"
+                        DispatchQueue.main.async {
+                            if let nfcCallbackFn = self.nfcCallbackFn {
+                                self.webView.evaluateJavaScript("\(nfcCallbackFn)('\(statusMessage)')")
+                            }
+                        }
+                    } else {
+                        statusMessage = "Found 1 NDEF message"
+                        DispatchQueue.main.async {
+                            // Process detected NFCNDEFMessage objects.
+                            var arr = []
+                            for record in message!.records
+                            {
+                                //DispatchQueue.main.async {
+                                    switch record.typeNameFormat {
+                                    case .nfcWellKnown:
+                                        if let url = record.wellKnownTypeURIPayload() {
+                                            //print("didDetect nfcWellKnown: \(url.absoluteString)")
+                                            arr.append(url.absoluteString)
+                                        }
+                                    case .absoluteURI:
+                                        if let text = String(data: record.payload, encoding: .utf8) {
+                                            //print("didDetect absoluteURI: \(text)")
+                                            arr.append(text)
+                                        }
+                                    case .media:
+                                        if let type = String(data: record.type, encoding: .utf8) {
+                                            //print("didDetect media: \(type)")
+                                            arr.append("media: \(type)")
+                                            //simple parsing not possible as media type can be anything
+                                            /*if let payloadData = record.payload as? Foundation.Data {
+                                                if let payloadString = String(data: payloadData, encoding: .utf8) {
+                                                    print("Parsed payload string: \(payloadString)")
+                                                } else {
+                                                    print("Failed to parse payload as string.")
+                                                }
+                                            }*/
+                                        }
+                                    case .nfcExternal, .empty, .unknown, .unchanged:
+                                        fallthrough
+                                    @unknown default:
+                                        //print("didDetect fallthrough: \(record.typeNameFormat.rawValue.description)")
+                                        arr.append("unsupported: \(record.typeNameFormat.rawValue.description)")
+                                    }
+                                //}
+                            }
+                            print("\(arr.count) message content")
+                            if let nfcCallbackFn = self.nfcCallbackFn {
+                                if let jsonData = try? JSONSerialization.data(withJSONObject: arr, options: []),
+                                   let jsonString = String(data: jsonData, encoding: .utf8) {
+                                    self.webView.evaluateJavaScript("\(nfcCallbackFn)(null, \(jsonString))")
+                                }
+                            }
+                        }
+                    }
+                    session.alertMessage = statusMessage
+                    session.invalidate()
+                })
+            })
+        })
+    }
+    
+    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
+        
+    }
+    
+    func onSearchResult(interfaceId: String, callbackFn: String, error: String?, le: [String : String]) {
+        if (error != nil) {
+            sendBtError(interfaceId: interfaceId, interfaceFunc: callbackFn, error: error ?? "unknown error");
+        } else {
+            var deviceList: [[String: String]] = []
+            for (address, deviceName) in le {
+                var deviceInfo: [String: String] = [:]
+                deviceInfo["Address"] = address
+                deviceInfo["Name"] = deviceName
+                deviceList.append(deviceInfo)
+            }
+            
+            var deviceListString = "["
+
+            for (index, (address, deviceName)) in le.enumerated() {
+                // Create JSON object string manually, assuming `address` and `deviceName` are safe strings.
+                let deviceInfoString = """
+                {
+                    "Address": "\(address)",
+                    "Name": "\(deviceName)"
+                }
+                """
+                
+                deviceListString += deviceInfoString
+                
+                // Add a comma unless it's the last element
+                if index < le.count - 1 {
+                    deviceListString += ","
+                }
+            }
+
+            deviceListString += "]"
+            webView.evaluateJavaScript("\(callbackFn)('\(interfaceId)', null, \(deviceListString))")
+//            do {
+//                let jsonData = try JSONSerialization.data(withJSONObject: deviceList, options: .prettyPrinted)
+//                if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                    webView.evaluateJavaScript("\(callbackFn)('\(interfaceId)', null, '\(jsonString)')")
+//                }
+//            } catch {
+//                print("Failed to serialize JSON: \(error.localizedDescription)")
+//                webView.evaluateJavaScript("\(callbackFn)('\(interfaceId)', '\(error.localizedDescription)')")
+//            }
+        }
+    }
+    
+    func onResult(interfaceId: String, callbackFn: String, error: String?) {
+        if (error != nil) {
+            sendBtError(interfaceId: interfaceId, interfaceFunc: callbackFn, error: error ?? "unknown error");
+        } else {
+            webView.evaluateJavaScript("\(callbackFn)('\(interfaceId)', null, true)")
+        }
+    }
+    
+    func onMessage(interfaceId: String, callbackFn: String, data: String, uuid: String) {
+        let replacements: [String: String] = [
+            "\\": "\\\\", // Escape backslash
+            "'": "\\'",   // Escape single quote
+            "\"": "\\\"", // Escape double quote (if needed)
+            "\r": "\\r",  // Escape carriage return
+            "\n": "\\n",  // Escape new line
+            "\t": "\\t",  // Escape tab
+            "/": "\\/"    // Escape forward slash (for regex use cases)
+        ]
+        var escapedData = data;
+        
+        // Apply all replacements
+        for (target, replacement) in replacements {
+            escapedData = escapedData.replacingOccurrences(of: target, with: replacement)
+        }
+        //webView.loadUrl("javascript: " + callbackFn + "('"+ interfaceId + "', '"+ data + (uuid == null ? "')" : "', '" + uuid + "')"));
+        //let escapedData = data.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "'", with: "\\'")
+        webView.evaluateJavaScript("\(callbackFn)('\(interfaceId)', '\(escapedData)', '\(uuid)')")
+    }
+    
+    func sendBtError(interfaceId: String, interfaceFunc: String, error: String) {
+        let escapedError = error.replacingOccurrences(of: "'", with: "\\'")
+        webView.evaluateJavaScript("\(interfaceFunc)('\(interfaceId)', {'succeed' : false, 'message': '\(escapedError)'})")
+    }
+    //END nfc, bt code
     
     //MenuView with size constraints
     @IBOutlet weak var menuView: UIView!
@@ -86,6 +323,10 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     
     var _base: BaseFormClass?
     var cookies: [HTTPCookie] = [];
+    //nfc, bt code
+    var bluetoothHelperMap: [String : BluetoothHelper] = [:]
+    var session: NFCNDEFReaderSession?
+    var nfcCallbackFn: String?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -1151,6 +1392,98 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             }
                         }
                         break;
+                    case "getDeviceList":
+                        if let function = callback?["function"] as? String, let interfaceId = param?["interface"] as? String {
+                            var bluetoothHelper: BluetoothHelper
+                            if let existingHelper = bluetoothHelperMap[interfaceId] {
+                                bluetoothHelper = existingHelper
+                            } else {
+                                bluetoothHelper = BluetoothHelper(interfaceId: interfaceId, callbackFn: function, bluetoothResults: self)
+                                bluetoothHelperMap[interfaceId] = bluetoothHelper
+                            }
+                            bluetoothHelper.search(callbackFn: function)
+                        }
+                        
+                        //UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                        /*if let url = URL(string: "App-Prefs:root=Bluetooth") {
+                                    if UIApplication.shared.canOpenURL(url) {
+                                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                    }
+                                }*/
+                    case "connectToDevice":
+                        if let function = callback?["function"] as? String, let interfaceId = param?["interface"] as? String {
+                            if let deviceAddr = param?["address"] as? String {
+                                let receiveMessage = param?["receiveMessage"] as! String?
+                                var bluetoothHelper: BluetoothHelper
+                                if let existingHelper = bluetoothHelperMap[interfaceId] {
+                                    bluetoothHelper = existingHelper
+                                } else {
+                                    bluetoothHelper = BluetoothHelper(interfaceId: interfaceId, callbackFn: function, bluetoothResults: self)
+                                    bluetoothHelperMap[interfaceId] = bluetoothHelper
+                                }
+                                bluetoothHelper.connect(address: deviceAddr, callbackFn: function, receiveMessageFn: receiveMessage)
+                            } else {
+                                let errMsg = "device address missing";
+                                sendBtError(interfaceId: interfaceId, interfaceFunc: function, error: errMsg);
+                            }
+                        }
+                        //turnOnBluetooth()
+                    case "sendToDevice":
+                        if let function = callback?["function"] as? String, let interfaceId = param?["interface"] as? String {
+                            if let bluetoothHelper = bluetoothHelperMap[interfaceId] {
+                                if let data = param?["data"] as? String {
+                                    bluetoothHelper.send(value: data, callbackFn: function)
+                                } else {
+                                    sendBtError(interfaceId: interfaceId, interfaceFunc: function, error: "no data param")
+                                }
+                            } else {
+                                sendBtError(interfaceId: interfaceId, interfaceFunc: function, error: "connection hasn't been made")
+                            }
+                        }
+                        
+                        //UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                    case "disconnectBluetooth":
+                        if let function = callback?["function"] as? String, let interfaceId = param?["interface"] as? String {
+                            if let bluetoothHelper = bluetoothHelperMap[interfaceId] {
+                                bluetoothHelper.disconnect(callbackFn: function)
+                            } else {
+                                sendBtError(interfaceId: interfaceId, interfaceFunc: function, error: "connection hasn't been made")
+                            }
+                        }
+                    case "nfcScan":
+                        if let function = callback?["function"] as? String {
+                            guard NFCNDEFReaderSession.readingAvailable else {
+                                let error = "device doesn't support tag scanning"
+                                webView.evaluateJavaScript("\(function)({'succeed' : false, 'message': '\(error)'})")
+                                return
+                            }
+                            nfcCallbackFn = function
+                            session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
+                            session?.alertMessage = "Hold your iPhone near the nfc tag"
+                            session?.begin()
+                        }
+                    case "appShare":
+                        if let text = param?["text"] as? String {
+                            let activityViewController = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+                            activityViewController.completionWithItemsHandler = { (activity, success, items, error) in
+                                if success {
+                                    print("Sharing successful!")
+                                } else {
+                                    print("Sharing canceled!")
+                                }
+                            }
+                            // For iPads: Necessary to prevent crash by specifying the source of the popover
+                            /*if let popoverController = activityViewController.popoverPresentationController {
+                                popoverController.sourceView = sender // Button that triggers the share sheet
+                                popoverController.sourceRect = sender.bounds // Bounds of the button
+                            }*/
+                            self.present(activityViewController, animated: true, completion: nil)
+                        }
+                    case "closeApp":
+                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            exit(0)
+                        }
                         
                     default:
                         print(action)
