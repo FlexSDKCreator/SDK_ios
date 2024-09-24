@@ -31,7 +31,7 @@ protocol MasterDetailActionDelegate {
 public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, BluetoothResults, NFCNDEFReaderSessionDelegate {
     
     //START nfc, bt code
-    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: any Error) {
+    public func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: any Error) {
         // Check the invalidation reason from the returned error.
         if let readerError = error as? NFCReaderError {
             if (readerError.code == .readerSessionInvalidationErrorUserCanceled) {
@@ -47,7 +47,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         self.session = nil
     }
     
-    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
+    public func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
         for message in messages
         {
             for record in message.records
@@ -68,7 +68,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     }
     
     /// - Tag: processingNDEFTag
-    func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
+    public func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
         if tags.count > 1 {
             // Restart polling in 500ms
             let retryInterval = DispatchTimeInterval.milliseconds(500)
@@ -182,7 +182,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         })
     }
     
-    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
+    public func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
         
     }
     
