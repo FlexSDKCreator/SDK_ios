@@ -136,9 +136,16 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                                 //DispatchQueue.main.async {
                                     switch record.typeNameFormat {
                                     case .nfcWellKnown:
-                                        if let url = record.wellKnownTypeURIPayload() {
-                                            //print("didDetect nfcWellKnown: \(url.absoluteString)")
-                                            arr.append(url.absoluteString)
+                                        //if url/uri type data.
+                                        let uri = record.wellKnownTypeURIPayload()
+                                        if(uri != nil){
+                                            arr.append(uri!.absoluteString)
+                                        }
+                                        
+                                        //if text type data.
+                                        let (text, _) = record.wellKnownTypeTextPayload()
+                                        if(text != nil){
+                                            arr.append(text!)
                                         }
                                     case .absoluteURI:
                                         if let text = String(data: record.payload, encoding: .utf8) {
