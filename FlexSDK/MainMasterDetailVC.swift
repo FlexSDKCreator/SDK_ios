@@ -385,9 +385,9 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         tappableTapGesture.delegate = self
         tappableView.addGestureRecognizer(tappableTapGesture)
         
-        let panGestureRec = UIPanGestureRecognizer(target: self, action: #selector(handleDummyViewPan(_:)))
-        swipeView.addGestureRecognizer(panGestureRec)
-        view.bringSubviewToFront(swipeView)
+//        let panGestureRec = UIPanGestureRecognizer(target: self, action: #selector(handleDummyViewPan(_:)))
+//        swipeView.addGestureRecognizer(panGestureRec)
+//        view.bringSubviewToFront(swipeView)
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.processPool = WKProcessPool();
         let webPreference = WKPreferences()
@@ -399,6 +399,16 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         mainContainerView.insertSubview(webView, at: 1)
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.isHidden = false
+        // Add edge swipe gesture recognizer
+        let edgeSwipeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        edgeSwipeGesture.edges = .left // Detect left edge swipes
+        edgeSwipeGesture.delegate = self
+        webView.addGestureRecognizer(edgeSwipeGesture)
+        /*if #available(iOS 16.4, *) {
+            webView.isInspectable = true
+        } else {
+            // Fallback on earlier versions
+        }*/
         let wvTopConstraint = NSLayoutConstraint(item: webView!, attribute: .top, relatedBy: .equal, toItem: detailContainerView, attribute: .top, multiplier: 1, constant: 0)
         let wvBottomConstraint = NSLayoutConstraint(item: webView!, attribute: .bottom, relatedBy: .equal, toItem: detailContainerView, attribute: .bottom, multiplier: 1, constant: 0)
         let wvLeadingConstraint = NSLayoutConstraint(item: webView!, attribute: .leading, relatedBy: .equal, toItem: detailContainerView, attribute: .leading, multiplier: 1, constant: 0)
@@ -533,7 +543,55 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         
         addKeyboardNotification()
     }
-    
+    var startLocation: CGPoint?
+    @objc func handleSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        let totalWidth = view.bounds.size.width
+        let location = gesture.location(in: view)
+        
+        switch gesture.state {
+        case .began:
+            startLocation = location
+            print("Swipe began at: \(location)")
+            webView.evaluateJavaScript("onSwipeBegin();") { (result, error) in
+                if let err = error {
+                    print("Error biginSwipe: \(err.localizedDescription)")
+                }
+            }
+        case .changed:
+            let startX = startLocation?.x
+            let locationX = location.x
+            let swipeDistance = locationX - (startX ?? 0)
+            let percent = swipeDistance * 100.0 / totalWidth
+            webView.evaluateJavaScript("setSwipeTranslate(\(percent));"){ (result, error) in
+                if let error = error {
+                    print("Error translateX: \(error.localizedDescription)")
+                }
+            }
+        case .ended:
+            guard let start = startLocation else { return }
+            
+            let swipeDistance = location.x - start.x
+            print("Swipe distance: \(swipeDistance)")
+            
+            let percent = swipeDistance * 100.0 / totalWidth
+            webView.evaluateJavaScript("onSwipeEnded(\(percent));") { (result, error) in
+                if let error = error {
+                    print("Error executing JavaScript: \(error.localizedDescription)")
+                } else {
+                    print("Back navigation triggered successfully.")
+                }
+            }
+        case .cancelled:
+            print("Swipe cancelled at: \(location)")
+            webView.evaluateJavaScript("onSwipeEnded();")
+        case .failed:
+            print("Swipe failed at: \(location)")
+            webView.evaluateJavaScript("onSwipeEnded();")
+        default:
+            break
+        }
+    }
+
     fileprivate func loadWebvviewUrl(_ notificationPayload: [AnyHashable : Any]?) -> Bool {
         if let actionJson = notificationPayload?[NotiConstants.actionJson], let actionBody = actionJson as? String, let action = try? JSONSerialization.jsonObject(with: actionBody.data(using: .utf8)!, options: []) as? [String:String] {
             if let linkParm = action["linkParam"] {
@@ -1706,7 +1764,7 @@ extension MainMasterDetailVC: UICollectionViewDataSource, UICollectionViewDelega
 
 extension MainMasterDetailVC: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return touch.view == gestureRecognizer.view
+        return true//touch.view == gestureRecognizer.view
     }
 }
 
