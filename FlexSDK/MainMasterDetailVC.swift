@@ -28,6 +28,14 @@ protocol MasterDetailActionDelegate {
     func closeMenuDrawer()
 }
 
+public protocol CustomActionDelegate {
+    func onCustomAction(customAction: CustomAction?, passResultToWeb: PassResultToWeb?)
+}
+
+public protocol PassResultToWeb {
+    func onResult(error: String?, result: String?)
+}
+
 public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, BluetoothResults, NFCNDEFReaderSessionDelegate {
     
     //START nfc, bt code
@@ -334,6 +342,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var bluetoothHelperMap: [String : BluetoothHelper] = [:]
     var session: NFCNDEFReaderSession?
     var nfcCallbackFn: String?
+    var customActionDelegate: CustomActionDelegate?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -1551,12 +1560,73 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         }
                         
                     default:
+                        let appDoParam = CustomAction(action: action)
+
+                        if let param = param {
+                            for (key, value) in param {
+                                appDoParam.param[key] = value
+                            }
+                        }
+                        
+                        if let callback = callback {
+                            
+                            let passresult: PassResultToWeb = {
+                                struct PassResult: PassResultToWeb {
+                                    var callback: [String:Any]
+                                    var webview: WKWebView
+                                    var action: String
+                                    init(callback: [String:Any], webview: WKWebView, action: String) {
+                                        self.callback = callback
+                                        self.webview = webview
+                                        self.action = action
+                                    }
+                                    func onResult(error: String?, result: String?) {
+                                        do {
+                                            if let callbackFunc = callback["function"] as? String,
+                                               let runFunction = callback["runFunction"] as? String {
+                                                let runJS: String
+                                                if let error = error {
+                                                    runJS = "\(callbackFunc)('\(runFunction)', '\(error)', \(result == nil ? "null" : "'\(result!)'"))"
+                                                } else {
+                                                    runJS = "\(callbackFunc)('\(runFunction)', null, \(result == nil ? "null" : "'\(result!)'"))"
+                                                }
+                                                webview.evaluateJavaScript(runJS) { (result, error) in
+                                                    if let err = error {
+                                                        print("Error CustomAction \(action): \(err.localizedDescription)")
+                                                    }
+                                                }
+                                            }
+                                        } catch {
+                                            fatalError("Error constructing JavaScript call: \(error)")
+                                        }
+                                    }
+                                }
+                                var passer = PassResult(callback: callback, webview: webView, action: action)
+                                return passer
+                            }()
+                            
+                            customActionDelegate?.onCustomAction(customAction: appDoParam, passResultToWeb: passresult)
+                        }
                         print(action)
                     }
                 }
             }
         }
     }
+    
+    public func setCustomActionDelegate(delegate: CustomActionDelegate) {
+        self.customActionDelegate = delegate
+    }
+    
+    public func initCustomAuth(url: String, params: String) {
+        let runJS: String = "initCustomAuth('\(url)', '\(params)')"
+        self.webView.evaluateJavaScript(runJS) { (result, error) in
+            if let err = error {
+                print("Error initCustomAuth \(url): \(err.localizedDescription)")
+            }
+        }
+    }
+    
     func webFileDownload(id:String, serviceURL:String, bis:String, filePath:String,callback:String){
         //        https:///webdevmobile.ksystemace.com/FlexSvc/api/FileDownload?SessionId=test&ServerId=bpodev_bis&FileFullPath=C:\temp\test.pdf
         //create url use FileServiceURL :: BaseUserValue.SERVERIP_VALUE
