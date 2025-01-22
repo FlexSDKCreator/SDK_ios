@@ -60,6 +60,7 @@
 		968350EE285B39CC0068B903 /* ServiceRequestParamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */; };
 		968350EF285B39CC0068B903 /* LoginSvcDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968350BC285B39CC0068B903 /* LoginSvcDTO.swift */; };
 		968350F0285B39CC0068B903 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 968350BE285B39CC0068B903 /* Localizable.strings */; };
+		B53D3F782D2CFCE200BFB0C6 /* CustomAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53D3F772D2CFCE200BFB0C6 /* CustomAction.swift */; };
 		C82C54662CA1494A008B6752 /* BluetoothHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C54652CA1494A008B6752 /* BluetoothHelper.swift */; };
 		C8E029D42B440D2C0040C802 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D32B440D2C0040C802 /* CameraViewController.swift */; };
 		C8E029D62B440D560040C802 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E029D52B440D560040C802 /* UIUtilities.swift */; };
@@ -121,6 +122,7 @@
 		968350BC285B39CC0068B903 /* LoginSvcDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSvcDTO.swift; sourceTree = "<group>"; };
 		968350BF285B39CC0068B903 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
 		A7D124BF7FC23046B5666B1A /* Pods-FlexSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexSDK.debug.xcconfig"; path = "Target Support Files/Pods-FlexSDK/Pods-FlexSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		B53D3F772D2CFCE200BFB0C6 /* CustomAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAction.swift; sourceTree = "<group>"; };
 		C82C54652CA1494A008B6752 /* BluetoothHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothHelper.swift; sourceTree = "<group>"; };
 		C8E029D32B440D2C0040C802 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C8E029D52B440D560040C802 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 		968350B9285B39CC0068B903 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B53D3F772D2CFCE200BFB0C6 /* CustomAction.swift */,
 				968350BA285B39CC0068B903 /* MenuModule.swift */,
 				968350BB285B39CC0068B903 /* ServiceRequestParamModel.swift */,
 				968350BC285B39CC0068B903 /* LoginSvcDTO.swift */,
@@ -454,6 +457,7 @@
 				968350E8285B39CC0068B903 /* UIColorExtension.swift in Sources */,
 				968350D7285B39CC0068B903 /* FirebaseUtils.swift in Sources */,
 				968350D2285B39CC0068B903 /* YLWColorUtils.swift in Sources */,
+				B53D3F782D2CFCE200BFB0C6 /* CustomAction.swift in Sources */,
 				968350DE285B39CC0068B903 /* WebConst.swift in Sources */,
 				968350CE285B39CC0068B903 /* BaseUtil.swift in Sources */,
 				968350ED285B39CC0068B903 /* MenuModule.swift in Sources */,
