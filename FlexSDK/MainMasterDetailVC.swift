@@ -1618,11 +1618,11 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         self.customActionDelegate = delegate
     }
     
-    public func initCustomAuth(url: String, params: String) {
-        let runJS: String = "initCustomAuth('\(url)', '\(params)')"
+    public func initYlwAuth(authToken: String, appID: String) {
+        let runJS: String = "initYlwAuth('\(authToken)', '\(appID)')"
         self.webView.evaluateJavaScript(runJS) { (result, error) in
             if let err = error {
-                print("Error initCustomAuth \(url): \(err.localizedDescription)")
+                print("Error initYlwAuth \(url): \(err.localizedDescription)")
             }
         }
     }
