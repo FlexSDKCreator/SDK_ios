@@ -343,6 +343,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var session: NFCNDEFReaderSession?
     var nfcCallbackFn: String?
     var customActionDelegate: CustomActionDelegate?
+    var erpAuthToken: String?
+    var erpAppID: String?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -1558,7 +1560,10 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             exit(0)
                         }
-                        
+                    case "initLogin":
+                        if let erpAuthToken = self.erpAuthToken, let erpAppID = self.erpAppID {
+                            initYlwAuth(authToken: erpAuthToken, appID: erpAppID)
+                        }
                     default:
                         let appDoParam = CustomAction(action: action)
 
@@ -1620,10 +1625,20 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     
     public func initYlwAuth(authToken: String, appID: String) {
         let runJS: String = "initYlwAuth('\(authToken)', '\(appID)')"
-        self.webView.evaluateJavaScript(runJS) { (result, error) in
-            if let err = error {
-                print("Error initYlwAuth \(url): \(err.localizedDescription)")
+        if let webView = self.webView {
+            webView.evaluateJavaScript(runJS) { [self] (result, error) in
+                if let err = error {
+                    print("Error initYlwAuth \(appID): \(err.localizedDescription)")
+                    self.erpAuthToken = authToken
+                    self.erpAppID = appID
+                } else {
+                    self.erpAuthToken = nil
+                    self.erpAppID = nil
+                }
             }
+        } else {
+            self.erpAuthToken = authToken
+            self.erpAppID = appID
         }
     }
     
