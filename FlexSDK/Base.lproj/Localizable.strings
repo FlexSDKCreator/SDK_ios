@@ -630,3 +630,13 @@
 "samePhone" = " have same phone numbers. Please contact your administrator.";
 "AccuracyRequired" = "This app needs accurate location";
 "LocationServiceOff" = "Please turn on Location Services in Settings > Privacy";
+
+//for NFC
+"NFCScanMsg" = "Hold your iPhone near the nfc tag";
+"NFCFoundMsg" = "Found 1 NDEF message";
+"NFCDeviceErrMsg" = "device doesn't support tag scanning";
+"NFCStatusErrMsg" = "Unable to query NDEF status of tag";
+"NFCConnErrMsg" = "Unable to connect to tag.";
+"NFCCompErrMsg" = "Tag is not NDEF compliant";
+"NFCReadFailMsg" = "Fail to read NDEF from tag";
+"NFCMultiReadMsg" = "More than 1 tag is detected, please remove all tags and try again.";
