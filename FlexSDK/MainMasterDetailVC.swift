@@ -72,7 +72,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         if tags.count > 1 {
             // Restart polling in 500ms
             let retryInterval = DispatchTimeInterval.milliseconds(500)
-            session.alertMessage = "More than 1 tag is detected, please remove all tags and try again."
+            session.alertMessage = NSLocalizedString("NFCMultiReadMsg", comment: "More than 1 tag is detected, please remove all tags and try again.")
             DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
                 session.restartPolling()
             })
@@ -83,7 +83,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         let tag = tags.first!
         session.connect(to: tag, completionHandler: { (error: Error?) in
             if nil != error {
-                let errMsg = "Unable to connect to tag."
+                let errMsg = NSLocalizedString("NFCConnErrMsg", comment: "Unable to connect to tag.")
                 session.alertMessage = errMsg
                 session.invalidate()
                 DispatchQueue.main.async {
@@ -96,7 +96,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             
             tag.queryNDEFStatus(completionHandler: { (ndefStatus: NFCNDEFStatus, capacity: Int, error: Error?) in
                 if .notSupported == ndefStatus {
-                    let errMsg = "Tag is not NDEF compliant"
+                    let errMsg = NSLocalizedString("NFCCompErrMsg", comment: "Tag is not NDEF compliant")
                     session.alertMessage = errMsg
                     session.invalidate()
                     DispatchQueue.main.async {
@@ -106,7 +106,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     }
                     return
                 } else if nil != error {
-                    let errMsg = "Unable to query NDEF status of tag"
+                    let errMsg = NSLocalizedString("NFCStatusErrMsg", comment: "Unable to query NDEF status of tag")
                     session.alertMessage = errMsg
                     session.invalidate()
                     DispatchQueue.main.async {
@@ -120,14 +120,14 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                 tag.readNDEF(completionHandler: { (message: NFCNDEFMessage?, error: Error?) in
                     var statusMessage: String
                     if nil != error || nil == message {
-                        statusMessage = error?.localizedDescription ?? "Fail to read NDEF from tag"
+                        statusMessage = error?.localizedDescription ?? NSLocalizedString("NFCReadFailMsg", comment: "Fail to read NDEF from tag")
                         DispatchQueue.main.async {
                             if let nfcCallbackFn = self.nfcCallbackFn {
                                 self.webView.evaluateJavaScript("\(nfcCallbackFn)('\(statusMessage)')")
                             }
                         }
                     } else {
-                        statusMessage = "Found 1 NDEF message"
+                        statusMessage = NSLocalizedString("NFCFoundMsg", comment: "Found 1 NDEF message")
                         DispatchQueue.main.async {
                             // Process detected NFCNDEFMessage objects.
                             var arr = []
@@ -404,11 +404,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         edgeSwipeGesture.edges = .left // Detect left edge swipes
         edgeSwipeGesture.delegate = self
         webView.addGestureRecognizer(edgeSwipeGesture)
-        /*if #available(iOS 16.4, *) {
+        
+        #if !RELEASE
+        if #available(iOS 16.4, *) {
             webView.isInspectable = true
-        } else {
-            // Fallback on earlier versions
-        }*/
+        }
+        #endif
+        
         let wvTopConstraint = NSLayoutConstraint(item: webView!, attribute: .top, relatedBy: .equal, toItem: detailContainerView, attribute: .top, multiplier: 1, constant: 0)
         let wvBottomConstraint = NSLayoutConstraint(item: webView!, attribute: .bottom, relatedBy: .equal, toItem: detailContainerView, attribute: .bottom, multiplier: 1, constant: 0)
         let wvLeadingConstraint = NSLayoutConstraint(item: webView!, attribute: .leading, relatedBy: .equal, toItem: detailContainerView, attribute: .leading, multiplier: 1, constant: 0)
@@ -1518,13 +1520,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     case "nfcScan":
                         if let function = callback?["function"] as? String {
                             guard NFCNDEFReaderSession.readingAvailable else {
-                                let error = "device doesn't support tag scanning"
+                                let error = NSLocalizedString("NFCDeviceErrMsg", comment: "device doesn't support tag scanning")
                                 webView.evaluateJavaScript("\(function)({'succeed' : false, 'message': '\(error)'})")
                                 return
                             }
                             nfcCallbackFn = function
                             session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
-                            session?.alertMessage = "Hold your iPhone near the nfc tag"
+                            session?.alertMessage = NSLocalizedString("NFCScanMsg", comment: "Hold your iPhone near the nfc tag")
                             session?.begin()
                         }
                     case "appShare":

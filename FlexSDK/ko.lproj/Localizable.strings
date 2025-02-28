@@ -633,3 +633,13 @@
 "samePhone" = " have same phone numbers. Please contact your administrator.";
 "AccuracyRequired" = "사용자의 정확한 위치가 필요합니다. ";
 "LocationServiceOff" = "Settings > Privacy 에서 Location Services 를 켜주세요.";
+
+//for NFC
+"NFCScanMsg" = "기기를 태그에 가까이 대주세요.";
+"NFCFoundMsg" = "스캔이 완료되었습니다.";
+"NFCDeviceErrMsg" = "이 기기는 스캔이 불가능합니다.";
+"NFCStatusErrMsg" = "태그의 상태를 확인할 수 없습니다.";
+"NFCConnErrMsg" = "태그에 연결할 수 없습니다.";
+"NFCCompErrMsg" = "태그가 정상적으로 동작하지 않습니다.";
+"NFCReadFailMsg" = "태그 정보를 읽을 수 없습니다.";
+"NFCMultiReadMsg" = "1개 이상의 태그가 인식되었습니다. 다시 시도해주세요.";
