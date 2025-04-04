@@ -8,11 +8,11 @@ public class CustomAction {
         self.action = action
     }
     
-    func getAction() -> String {
+    public func getAction() -> String {
         return action
     }
     
-    func getParam() -> [String: Any] {
+    public func getParam() -> [String: Any] {
         return param
     }
 }

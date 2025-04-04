@@ -13,14 +13,6 @@
 		26E7B81D292341F1001ECF1C /* S3Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E7B81C292341F1001ECF1C /* S3Downloader.swift */; };
 		9683507B285B385B0068B903 /* FlexSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 9683507A285B385B0068B903 /* FlexSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		968350C0285B39CC0068B903 /* GoogleService-Info-myDesk_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96835082285B39CA0068B903 /* GoogleService-Info-myDesk_dev.plist */; };
-		968350C1285B39CC0068B903 /* file_upload.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96835084285B39CA0068B903 /* file_upload.gif */; };
-		968350C3285B39CC0068B903 /* icon-PW-Lock.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96835086285B39CA0068B903 /* icon-PW-Lock.gif */; };
-		968350C4285B39CC0068B903 /* icon-Pattern-Lock.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96835087285B39CA0068B903 /* icon-Pattern-Lock.gif */; };
-		968350C5285B39CC0068B903 /* icon-FingerScan-Lock.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96835088285B39CA0068B903 /* icon-FingerScan-Lock.gif */; };
-		968350C6285B39CC0068B903 /* Loading2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96835089285B39CA0068B903 /* Loading2.gif */; };
-		968350C7285B39CC0068B903 /* file_download.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9683508A285B39CA0068B903 /* file_download.gif */; };
-		968350C8285B39CC0068B903 /* icon_demo_smile.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9683508B285B39CA0068B903 /* icon_demo_smile.gif */; };
-		968350C9285B39CC0068B903 /* icon_settings-white.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9683508C285B39CA0068B903 /* icon_settings-white.gif */; };
 		968350CA285B39CC0068B903 /* GoogleService-Info-EverWork.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9683508D285B39CA0068B903 /* GoogleService-Info-EverWork.plist */; };
 		968350CB285B39CC0068B903 /* GoogleService-Info-myDesk.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9683508E285B39CA0068B903 /* GoogleService-Info-myDesk.plist */; };
 		968350CC285B39CC0068B903 /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96835090285B39CA0068B903 /* StringUtils.swift */; };
@@ -74,14 +66,6 @@
 		96835077285B385B0068B903 /* FlexSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9683507A285B385B0068B903 /* FlexSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexSDK.h; sourceTree = "<group>"; };
 		96835082285B39CA0068B903 /* GoogleService-Info-myDesk_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-myDesk_dev.plist"; sourceTree = "<group>"; };
-		96835084285B39CA0068B903 /* file_upload.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = file_upload.gif; sourceTree = "<group>"; };
-		96835086285B39CA0068B903 /* icon-PW-Lock.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "icon-PW-Lock.gif"; sourceTree = "<group>"; };
-		96835087285B39CA0068B903 /* icon-Pattern-Lock.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "icon-Pattern-Lock.gif"; sourceTree = "<group>"; };
-		96835088285B39CA0068B903 /* icon-FingerScan-Lock.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "icon-FingerScan-Lock.gif"; sourceTree = "<group>"; };
-		96835089285B39CA0068B903 /* Loading2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Loading2.gif; sourceTree = "<group>"; };
-		9683508A285B39CA0068B903 /* file_download.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = file_download.gif; sourceTree = "<group>"; };
-		9683508B285B39CA0068B903 /* icon_demo_smile.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = icon_demo_smile.gif; sourceTree = "<group>"; };
-		9683508C285B39CA0068B903 /* icon_settings-white.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "icon_settings-white.gif"; sourceTree = "<group>"; };
 		9683508D285B39CA0068B903 /* GoogleService-Info-EverWork.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-EverWork.plist"; sourceTree = "<group>"; };
 		9683508E285B39CA0068B903 /* GoogleService-Info-myDesk.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-myDesk.plist"; sourceTree = "<group>"; };
 		96835090285B39CA0068B903 /* StringUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringUtils.swift; sourceTree = "<group>"; };
@@ -201,26 +185,10 @@
 			isa = PBXGroup;
 			children = (
 				96835082285B39CA0068B903 /* GoogleService-Info-myDesk_dev.plist */,
-				96835083285B39CA0068B903 /* Gifs */,
 				9683508D285B39CA0068B903 /* GoogleService-Info-EverWork.plist */,
 				9683508E285B39CA0068B903 /* GoogleService-Info-myDesk.plist */,
 			);
 			path = SupportingFiles;
-			sourceTree = "<group>";
-		};
-		96835083285B39CA0068B903 /* Gifs */ = {
-			isa = PBXGroup;
-			children = (
-				96835084285B39CA0068B903 /* file_upload.gif */,
-				96835086285B39CA0068B903 /* icon-PW-Lock.gif */,
-				96835087285B39CA0068B903 /* icon-Pattern-Lock.gif */,
-				96835088285B39CA0068B903 /* icon-FingerScan-Lock.gif */,
-				96835089285B39CA0068B903 /* Loading2.gif */,
-				9683508A285B39CA0068B903 /* file_download.gif */,
-				9683508B285B39CA0068B903 /* icon_demo_smile.gif */,
-				9683508C285B39CA0068B903 /* icon_settings-white.gif */,
-			);
-			path = Gifs;
 			sourceTree = "<group>";
 		};
 		9683508F285B39CA0068B903 /* Utils */ = {
@@ -392,24 +360,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				968350C6285B39CC0068B903 /* Loading2.gif in Resources */,
 				968350E0285B39CC0068B903 /* InfoPlist.strings in Resources */,
-				968350C8285B39CC0068B903 /* icon_demo_smile.gif in Resources */,
 				968350E4285B39CC0068B903 /* FlexSDK.storyboard in Resources */,
-				968350C5285B39CC0068B903 /* icon-FingerScan-Lock.gif in Resources */,
-				968350C4285B39CC0068B903 /* icon-Pattern-Lock.gif in Resources */,
-				968350C9285B39CC0068B903 /* icon_settings-white.gif in Resources */,
 				968350E2285B39CC0068B903 /* Images.xcassets in Resources */,
 				968350CA285B39CC0068B903 /* GoogleService-Info-EverWork.plist in Resources */,
-				968350C7285B39CC0068B903 /* file_download.gif in Resources */,
 				968350C0285B39CC0068B903 /* GoogleService-Info-myDesk_dev.plist in Resources */,
 				968350DF285B39CC0068B903 /* Localizable.strings in Resources */,
-				968350C1285B39CC0068B903 /* file_upload.gif in Resources */,
 				968350E3285B39CC0068B903 /* Localizable.strings in Resources */,
 				968350CB285B39CC0068B903 /* GoogleService-Info-myDesk.plist in Resources */,
 				968350F0285B39CC0068B903 /* Localizable.strings in Resources */,
 				968350E6285B39CC0068B903 /* ModuleMenuCollectionViewCell.xib in Resources */,
-				968350C3285B39CC0068B903 /* icon-PW-Lock.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
