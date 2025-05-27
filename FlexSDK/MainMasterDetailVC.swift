@@ -16,6 +16,8 @@ import Network
 import AVFoundation
 import MLKitVision
 import CoreNFC
+import UniformTypeIdentifiers
+import Photos
 
 enum Module: Int {
     case none = 5000, companity, attendence, board, contact
@@ -37,6 +39,17 @@ public protocol PassResultToWeb {
 }
 
 public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, BluetoothResults, NFCNDEFReaderSessionDelegate {
+    
+    struct FileSession {
+        let url: URL
+        let handle: FileHandle
+        let isScoped: Bool
+        let dir: URL
+    }
+    private var fileSessions = [String:FileSession]()
+    private var imageData = [String:FileSession]()
+    private var pickerDelegateKey: UInt8 = 0
+    public var activePickers = [String: UIDocumentPickerViewController]()
     
     //START nfc, bt code
     public func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: any Error) {
@@ -345,6 +358,9 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var customActionDelegate: CustomActionDelegate?
     var erpAuthToken: String?
     var erpAppID: String?
+    var flexAppID: String?
+    var pendingCompletion: (([URL]?) -> Void)?
+    var limitsNavigationsToAppBoundDomains: Bool?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -400,6 +416,9 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
 //        swipeView.addGestureRecognizer(panGestureRec)
 //        view.bringSubviewToFront(swipeView)
         let webConfiguration = WKWebViewConfiguration()
+        if let limit = limitsNavigationsToAppBoundDomains {
+            webConfiguration.limitsNavigationsToAppBoundDomains = limit;
+        }
         webConfiguration.processPool = WKProcessPool();
         let webPreference = WKPreferences()
         webPreference.javaScriptEnabled = true
@@ -488,7 +507,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         NotificationCenter.default.addObserver(self,selector: #selector(notiDidReceive), name: NSNotification.Name(rawValue: NotiConstants.notificationpayload), object: nil)
         let notificationPayload = NotiConstants.sharedInstance.userDefaults.object(forKey: NotiConstants.notificationpayload) as? NSDictionary
         NotiConstants.sharedInstance.userDefaults.removeObject(forKey: NotiConstants.notificationpayload)
-        if !loadWebvviewUrl(notificationPayload as? [AnyHashable : Any]), let myURL = URL(string: "https://app.flextudio.com/") {
+        if !loadWebvviewUrl(notificationPayload as? [AnyHashable : Any]),
+        let myURL = URL(string: "https://\((flexAppID.map { "\($0).app" }) ?? "app").flextudio.com/") {
             let myRequest = URLRequest(url: myURL)
             webView.load(myRequest)
         }
@@ -1411,7 +1431,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             closeMenuDrawer()
                         }
                     case "clearbadge":
-                        UIApplication.shared.applicationIconBadgeNumber = 0
+                        if let timestamp = param?["timestamp"] as? Int, let unReadCount = param?["unReadCount"] as? Int {
+                            UIApplication.shared.applicationIconBadgeNumber = unReadCount
+                            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["\(timestamp)"])
+                        } else {
+                            UIApplication.shared.applicationIconBadgeNumber = 0
+                            UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+                        }
                     case "closeloading":
                         removeWebViewLoading()
                         if let closefunction = callback?["function"] as? String {
@@ -1618,7 +1644,230 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     }
                 }
             }
+        } else if let messageObject = message.body as? [String:Any] {
+            let param = messageObject["param"] as? [String:Any]
+            if let action = messageObject["action"] as? String {
+                switch action {
+                case "initSave":
+                    if let saveID = param?["saveID"] as? String, let fileName = param?["fileName"] as? String {
+                        self.destinationForFile(filename: fileName, saveID: saveID)
+                    }
+                case "fileChunk":
+                    if let saveID = param?["saveID"] as? String, let b64 = param?["b64"] as? String {
+                        if let fileSession = fileSessions[saveID], let chunk = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
+                            fileSession.handle.seekToEndOfFile()
+                            fileSession.handle.write(chunk)
+                        } else if let fileData = imageData[saveID], let chunk = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
+                            fileData.handle.seekToEndOfFile()
+                            fileData.handle.write(chunk)
+                        }
+                    }
+                case "fileComplete":
+                    if let saveID = param?["saveID"] as? String, let fileName = param?["fileName"] as? String {
+                        if let fileSession = fileSessions[saveID] {
+                            fileSessions.removeValue(forKey: saveID)
+                            fileSession.handle.closeFile()
+                            if fileSession.isScoped {
+                                fileSession.dir.stopAccessingSecurityScopedResource()
+                            } else {
+                                fileNamePicker(fileSession, saveID)
+                            }
+                        } else if let fileData = imageData[saveID] {
+                            imageData.removeValue(forKey: saveID)
+                            fileData.handle.closeFile()
+                            PHPhotoLibrary.shared().performChanges({
+                                let ext = (fileName as NSString).pathExtension.lowercased()
+                                let type = UTType(filenameExtension: ext)
+                                if let ut = type, ut.conforms(to: .image) {
+                                    PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileData.url)
+                                } else {
+                                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileData.url)
+                                }
+                            }) { success, error in
+                                DispatchQueue.main.async {
+                                    if success {
+                                        print("Imported into Photos!")
+                                        self.webView.evaluateJavaScript("showFileToast('\(fileName)', true)")
+                                        do {
+                                            try FileManager.default.removeItem(at: fileData.url)
+                                            try FileManager.default.removeItem(at: fileData.dir)
+                                        } catch { print("Couldn't delete temp:", error) }
+                                    } else {
+                                        print("Import failed:", error!)
+                                        self.fileNamePicker(fileData, saveID)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                case "download":
+                    if let url = param?["url"] as? String, let fileName = param?["fileName"] as? String {
+                        downloadUrl(url: url, filename: fileName)
+                    }
+                default:
+                    break
+                }
+            }
         }
+    }
+    
+    func destinationForFile(filename: String, saveID: String) {
+      let ext = (filename as NSString).pathExtension.lowercased()
+      guard let type = UTType(filenameExtension: ext) else {
+          self.saveToTemp(filename: filename, saveID: saveID, isImg: false)
+          //pickFolder(saveID: saveID, fileName: filename)
+          return
+      }
+      if (type.conforms(to: .image) || type.conforms(to: .movie) || type.conforms(to: .video)) {
+          ensurePhotoLibraryAccess { granted in
+            if granted {
+                self.saveToTemp(filename: filename, saveID: saveID, isImg: true)
+            } else {
+                self.saveToTemp(filename: filename, saveID: saveID, isImg: false)
+                //self.webView.evaluateJavaScript("onSaveCancel('\(saveID)')", completionHandler: nil)
+            }
+          }
+      } else {
+          self.saveToTemp(filename: filename, saveID: saveID, isImg: false)
+      }
+    }
+    
+    func ensurePhotoLibraryAccess(completion: @escaping (Bool) -> Void) {
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .authorized:
+            completion(true)
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { newStatus in
+                DispatchQueue.main.async {
+                    completion(newStatus == .authorized)
+                }
+            }
+        default:
+            completion(false)
+        }
+    }
+    
+    fileprivate func saveToTemp(filename: String, saveID: String, isImg: Bool) {
+        let tmpBase = FileManager.default.temporaryDirectory
+        let sessionDir = tmpBase.appendingPathComponent(saveID, isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(
+                at: sessionDir,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            let tmpURL = sessionDir.appendingPathComponent(filename, isDirectory: false)
+            FileManager.default.createFile(atPath: tmpURL.path, contents: nil, attributes: nil)
+            let handle = try FileHandle(forWritingTo: tmpURL)
+            if isImg {
+                self.imageData[saveID] = FileSession(url: tmpURL, handle: handle, isScoped: false, dir: sessionDir)
+            } else {
+                self.fileSessions[saveID] = FileSession(url: tmpURL, handle: handle, isScoped: false, dir: sessionDir)
+            }
+            self.webView.evaluateJavaScript("onSaveReady('\(saveID)')", completionHandler: nil)
+        } catch {
+            print("Failed to open temp file:", error)
+            self.webView.evaluateJavaScript("onSaveCancel('\(saveID)')", completionHandler: nil)
+        }
+    }
+    
+    fileprivate func fileNamePicker(_ fileSession: MainMasterDetailVC.FileSession, _ saveID: String) {
+        let picker = UIDocumentPickerViewController(
+            forExporting: [fileSession.url],
+            asCopy: true
+        )
+        picker.modalPresentationStyle = .formSheet
+        let del = ExportDelegate(tempURL: fileSession.url, dir: fileSession.dir, saveID: saveID, parent: self)
+        picker.delegate = del
+        activePickers[saveID] = picker
+        objc_setAssociatedObject(picker, &del.associationKey, del, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        self.present(picker, animated: true)
+    }
+    
+    func downloadUrl(url: String, filename: String) {
+        let ext = (filename as NSString).pathExtension.lowercased()
+        if let type = UTType(filenameExtension: ext), type.conforms(to: .image) || type.conforms(to: .movie) || type.conforms(to: .video) {
+            ensurePhotoLibraryAccess { granted in
+              if granted {
+                  self.downloadFile(url: url, filename: filename, type: type)
+              } else {
+                  self.downloadFile(url: url, filename: filename, type: nil)
+              }
+            }
+        } else {
+            self.downloadFile(url: url, filename: filename, type: nil)
+        }
+    }
+    
+    func downloadFile(url: String, filename: String, type: UTType?) {
+        if let fileURL = URL(string: url) {
+            let sessionConfig = URLSessionConfiguration.default
+            let session = URLSession(configuration: sessionConfig)
+            let request = URLRequest(url:fileURL)
+            let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+                if let tempLocalUrl = tempLocalUrl, error == nil {
+                    do {
+                        let tempUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+                        
+                        if FileManager.default.fileExists(atPath: tempUrl.path) {
+                            try FileManager.default.removeItem(at: tempUrl)
+                        }
+                        try FileManager.default.copyItem(at: tempLocalUrl, to: tempUrl)
+                        if let ut = type {
+                            PHPhotoLibrary.shared().performChanges({
+                                if ut.conforms(to: .image) {
+                                    PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: tempUrl)
+                                } else {
+                                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: tempUrl)
+                                }
+                            }) { success, error in
+                                DispatchQueue.main.async {
+                                    if success {
+                                        self.webView.evaluateJavaScript("showFileToast('\(filename)', true)")
+                                        print("Imported into Photos!")
+                                        do {
+                                            try FileManager.default.removeItem(at: tempUrl)
+                                        } catch { print("Couldn't delete temp:", error) }
+                                    } else {
+                                        print("Import failed:", error!)
+                                        self.fileNamePicker(tempUrl, filename)
+                                    }
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.fileNamePicker(tempUrl, filename)
+                            }
+                        }
+                    } catch {
+                    }
+                }
+            }
+            task.resume()
+        }
+        
+    }
+    
+    fileprivate func fileNamePicker(_ tempUrl: URL, _ filename: String) {
+        let picker = UIDocumentPickerViewController(
+            forExporting: [tempUrl],
+            asCopy: true
+        )
+        picker.modalPresentationStyle = .formSheet
+        let del = ExportDelegate(tempURL: tempUrl, dir: nil, saveID: filename, parent: self)
+        picker.delegate = del
+        self.activePickers[filename] = picker
+        objc_setAssociatedObject(picker, &del.associationKey, del, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        self.present(picker, animated: true)
+    }
+    
+    public func setFlexAppID(fAppID: String) {
+        self.flexAppID = fAppID
+    }
+    
+    public func setLimitNavigation(limitsNavigationsToAppBoundDomains: Bool) {
+        self.limitsNavigationsToAppBoundDomains = limitsNavigationsToAppBoundDomains
     }
     
     public func setCustomActionDelegate(delegate: CustomActionDelegate) {
@@ -1915,7 +2164,9 @@ extension MainMasterDetailVC: UIGestureRecognizerDelegate {
 extension MainMasterDetailVC: WKUIDelegate {
     
     public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        
+        if let limit = limitsNavigationsToAppBoundDomains {
+            configuration.limitsNavigationsToAppBoundDomains = limit;
+        }
         // Create new WKWebView with custom configuration here
         //let configuration = WKWebViewConfiguration()
 //        configuration.userContentController = contentController
@@ -1935,6 +2186,48 @@ extension MainMasterDetailVC: MasterDetailActionDelegate {
             //HIDE MENU PANEL
             self.closeMenuDrawer()
         }
+    }
+}
+
+class ExportDelegate: NSObject, UIDocumentPickerDelegate {
+    private static var counter: UInt8 = 0
+    public var associationKey: UInt8 = 0
+    weak var parent: MainMasterDetailVC?
+    let tempURL: URL
+    let dir: URL?
+    let saveID: String
+    init(tempURL: URL, dir: URL?, saveID: String, parent: MainMasterDetailVC?) {
+        if ExportDelegate.counter < 255 {
+            self.associationKey = ExportDelegate.counter + 1
+        } else {
+            self.associationKey = 0
+        }
+        ExportDelegate.counter = self.associationKey
+        self.tempURL = tempURL
+        self.dir = dir
+        self.saveID = saveID
+        self.parent = parent
+    }
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let fileName = urls.first?.lastPathComponent, !fileName.isEmpty {
+            self.parent?.webView.evaluateJavaScript("showFileToast('\(fileName)')")
+        }
+        cleanup(controller)
+    }
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        cleanup(controller)
+    }
+    private func cleanup(_ controller: UIDocumentPickerViewController) {
+        DispatchQueue.main.async {
+            objc_setAssociatedObject(controller, &self.associationKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            self.parent?.activePickers.removeValue(forKey: self.saveID)
+            self.parent = nil
+        }
+        do {
+            try FileManager.default.removeItem(at: tempURL)
+            guard let dir = dir else { return }
+            try FileManager.default.removeItem(at: dir)
+        } catch { print("Cleanup failed:", error) }
     }
 }
 
