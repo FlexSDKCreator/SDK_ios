@@ -1436,6 +1436,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["\(timestamp)"])
                         } else {
                             UIApplication.shared.applicationIconBadgeNumber = 0
+                            UNUserNotificationCenter.current().removeAllDeliveredNotifications()
                         }
                     case "closeloading":
                         removeWebViewLoading()
@@ -1648,61 +1649,61 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             if let action = messageObject["action"] as? String {
                 switch action {
                 case "initSave":
-                    let saveID = param?["saveID"] as! String
-                    let fileName = param?["fileName"] as! String
-                    self.destinationForFile(filename: fileName, saveID: saveID)
+                    if let saveID = param?["saveID"] as? String, let fileName = param?["fileName"] as? String {
+                        self.destinationForFile(filename: fileName, saveID: saveID)
+                    }
                 case "fileChunk":
-                    let saveID = param?["saveID"] as! String
-                    let b64 = param?["b64"] as! String
-                    if let fileSession = fileSessions[saveID], let chunk = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
-                        fileSession.handle.seekToEndOfFile()
-                        fileSession.handle.write(chunk)
-                    } else if let fileData = imageData[saveID], let chunk = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
-                        fileData.handle.seekToEndOfFile()
-                        fileData.handle.write(chunk)
+                    if let saveID = param?["saveID"] as? String, let b64 = param?["b64"] as? String {
+                        if let fileSession = fileSessions[saveID], let chunk = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
+                            fileSession.handle.seekToEndOfFile()
+                            fileSession.handle.write(chunk)
+                        } else if let fileData = imageData[saveID], let chunk = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
+                            fileData.handle.seekToEndOfFile()
+                            fileData.handle.write(chunk)
+                        }
                     }
                 case "fileComplete":
-                    let saveID = param?["saveID"] as! String
-                    let fileName = param?["fileName"] as! String
-                    if let fileSession = fileSessions[saveID] {
-                        fileSessions.removeValue(forKey: saveID)
-                        fileSession.handle.closeFile()
-                        if fileSession.isScoped {
-                            fileSession.dir.stopAccessingSecurityScopedResource()
-                        } else {
-                            fileNamePicker(fileSession, saveID)
-                        }
-                    } else if let fileData = imageData[saveID] {
-                        imageData.removeValue(forKey: saveID)
-                        fileData.handle.closeFile()
-                        PHPhotoLibrary.shared().performChanges({
-                            let ext = (fileName as NSString).pathExtension.lowercased()
-                            let type = UTType(filenameExtension: ext)
-                            if let ut = type, ut.conforms(to: .image) {
-                                PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileData.url)
+                    if let saveID = param?["saveID"] as? String, let fileName = param?["fileName"] as? String {
+                        if let fileSession = fileSessions[saveID] {
+                            fileSessions.removeValue(forKey: saveID)
+                            fileSession.handle.closeFile()
+                            if fileSession.isScoped {
+                                fileSession.dir.stopAccessingSecurityScopedResource()
                             } else {
-                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileData.url)
+                                fileNamePicker(fileSession, saveID)
                             }
-                        }) { success, error in
-                            DispatchQueue.main.async {
-                                if success {
-                                    print("Imported into Photos!")
-                                    self.webView.evaluateJavaScript("showFileToast('\(fileName)', true)")
-                                    do {
-                                        try FileManager.default.removeItem(at: fileData.url)
-                                        try FileManager.default.removeItem(at: fileData.dir)
-                                    } catch { print("Couldn't delete temp:", error) }
+                        } else if let fileData = imageData[saveID] {
+                            imageData.removeValue(forKey: saveID)
+                            fileData.handle.closeFile()
+                            PHPhotoLibrary.shared().performChanges({
+                                let ext = (fileName as NSString).pathExtension.lowercased()
+                                let type = UTType(filenameExtension: ext)
+                                if let ut = type, ut.conforms(to: .image) {
+                                    PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileData.url)
                                 } else {
-                                    print("Import failed:", error!)
-                                    self.fileNamePicker(fileData, saveID)
+                                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileData.url)
+                                }
+                            }) { success, error in
+                                DispatchQueue.main.async {
+                                    if success {
+                                        print("Imported into Photos!")
+                                        self.webView.evaluateJavaScript("showFileToast('\(fileName)', true)")
+                                        do {
+                                            try FileManager.default.removeItem(at: fileData.url)
+                                            try FileManager.default.removeItem(at: fileData.dir)
+                                        } catch { print("Couldn't delete temp:", error) }
+                                    } else {
+                                        print("Import failed:", error!)
+                                        self.fileNamePicker(fileData, saveID)
+                                    }
                                 }
                             }
                         }
                     }
                 case "download":
-                    let url = param?["url"] as! String
-                    let fileName = param?["fileName"] as! String
-                    downloadUrl(url: url, filename: fileName)
+                    if let url = param?["url"] as? String, let fileName = param?["fileName"] as? String {
+                        downloadUrl(url: url, filename: fileName)
+                    }
                 default:
                     break
                 }
