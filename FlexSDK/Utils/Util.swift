@@ -8,6 +8,7 @@
 
 import Foundation
 import ObjectMapper
+import WebKit
 
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
@@ -1580,6 +1581,108 @@ fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [Stri
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
     return input.rawValue
+}
+
+
+class FlexUtils {
+    static func getCookieValue(name: String, url: URL, completion: @escaping (String?) -> Void) {
+        let host = url.host ?? ""
+        let store = WKWebsiteDataStore.default().httpCookieStore
+        store.getAllCookies { cookies in
+            let value = cookies.first { $0.name == name && $0.domain.contains(host)}?.value
+            completion(value)
+        }
+    }
+    static func clearCookies(forDomain domain: String, completion: @escaping () -> Void) {
+        let store = WKWebsiteDataStore.default().httpCookieStore
+        store.getAllCookies { cookies in
+            let group = DispatchGroup()
+            for cookie in cookies where cookie.domain.contains(domain) {
+                group.enter()
+                store.delete(cookie) {
+                    group.leave()
+                }
+            }
+            group.notify(queue: .main) {
+                completion()
+            }
+        }
+    }
+    public static func logout() {
+        WebKitPrewarmer.shared.prewarmCookieStore {
+            getCookieValue(name: "FlexApp-SessionID", url: URL(string: "https://flextudio.com/")!) { cookieSession in
+                guard let sessionId = cookieSession else {
+                    return
+                }
+                clearCookies(forDomain: "flextudio.com") {
+                    print("flex cookies cleared")
+                }
+                guard let url = URL(string: "https://app.flextudio.com/logout") else { return }
+                var request = URLRequest(url: url)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue("application/json", forHTTPHeaderField: "Accept")
+                request.httpMethod = "POST"
+                let payload: [String: String] = ["sessionId": sessionId]
+                do {
+                    request.httpBody = try JSONSerialization.data(
+                        withJSONObject: payload,
+                        options: []
+                    )
+                } catch {
+                    print("Failed to serialize JSON:", error)
+                    return
+                }
+                URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        print("logout error: \(error)")
+                    }
+                    guard data != nil else {
+                        print("logout: No data in response")
+                        return
+                    }
+                    print("logout success")
+                }
+                .resume()
+                
+            }
+            
+        }
+    }
+}
+
+final class WebKitPrewarmer: NSObject {
+    static let shared = WebKitPrewarmer()
+
+    private var webView: WKWebView?
+    private var delegate: NavigationDelegate?
+
+    func prewarmCookieStore(completion: @escaping () -> Void) {
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = .default()
+
+        let webView = WKWebView(frame: .zero, configuration: config)
+        let delegate = NavigationDelegate {
+            self.webView = nil
+            self.delegate = nil
+            completion()
+        }
+
+        webView.navigationDelegate = delegate
+        self.webView = webView
+        self.delegate = delegate
+
+        webView.loadHTMLString("", baseURL: nil)
+    }
+
+    private class NavigationDelegate: NSObject, WKNavigationDelegate {
+        let onFinish: () -> Void
+        init(onFinish: @escaping () -> Void) {
+            self.onFinish = onFinish
+        }
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            onFinish()
+        }
+    }
 }
 
 
