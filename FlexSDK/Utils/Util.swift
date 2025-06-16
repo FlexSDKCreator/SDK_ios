@@ -1584,7 +1584,7 @@ fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Ke
 }
 
 
-class FlexUtils {
+public class FlexUtils {
     static func getCookieValue(name: String, url: URL, completion: @escaping (String?) -> Void) {
         let host = url.host ?? ""
         let store = WKWebsiteDataStore.default().httpCookieStore
