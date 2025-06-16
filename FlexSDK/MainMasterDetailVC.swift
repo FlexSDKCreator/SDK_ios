@@ -18,6 +18,8 @@ import MLKitVision
 import CoreNFC
 import UniformTypeIdentifiers
 import Photos
+import QuickLook
+
 
 enum Module: Int {
     case none = 5000, companity, attendence, board, contact
@@ -38,6 +40,10 @@ public protocol PassResultToWeb {
     func onResult(error: String?, result: String?)
 }
 
+public protocol CustomAuthDelegate {
+    func onAuthTokenRequest()
+}
+
 public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, BluetoothResults, NFCNDEFReaderSessionDelegate {
     
     struct FileSession {
@@ -50,7 +56,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     private var imageData = [String:FileSession]()
     private var pickerDelegateKey: UInt8 = 0
     public var activePickers = [String: UIDocumentPickerViewController]()
-    
+    var previewUrl: URL?
+
     //START nfc, bt code
     public func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: any Error) {
         // Check the invalidation reason from the returned error.
@@ -356,9 +363,11 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var session: NFCNDEFReaderSession?
     var nfcCallbackFn: String?
     var customActionDelegate: CustomActionDelegate?
+    var customAuthDelegate: CustomAuthDelegate?
     var erpAuthToken: String?
     var erpAppID: String?
     var flexAppID: String?
+    var linkParam: String?
     var pendingCompletion: (([URL]?) -> Void)?
     var limitsNavigationsToAppBoundDomains: Bool?
     
@@ -507,10 +516,15 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         NotificationCenter.default.addObserver(self,selector: #selector(notiDidReceive), name: NSNotification.Name(rawValue: NotiConstants.notificationpayload), object: nil)
         let notificationPayload = NotiConstants.sharedInstance.userDefaults.object(forKey: NotiConstants.notificationpayload) as? NSDictionary
         NotiConstants.sharedInstance.userDefaults.removeObject(forKey: NotiConstants.notificationpayload)
-        if !loadWebvviewUrl(notificationPayload as? [AnyHashable : Any]),
-        let myURL = URL(string: "https://\((flexAppID.map { "\($0).app" }) ?? "app").flextudio.com/") {
-            let myRequest = URLRequest(url: myURL)
-            webView.load(myRequest)
+        if !loadWebvviewUrl(notificationPayload as? [AnyHashable : Any]) {
+            var urlString = "https://\((flexAppID.map { "\($0).app" }) ?? "app").flextudio.com/"
+            if let qs = linkParam {
+                urlString += "?\(qs)"
+            }
+            if let url = URL(string: urlString) {
+                let myRequest = URLRequest(url: url)
+                webView.load(myRequest)
+            }
         }
         
         //loadMenuModules()
@@ -1400,6 +1414,26 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         if let serviceURL = serviceURL, let bis = bis, let filePath = filePath {
                             webFileDownload(id: id, serviceURL:serviceURL, bis:bis, filePath: filePath,callback:systemCallback)
                         }
+                    case "downloadfiledata":
+                        let callback = callback?["function"] as? String
+                        if let url = param?["url"] as? String, let xmlns = param?["xmlns"] as? String, let filePath = param?["filePath"] as? String, let token = param?["token"] as? String, let fileName = param?["fileName"] as? String {
+                            postFileDataXml(to : url, path: filePath, token: token, xmlns: xmlns, fileName: fileName){ result in
+                                if let callback = callback {
+                                    switch result {
+                                    case .success(let code):
+                                        DispatchQueue.main.async {
+                                            self.webView.evaluateJavaScript("\(callback)('\(id)', {'status' : {'succeed' : true,'code' : '\(code)'}})")
+                                        }
+                                    case .failure(let error):
+                                        DispatchQueue.main.async {
+                                            self.webView.evaluateJavaScript("\(callback)('\(id)', {'status' : {'succeed' : false,'code' : '\(error.message)'}})")
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                        }
+
                     case "s3down":
                         let partUrls = param?["partUrls"] as? [String]
 //                        let partsCount = messageObject["partsCount"] as? Int
@@ -1591,6 +1625,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     case "initLogin":
                         if let erpAuthToken = self.erpAuthToken, let erpAppID = self.erpAppID {
                             initYlwAuth(authToken: erpAuthToken, appID: erpAppID)
+                        } else if let customAuthDelegate = self.customAuthDelegate {
+                            customAuthDelegate.onAuthTokenRequest()
                         }
                     default:
                         let appDoParam = CustomAction(action: action)
@@ -1710,6 +1746,80 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             }
         }
     }
+    func buildFileDataXml(path: String, token: String, xmlns: String) -> String {
+        return """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <FileData xmlns="\(xmlns)">
+            <path>\(escapeXml(path))</path>
+            <token>\(escapeXml(token))</token>
+        </FileData>
+        """
+    }
+    
+    func escapeXml(_ input: String) -> String {
+        return input
+          .replacingOccurrences(of: "&",  with: "&amp;")
+          .replacingOccurrences(of: "<",  with: "&lt;")
+          .replacingOccurrences(of: ">",  with: "&gt;")
+          .replacingOccurrences(of: "\"", with: "&quot;")
+          .replacingOccurrences(of: "'",  with: "&apos;")
+    }
+
+    func postFileDataXml(to urlString: String, path: String, token: String, xmlns: String, fileName: String, completion: @escaping (Result<String, FileDataError>) -> Void) {
+        guard let url = URL(string: urlString) else {
+            completion(.failure(FileDataError(message: "파일 다운로드 주소가 유효하지 않습니다.")))
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let xmlPayload = buildFileDataXml(path: path, token: token, xmlns: xmlns)
+        request.httpBody = Foundation.Data(xmlPayload.utf8)
+        
+        let task = URLSession.shared.downloadTask(with: request) { tempURL, response, error in
+            if let error = error {
+                completion(.failure(FileDataError(message: error.localizedDescription)))
+                return
+            }
+            
+            guard
+                let httpResp = response as? HTTPURLResponse,
+                (200...299).contains(httpResp.statusCode)
+            else {
+                let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+                completion(.failure(FileDataError(message: "파일을 다운로드할 수 없습니다: \(code)")))
+                return
+            }
+            
+            guard let tempURL = tempURL else {
+                completion(.failure(FileDataError(message:  "파일을 다운로드할 수 없습니다.")))
+                return
+            }
+            let tempUrl = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+            do {
+                if FileManager.default.fileExists(atPath: tempUrl.path) {
+                    try FileManager.default.removeItem(at: tempUrl)
+                }
+                try FileManager.default.copyItem(at: tempURL, to: tempUrl)
+            } catch (let writeError) {
+                completion(.failure(FileDataError(message:  writeError.localizedDescription)))
+            }
+            DispatchQueue.main.async {
+                let picker = UIDocumentPickerViewController(
+                    forExporting: [tempUrl],
+                    asCopy: true
+                )
+                picker.modalPresentationStyle = .formSheet
+                let del = ExportDelegate(tempURL: tempUrl, dir: nil, saveID: fileName, showFile: true, parent: self, completion: completion)
+                picker.delegate = del
+                self.activePickers[fileName] = picker
+                objc_setAssociatedObject(picker, &del.associationKey, del, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                self.present(picker, animated: true)
+            }
+        }
+        task.resume()
+    }
     
     func destinationForFile(filename: String, saveID: String) {
       let ext = (filename as NSString).pathExtension.lowercased()
@@ -1778,7 +1888,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             asCopy: true
         )
         picker.modalPresentationStyle = .formSheet
-        let del = ExportDelegate(tempURL: fileSession.url, dir: fileSession.dir, saveID: saveID, parent: self)
+        let del = ExportDelegate(tempURL: fileSession.url, dir: fileSession.dir, saveID: saveID, showFile: false, parent: self)
         picker.delegate = del
         activePickers[saveID] = picker
         objc_setAssociatedObject(picker, &del.associationKey, del, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -1855,7 +1965,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             asCopy: true
         )
         picker.modalPresentationStyle = .formSheet
-        let del = ExportDelegate(tempURL: tempUrl, dir: nil, saveID: filename, parent: self)
+        let del = ExportDelegate(tempURL: tempUrl, dir: nil, saveID: filename, showFile: false, parent: self)
         picker.delegate = del
         self.activePickers[filename] = picker
         objc_setAssociatedObject(picker, &del.associationKey, del, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -1866,6 +1976,10 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         self.flexAppID = fAppID
     }
     
+    public func setLinkParam(linkParam: String) {
+        self.linkParam = linkParam
+    }
+
     public func setLimitNavigation(limitsNavigationsToAppBoundDomains: Bool) {
         self.limitsNavigationsToAppBoundDomains = limitsNavigationsToAppBoundDomains
     }
@@ -1874,6 +1988,11 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         self.customActionDelegate = delegate
     }
     
+    public func setCustomAuthDelegate(delegate: CustomAuthDelegate) {
+        self.customAuthDelegate = delegate
+    }
+    
+
     public func initYlwAuth(authToken: String, appID: String) {
         let runJS: String = "initYlwAuth('\(authToken)', '\(appID)')"
         if let webView = self.webView {
@@ -2188,7 +2307,9 @@ extension MainMasterDetailVC: MasterDetailActionDelegate {
         }
     }
 }
-
+struct FileDataError: Error {
+  let message: String
+}
 class ExportDelegate: NSObject, UIDocumentPickerDelegate {
     private static var counter: UInt8 = 0
     public var associationKey: UInt8 = 0
@@ -2196,7 +2317,9 @@ class ExportDelegate: NSObject, UIDocumentPickerDelegate {
     let tempURL: URL
     let dir: URL?
     let saveID: String
-    init(tempURL: URL, dir: URL?, saveID: String, parent: MainMasterDetailVC?) {
+    let showFile: Bool
+    let completion: ((Result<String, FileDataError>) -> Void)?
+    init(tempURL: URL, dir: URL?, saveID: String, showFile: Bool, parent: MainMasterDetailVC?, completion: ((Result<String, FileDataError>) -> Void)? = nil) {
         if ExportDelegate.counter < 255 {
             self.associationKey = ExportDelegate.counter + 1
         } else {
@@ -2207,9 +2330,35 @@ class ExportDelegate: NSObject, UIDocumentPickerDelegate {
         self.dir = dir
         self.saveID = saveID
         self.parent = parent
+        self.showFile = showFile
+        self.completion = completion
     }
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        if let fileName = urls.first?.lastPathComponent, !fileName.isEmpty {
+        if self.showFile , let url = urls.first {
+            if QLPreviewController.canPreview(url as QLPreviewItem) {
+                let preview = QLPreviewController()
+                preview.modalPresentationStyle = .overCurrentContext//.overFullScreen//.formSheet//.pageSheet//
+                parent?.definesPresentationContext = true
+                preview.dataSource = parent
+                parent?.previewUrl = url
+                preview.view.backgroundColor = .clear
+        
+                if #available(iOS 15.0, *) {
+                    if let sheet = preview.sheetPresentationController {
+                        sheet.detents = [.large()]
+                        sheet.largestUndimmedDetentIdentifier = .large
+                        sheet.prefersGrabberVisible = true
+                    }
+                }
+                parent?.present(preview, animated: true) {
+                    self.parent?.previewUrl = nil
+                    self.completion?(.success(""))
+                }
+                return
+            } else {
+                self.completion?(.success("no preview"))
+            }
+        } else if let fileName = urls.first?.lastPathComponent, !fileName.isEmpty {
             self.parent?.webView.evaluateJavaScript("showFileToast('\(fileName)')")
         }
         cleanup(controller)
@@ -2243,7 +2392,18 @@ extension URL {
         return (try? self.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier ?? "public.data"
     }
 }
-extension MainMasterDetailVC: UIDocumentInteractionControllerDelegate {
+extension MainMasterDetailVC: UIDocumentInteractionControllerDelegate, QLPreviewControllerDataSource {
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        previewUrl == nil ? 0 : 1
+    }
+    
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
+        guard let url = previewUrl else {
+            fatalError("Quick Look asked for an item when none exists")
+        }
+        return url as QLPreviewItem
+    }
+    
     public func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
  }
