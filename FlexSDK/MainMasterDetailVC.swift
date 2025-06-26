@@ -505,8 +505,6 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         let contentController = self.webView.configuration.userContentController
         contentController.add(self, name: "MobileTest")
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.returnResultByCallJS(_:)), name: NSNotification.Name(rawValue: "locationUpdated"), object: nil)
-        
         setupReloadBtn()
         setUpSpinner()
         
@@ -587,8 +585,6 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
 //            }
 //        }
         //TokenHandler().saveTokenToDB()
-        
-        addKeyboardNotification()
     }
     var startLocation: CGPoint?
     @objc func handleSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
@@ -767,6 +763,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         notificationCenter.addObserver(self, selector: #selector(rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(enterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(enterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(self.returnResultByCallJS(_:)), name: NSNotification.Name(rawValue: "locationUpdated"), object: nil)
         //Set MenuView size according to device type
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
@@ -796,7 +793,11 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+        notificationCenter.removeObserver(self, name: NSNotification.Name(rawValue: "locationUpdated"), object: nil)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -808,11 +809,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     }
 
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .portrait
-        } else {
-            return .all
-        }
+        return .all
     }
 
     @objc func rotated() {
@@ -2393,11 +2390,11 @@ extension URL {
     }
 }
 extension MainMasterDetailVC: UIDocumentInteractionControllerDelegate, QLPreviewControllerDataSource {
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+    public func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
         previewUrl == nil ? 0 : 1
     }
     
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
+    public func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
         guard let url = previewUrl else {
             fatalError("Quick Look asked for an item when none exists")
         }
@@ -2406,5 +2403,5 @@ extension MainMasterDetailVC: UIDocumentInteractionControllerDelegate, QLPreview
     
     public func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
- }
+    }
 }
