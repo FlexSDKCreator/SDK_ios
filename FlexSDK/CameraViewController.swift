@@ -28,22 +28,21 @@ class CameraViewController: UIViewController {
     ]
     
     private var currentDetector: Detector = .onDeviceBarcode
-    private var isUsingFrontCamera = false
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private lazy var captureSession = AVCaptureSession()
     private lazy var sessionQueue = DispatchQueue(label: Constant.sessionQueueLabel)
     private var lastFrame: CMSampleBuffer?
+    var isUsingFrontCamera = false
     var isMulti: Bool = false
+    var height: CGFloat = 0
+    var width: CGFloat = 0
+    var isHeightPercent: Bool = false
+    var isWidthPercent: Bool = false
+    var closeBtnOnVideo: Bool = false
+    var isQR: Bool = false
+    var closeBtnConstrains: [NSLayoutConstraint]?
+    var cameraViewConstraints: [NSLayoutConstraint]?
     var onScannerResult: ((Bool, String?, String?) -> Void)?
-    
-    private lazy var previewOverlayView: UIImageView = {
-        
-        precondition(isViewLoaded)
-        let previewOverlayView = UIImageView(frame: .zero)
-        previewOverlayView.contentMode = UIView.ContentMode.scaleAspectFit
-        previewOverlayView.translatesAutoresizingMaskIntoConstraints = false
-        return previewOverlayView
-    }()
     
     private lazy var annotationOverlayView: UIView = {
         precondition(isViewLoaded)
@@ -60,6 +59,7 @@ class CameraViewController: UIViewController {
     // MARK: - IBOutlets
     //@IBOutlet private weak var cameraView: UIView!
     private var cameraView = UIView()
+    private var closeBtn = UIButton();
     // MARK: - UIViewController
     
     override func viewDidLoad() {
@@ -67,34 +67,95 @@ class CameraViewController: UIViewController {
         view.addSubview(cameraView)
         view.backgroundColor = UIColor.black.withAlphaComponent(0.85)//UIColor.clear
         view.isOpaque = false
-        let closeBtn = UIButton();
         closeBtn.setImage(UIImage(named: "close_btn_34"), for: .normal)
         closeBtn.imageView?.contentMode = .scaleAspectFit
         closeBtn.addTarget(self, action: #selector(closeBtnClick), for: UIControl.Event.touchUpInside)
         view.addSubview(closeBtn)
         cameraView.translatesAutoresizingMaskIntoConstraints = false
+        cameraView.clipsToBounds = true
         closeBtn.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            cameraView.topAnchor.constraint(equalTo: view.topAnchor),
-            cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            closeBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            closeBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+        closeBtn.clipsToBounds = true
+        let constraints = [
+            cameraView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor),
+            cameraView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor),
+            cameraView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            cameraView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             closeBtn.widthAnchor.constraint(equalToConstant: 34),
             closeBtn.heightAnchor.constraint(equalToConstant: 34)
-        ])
+        ]
+        NSLayoutConstraint.activate(constraints)
+        applyMeasuredDimentions()
+        
         /*let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissViewController))
          tapGestureRecognizer.cancelsTouchesInView = false
          view.addGestureRecognizer(tapGestureRecognizer)*/
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.videoGravity = .resizeAspect
-        setUpPreviewOverlayView()
+        previewLayer.videoGravity = .resizeAspectFill
+        cameraView.layer.insertSublayer(previewLayer, at: 0)
+        
         setUpAnnotationOverlayView()
         setUpCaptureSessionOutput()
         setUpCaptureSessionInput()
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDismissGesture(_:)))
         self.view.addGestureRecognizer(panGesture)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to:size, with: coordinator)
+        coordinator.animate(alongsideTransition: { _ in
+            self.applyMeasuredDimentions()
+        })
+    }
+    fileprivate func applyMeasuredDimentions() {
+        let viewHeight = view.frame.height
+        let viewWeight = view.frame.width
+        var heightMeasure = height
+        var widthMeasure = width
+        if (height > 0) {
+            if (isHeightPercent) {
+                heightMeasure = viewHeight * min (100, height) / 100
+            }
+        } else {
+            heightMeasure = viewHeight
+        }
+        if (width > 0) {
+            if (isWidthPercent) {
+                widthMeasure = viewWeight * min (100, width) / 100
+            }
+        } else {
+            widthMeasure = viewWeight
+        }
+        if (isQR) {
+            heightMeasure = min (heightMeasure, widthMeasure)
+            widthMeasure = heightMeasure
+        }
+        if let camCons = cameraViewConstraints {
+            NSLayoutConstraint.deactivate(camCons)
+        }
+        cameraViewConstraints = []
+        let heightCons = cameraView.heightAnchor.constraint(equalToConstant: heightMeasure)
+        heightCons.priority = .defaultLow
+        cameraViewConstraints?.append(heightCons)
+        let widthCons = cameraView.widthAnchor.constraint(equalToConstant: widthMeasure)
+        widthCons.priority = .defaultLow
+        cameraViewConstraints?.append(widthCons)
+        if let camCons = cameraViewConstraints {
+            NSLayoutConstraint.activate(camCons)
+        }
+        if let camCons = closeBtnConstrains {
+            NSLayoutConstraint.deactivate(camCons)
+        }
+        closeBtnConstrains = []
+        if (closeBtnOnVideo) {
+            closeBtnConstrains?.append(closeBtn.bottomAnchor.constraint(equalTo: cameraView.topAnchor, constant: -10))
+            closeBtnConstrains?.append(closeBtn.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor, constant: -10))
+        } else {
+            closeBtnConstrains?.append(closeBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10))
+            closeBtnConstrains?.append(closeBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10))
+        }
+        if let closeCons = closeBtnConstrains {
+            NSLayoutConstraint.activate(closeCons)
+        }
     }
     @objc func handleDismissGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
@@ -123,11 +184,9 @@ class CameraViewController: UIViewController {
     }
     @objc func dismissViewController(tap: UITapGestureRecognizer) {
         let location = tap.location(in: view)
-        
-        let imageSize = previewOverlayView.intrinsicContentSize // The size of the content (the image)
-        
+        let imageSize = cameraView.intrinsicContentSize // The size of the content (the image)
         // Calculate the rect of the actual image within the imageView
-        let imageViewSize = previewOverlayView.bounds.size
+        let imageViewSize = cameraView.bounds.size
         var imageFrame = CGRect.zero
         let aspectFitSize = AVMakeRect(aspectRatio: imageSize, insideRect: CGRect(origin: .zero, size: imageViewSize))
         imageFrame.size = aspectFitSize.size
@@ -155,8 +214,37 @@ class CameraViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         previewLayer.frame = cameraView.bounds
+        if closeBtnOnVideo && closeBtn.frame.minY < 0 {
+            if let camCons = closeBtnConstrains {
+                NSLayoutConstraint.deactivate(camCons)
+            }
+            closeBtnConstrains?.append(closeBtn.topAnchor.constraint(equalTo: cameraView.topAnchor, constant: 10))
+            closeBtnConstrains?.append(closeBtn.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor, constant: -10))
+            if let closeCons = closeBtnConstrains {
+                NSLayoutConstraint.activate(closeCons)
+            }
+        }
+        if let connection = previewLayer.connection {
+            if connection.isVideoOrientationSupported {
+                connection.videoOrientation = currentVideoOrientation()
+            }
+        }
+    }
+    
+    private func currentVideoOrientation() -> AVCaptureVideoOrientation {
+        switch UIDevice.current.orientation {
+        case .portrait:
+            return .portrait
+        case .landscapeRight:
+            return .landscapeLeft // because the camera sees mirrored
+        case .landscapeLeft:
+            return .landscapeRight
+        case .portraitUpsideDown:
+            return .portraitUpsideDown
+        default:
+            return .portrait
+        }
     }
     
     // MARK: - IBActions
@@ -215,7 +303,6 @@ class CameraViewController: UIViewController {
                 print("Self is nil!")
                 return
             }
-            strongSelf.updatePreviewOverlayViewWithLastFrame()
             
             if let scanningError = scanningError {
                 print("Failed to scan barcodes with error: \(scanningError.localizedDescription).")
@@ -226,39 +313,54 @@ class CameraViewController: UIViewController {
                 return
             }
             if barcodes.count > 0 {
-                captureSession.stopRunning()
+                
                 var result : String = "";
+                var hasResult : Bool = false;
                 var barcode : Barcode
-                if isMulti {
-                    var listOfCodes = [String]()
-                    for i in 0..<barcodes.count {
-                        barcode = barcodes[i]
+                
+                var listOfCodes = [String]()
+                for i in 0..<barcodes.count {
+                    barcode = barcodes[i]
+                    let normalizedRect = CGRect(
+                        x: barcode.frame.origin.x / width,
+                        y: barcode.frame.origin.y / height,
+                        width: barcode.frame.size.width / width,
+                        height: barcode.frame.size.height / height
+                    )
+                    let convertedRect = strongSelf.previewLayer.layerRectConverted(
+                        fromMetadataOutputRect: normalizedRect
+                    )
+                    if cameraView.bounds.contains(convertedRect) {
+                        captureSession.stopRunning()
+                        hasResult = true
                         showBarcode(barcode, strongSelf, width, height, image.orientation)
                         listOfCodes.append(barcode.rawValue ?? (barcode.displayValue ?? ""))
+                        if !isMulti {
+                            result = barcode.rawValue ?? (barcode.displayValue ?? "")
+                            break
+                        }
                     }
-                    do {
+                }
+                do {
+                    if (hasResult && isMulti) {
                         let jsonData = try JSONSerialization.data(withJSONObject: listOfCodes, options: [])
                         if let jsonString = String(data: jsonData, encoding: .utf8) {
                             result = jsonString
                         }
-                    } catch {
-                        onScannerResult?(false, nil, error.localizedDescription)
-                        self.dismiss(animated: true, completion: nil)
-                        return
                     }
-                } else {
-                    barcode = barcodes[0]
-                    result = barcode.rawValue ?? (barcode.displayValue ?? "")
-                    showBarcode(barcode, strongSelf, width, height, image.orientation)
-                }
-                
-                AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) { }
-                onScannerResult?(true, result, nil)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                    // Put your dismiss code here
+                } catch {
+                    onScannerResult?(false, nil, error.localizedDescription)
                     self.dismiss(animated: true, completion: nil)
+                    return
                 }
-                
+                if (hasResult) {
+                    AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) { }
+                    onScannerResult?(true, result, nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        // Put your dismiss code here
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                }
             }
         }
     }
@@ -277,7 +379,7 @@ class CameraViewController: UIViewController {
             strongSelf.captureSession.beginConfiguration()
             // When performing latency tests to determine ideal capture settings,
             // run the app in 'release' mode to get accurate performance metrics
-            strongSelf.captureSession.sessionPreset = AVCaptureSession.Preset.hd1280x720
+            strongSelf.captureSession.sessionPreset = AVCaptureSession.Preset.medium
             
             let output = AVCaptureVideoDataOutput()
             output.videoSettings = [
@@ -335,6 +437,11 @@ class CameraViewController: UIViewController {
                 return
             }
             strongSelf.captureSession.startRunning()
+            if let connection = self.previewLayer.connection {
+                if connection.isVideoOrientationSupported {
+                    connection.videoOrientation = self.currentVideoOrientation()
+                }
+            }
         }
     }
     
@@ -347,24 +454,6 @@ class CameraViewController: UIViewController {
             }
             strongSelf.captureSession.stopRunning()
         }
-    }
-    
-    private func setUpPreviewOverlayView() {
-        cameraView.addSubview(previewOverlayView)
-        //    NSLayoutConstraint.activate([
-        //      previewOverlayView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
-        //      previewOverlayView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor),
-        //      previewOverlayView.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor),
-        //      previewOverlayView.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor),
-        //
-        //    ])
-        NSLayoutConstraint.activate([
-            previewOverlayView.topAnchor.constraint(equalTo: cameraView.topAnchor),
-            previewOverlayView.bottomAnchor.constraint(equalTo: cameraView.bottomAnchor),
-            previewOverlayView.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor),
-            previewOverlayView.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor),
-            
-        ])
     }
     
     private func setUpAnnotationOverlayView() {
@@ -419,25 +508,6 @@ class CameraViewController: UIViewController {
         for annotationView in annotationOverlayView.subviews {
             annotationView.removeFromSuperview()
         }
-    }
-    
-    private func updatePreviewOverlayViewWithLastFrame() {
-        guard let lastFrame = lastFrame,
-              let imageBuffer = CMSampleBufferGetImageBuffer(lastFrame)
-        else {
-            return
-        }
-        self.updatePreviewOverlayViewWithImageBuffer(imageBuffer)
-        self.removeDetectionAnnotations()
-    }
-    
-    private func updatePreviewOverlayViewWithImageBuffer(_ imageBuffer: CVImageBuffer?) {
-        guard let imageBuffer = imageBuffer else {
-            return
-        }
-        let orientation: UIImage.Orientation = isUsingFrontCamera ? .leftMirrored : .right
-        let image = UIUtilities.createUIImage(from: imageBuffer, orientation: orientation)
-        previewOverlayView.image = image
     }
     
     private func convertedPoints(

@@ -1093,6 +1093,21 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         }
     }
     
+    /*
+    @available(iOS 15.0, *)
+    func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+        guard type == .microphone || type == .cameraAndMicrophone else {
+            decisionHandler(.deny)
+            return
+        }
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            DispatchQueue.main.async {
+                decisionHandler(granted ? .grant : .deny)
+            }
+        }
+    }
+    */
+    
     func removeWebViewLoading() {
         loadingView.isHidden = true
 //        loadingDot.stopAnimating()
@@ -1354,18 +1369,68 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     case "loadbarcode":
                         let systemCallback = (callback?["function"] as? String) ?? ""
                         let afterEventName = (param?["afterEventName"] as? String) ?? ""
+                        let options = (param?["options"] as? String) ?? ""
                         let isMulti : Bool
                         if !afterEventName.isEmpty, let afterEventObject = try? JSONSerialization.jsonObject(with: afterEventName.data(using: .utf8)!, options: []) as? [String:Any] {
                             isMulti = afterEventObject["ismulti"] as? Bool ?? false
                         } else {
                             isMulti = false
                         }
+                        var height : CGFloat = 0
+                        var width : CGFloat = 0
+                        var closeBtnOnVideo: Bool = false
+                        var isQR: Bool = false
+                        var isHeightPer: Bool = false
+                        var isWidthPer: Bool = false
+                        var isUserFacing: Bool = false
+                        if !options.isEmpty, let optionsObject = try? JSONSerialization.jsonObject(with: options.data(using: .utf8)!, options: []) as? [String:Any] {
+                            let maxHeight = optionsObject["maxHeight"]
+                            let maxWidth = optionsObject["maxWidth"]
+                            let facingMode = optionsObject["facingMode"]
+                            closeBtnOnVideo = optionsObject["closeBtnOnVideo"] as? Bool ?? false
+                            isQR = optionsObject["isQR"] as? Bool ?? false
+                            if let heightNo = maxHeight as? NSNumber {
+                                height = CGFloat(truncating: heightNo)
+                            } else if let heightStr = maxHeight as? String {
+                                if (heightStr.endsWith("px")) {
+                                    let numberStr = String(heightStr.dropLast(2))
+                                    if let px = Double(numberStr) {
+                                        height = CGFloat(px)
+                                    }
+                                } else if (heightStr.endsWith("%")) {
+                                    let numberStr = String(heightStr.dropLast(1))
+                                    if let per = Double(numberStr) {
+                                        isHeightPer = true
+                                        height = CGFloat(per)
+                                    }
+                                }
+                            }
+                            if let widthNo = maxWidth as? NSNumber {
+                                width = CGFloat(truncating: widthNo)
+                            } else if let widthStr = maxWidth as? String {
+                                if (widthStr.endsWith("px")) {
+                                    let numberStr = String(widthStr.dropLast(2))
+                                    if let px = Double(numberStr) {
+                                        width = CGFloat(px)
+                                    }
+                                } else if (widthStr.endsWith("%")) {
+                                    let numberStr = String(widthStr.dropLast(1))
+                                    if let per = Double(numberStr) {
+                                        isWidthPer = true
+                                        width = CGFloat(per)
+                                    }
+                                }
+                            }
+                            if let facingStr = facingMode as? String {
+                                isUserFacing = facingStr.lowercased() == "user"
+                            }
+                        }
                         let onScannerResult: (Bool, String?, String?) -> Void = { success, code, message in
                             if success {
                                 let script =  "\(systemCallback)('\(id)',{'status':{'succeed' : true},'data':'\(code ?? "")', 'afterEventName':'\(afterEventName)'});"
                                 self.webView.evaluateJavaScript(script)
                             } else {
-                                let script = "\(systemCallback)('\(id)',{'status':{'succeed' : false,'message':'\(message ?? NSLocalizedString("ScannerDismissed", comment: "Scanner was dismissed"))'},'data':{'afterEventName':'\(afterEventName)'}});"
+                                let script = "\(systemCallback)('\(id)',{'status':{'succeed' : false,'message':'\(message ?? NSLocalizedString("ScannerDismissed", comment: "Scanner was dismissed"))'},'data':{'afterEventName':'\(afterEventName)'\(!options.isEmpty ? ", options: \(options)" : "")}});"
                                 self.webView.evaluateJavaScript(script)
                             }
                         }
@@ -1375,6 +1440,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                                     let scannerVC = CameraViewController()
                                     scannerVC.onScannerResult = onScannerResult
                                     scannerVC.isMulti = isMulti
+                                    scannerVC.height = height
+                                    scannerVC.width = width
+                                    scannerVC.isHeightPercent = isHeightPer
+                                    scannerVC.isWidthPercent = isWidthPer
+                                    scannerVC.closeBtnOnVideo = closeBtnOnVideo
+                                    scannerVC.isQR = isQR
+                                    scannerVC.isUsingFrontCamera = isUserFacing
                                     scannerVC.modalPresentationStyle = .overFullScreen
                                     self.present(scannerVC, animated: true, completion: nil)
                                 }
