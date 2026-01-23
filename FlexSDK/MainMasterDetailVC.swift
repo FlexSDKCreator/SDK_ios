@@ -371,6 +371,16 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var pendingCompletion: (([URL]?) -> Void)?
     var limitsNavigationsToAppBoundDomains: Bool?
     
+    private let msLoginContainerView = UIView()
+    private let closeMSWebView = UIButton(type: .system)
+    private lazy var msWebview: WKWebView = {
+        let config = WKWebViewConfiguration()
+        config.userContentController.add(self, name: "MobileTest")
+        let webView = WKWebView(frame: .zero, configuration: config)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
+    }()
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -404,6 +414,9 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         closeBtn.aligTextCenterX()
 
         
+        msLoginContainerView.isHidden = true
+        closeMSWebView.addTarget(self, action: #selector(didTapCloseMSWebView), for: .touchUpInside)
+        setupMSLoginUI()
         
         //Module Menu CV initialization
         numberOfCellsToDisplayHorizontally = UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad ? 4 : 2
@@ -590,6 +603,31 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     @objc func handleSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
         let totalWidth = view.bounds.size.width
         let location = gesture.location(in: view)
+        
+        if gesture.view === msLoginContainerView {
+            let width = msLoginContainerView.bounds.width
+            let translationX = max(0, gesture.translation(in: msLoginContainerView).x)
+            let progress = min(1.0, translationX / max(1.0, width))
+
+            switch gesture.state {
+            case .changed:
+                msLoginContainerView.transform = CGAffineTransform(translationX: translationX, y: 0)
+
+            case .ended, .cancelled, .failed:
+                let velocityX = gesture.velocity(in: msLoginContainerView).x
+                let shouldDismiss = (progress > 0.3) || (velocityX > 800)
+
+                if shouldDismiss {
+                    dismissMSOverlayAnimated()
+                } else {
+                    restoreMSOverlayAnimated()
+                }
+
+            default:
+                break
+            }
+            return
+        }
         
         switch gesture.state {
         case .began:
@@ -1591,10 +1629,18 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     case "openlinkapp", "OpenLinkApp":
                         if let urlPath = param?["ios"] as? String {
                             let url = URL(string: urlPath)
-                            UIApplication.shared.open(url!) { (result) in
-                                if result {
-                                   // The URL was delivered successfully!
-                                    print(result)
+                            let internalPrefix = "https://entra.flextudio.com/oidc/"
+                            
+                            if let url = url, urlPath.hasPrefix(internalPrefix) {
+                                self.msWebview.load(URLRequest(url: url))
+                                self.msLoginContainerView.isHidden = false
+                            } else {
+                                UIApplication.shared.open(url!) { (result) in
+                                    if result {
+                                        // The URL was delivered successfully!
+                                        print(result)
+                                    }
+
                                 }
                             }
                         }
@@ -1697,6 +1743,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         } else if let customAuthDelegate = self.customAuthDelegate {
                             customAuthDelegate.onAuthTokenRequest()
                         }
+                    case "entraAuthClose":
+                        hideMSLoginContainer()
                     default:
                         let appDoParam = CustomAction(action: action)
 
@@ -2208,6 +2256,88 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         }
     }
 
+    private func setupMSLoginUI() {
+        msLoginContainerView.translatesAutoresizingMaskIntoConstraints = false
+        msLoginContainerView.backgroundColor = .clear
+        let edgeSwipeGestureForMS = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        edgeSwipeGestureForMS.edges = .left
+        edgeSwipeGestureForMS.delegate = self
+        msLoginContainerView.addGestureRecognizer(edgeSwipeGestureForMS)
+        
+        view.addSubview(msLoginContainerView)
+
+        NSLayoutConstraint.activate([
+            msLoginContainerView.topAnchor.constraint(equalTo: view.topAnchor),
+            msLoginContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            msLoginContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            msLoginContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        msLoginContainerView.addSubview(msWebview)
+        NSLayoutConstraint.activate([
+            msWebview.topAnchor.constraint(equalTo: msLoginContainerView.topAnchor),
+            msWebview.leadingAnchor.constraint(equalTo: msLoginContainerView.leadingAnchor),
+            msWebview.trailingAnchor.constraint(equalTo: msLoginContainerView.trailingAnchor),
+            msWebview.bottomAnchor.constraint(equalTo: msLoginContainerView.bottomAnchor)
+        ])
+
+        closeMSWebView.translatesAutoresizingMaskIntoConstraints = false
+
+        closeMSWebView.setImage(UIImage(named: "btn_close"), for: .normal)
+        closeMSWebView.tintColor = UIColor(
+            red: 0x48 / 255.0,
+            green: 0x4D / 255.0,
+            blue: 0x52 / 255.0,
+            alpha: 1.0
+        )
+
+        closeMSWebView.addTarget(self, action: #selector(didTapCloseMSWebView), for: .touchUpInside)
+        msLoginContainerView.addSubview(closeMSWebView)
+
+        NSLayoutConstraint.activate([
+            closeMSWebView.topAnchor.constraint(equalTo: msLoginContainerView.safeAreaLayoutGuide.topAnchor, constant: 20),
+            closeMSWebView.trailingAnchor.constraint(equalTo: msLoginContainerView.trailingAnchor, constant: -20),
+            closeMSWebView.widthAnchor.constraint(equalToConstant: 25),
+            closeMSWebView.heightAnchor.constraint(equalToConstant: 25)
+        ])
+
+        closeMSWebView.imageView?.contentMode = .scaleAspectFit
+    }
+    
+    @objc private func didTapCloseMSWebView() {
+        hideMSLoginContainer()
+    }
+    
+    func showMSLoginContainer(urlString: String) {
+        msLoginContainerView.isHidden = false
+
+        guard let url = URL(string: urlString) else { return }
+        msWebview.load(URLRequest(url: url))
+    }
+    
+    func hideMSLoginContainer() {
+        msWebview.stopLoading()
+        msWebview.load(URLRequest(url: URL(string: "about:blank")!))
+        msLoginContainerView.isHidden = true
+    }
+    
+    func dismissMSOverlayAnimated() {
+        let width = msLoginContainerView.bounds.width
+
+        UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseOut]) {
+            self.msLoginContainerView.transform = CGAffineTransform(translationX: width, y: 0)
+        } completion: { _ in
+            self.msLoginContainerView.transform = .identity
+            self.hideMSLoginContainer()
+        }
+    }
+
+    private func restoreMSOverlayAnimated() {
+        UIView.animate(withDuration: 0.18, delay: 0, options: [.curveEaseOut]) {
+            self.msLoginContainerView.transform = .identity
+            self.msLoginContainerView.alpha = 1.0
+        }
+    }
     
     ////CLLocationManagerDelegate////
 //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -2350,11 +2480,159 @@ extension MainMasterDetailVC: UIGestureRecognizerDelegate {
 //}
 
 extension MainMasterDetailVC: WKUIDelegate {
-    
+    private struct CoordinateConverter {
+        private static let earthRadius: Double = 6378137.0
+
+        static func mercatorToWGS84(x: Double, y: Double) -> (lat: Double, lng: Double) {
+            let lng = (x / earthRadius) * 180.0 / Double.pi
+            let lat = (2.0 * atan(exp(y / earthRadius)) - Double.pi / 2.0) * 180.0 / Double.pi
+            return (lat: lat, lng: lng)
+        }
+
+        static func looksLikeWGS84(lat: Double, lng: Double) -> Bool {
+            return lat >= -90.0 && lat <= 90.0 && lng >= -180.0 && lng <= 180.0
+        }
+    }
+
+    private struct RoutePoint {
+        let lat: Double
+        let lng: Double
+        let name: String
+    }
+
+    private func strictQueryAllowedCharacterSet() -> CharacterSet {
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "&=?+")
+        return allowed
+    }
+
+    /// map.naver.com directions path component format: "x,y,name,,"
+    /// - returns WGS84 lat/lng (degrees)
+    private func parseNaverDirectionsPoint(_ component: String) -> RoutePoint? {
+        let parts = component.components(separatedBy: ",")
+        guard parts.count >= 2 else { return nil }
+
+        guard let a = Double(parts[0]), let b = Double(parts[1]) else { return nil }
+
+        let rawName = (parts.count >= 3 ? parts[2] : "")
+        let name = rawName.removingPercentEncoding ?? rawName
+
+        // WGS84
+        let maybeLng = a
+        let maybeLat = b
+        if CoordinateConverter.looksLikeWGS84(lat: maybeLat, lng: maybeLng) {
+            return RoutePoint(lat: maybeLat, lng: maybeLng, name: name)
+        }
+
+        // WebMercator
+        let wgs = CoordinateConverter.mercatorToWGS84(x: a, y: b)
+        return RoutePoint(lat: wgs.lat, lng: wgs.lng, name: name)
+    }
+
+    private func mapWebModeToNmapMode(_ raw: String) -> String {
+        switch raw.lowercased() {
+        case "car":
+            return "car"
+        case "walk":
+            return "walk"
+        case "bicycle":
+            return "bicycle"
+        case "public", "transit":
+            return "public"
+        default:
+            return "car"
+        }
+    }
+
+    private func buildNmapRouteURL(fromWebDirectionsURL url: URL) -> URL? {
+        let pathComponents = url.path.components(separatedBy: "/").filter { !$0.isEmpty }
+        guard let directionsIndex = pathComponents.firstIndex(of: "directions") else { return nil }
+
+        let afterDirections = pathComponents[(directionsIndex + 1)...]
+        guard let dashIndexInAfter = afterDirections.firstIndex(of: "-") else { return nil }
+        let dashIndex = dashIndexInAfter
+
+        let placeComponents = Array(pathComponents[(directionsIndex + 1)..<dashIndex])
+        guard placeComponents.count >= 2 else { return nil }
+
+        let rawMode: String = {
+            let modeIndex = dashIndex + 1
+            if modeIndex < pathComponents.count {
+                return pathComponents[modeIndex]
+            }
+            return "car"
+        }()
+        let mode = mapWebModeToNmapMode(rawMode)
+
+        var points: [RoutePoint] = []
+        for pc in placeComponents {
+            if let p = parseNaverDirectionsPoint(pc) {
+                points.append(p)
+            }
+        }
+        guard points.count >= 2 else { return nil }
+
+        let start = points.first!
+        let dest = points.last!
+        let vias = Array(points.dropFirst().dropLast()).prefix(5)
+        
+        let appName = Bundle.main.bundleIdentifier ?? ""
+        guard appName.isEmpty == false else { return nil }
+
+        let allowed = strictQueryAllowedCharacterSet()
+
+        func enc(_ s: String, fallback: String) -> String {
+            let v = s.isEmpty ? fallback : s
+            return v.addingPercentEncoding(withAllowedCharacters: allowed) ?? fallback
+        }
+
+        var query = ""
+        query += "slat=\(start.lat)&slng=\(start.lng)&sname=\(enc(start.name, fallback: ""))&"
+        query += "dlat=\(dest.lat)&dlng=\(dest.lng)&dname=\(enc(dest.name, fallback: ""))&"
+
+        for (idx, v) in vias.enumerated() {
+            let n = idx + 1
+            query += "v\(n)lat=\(v.lat)&v\(n)lng=\(v.lng)&v\(n)name=\(enc(v.name, fallback: ""))&"
+        }
+
+        query += "appname=\(enc(appName, fallback: appName))"
+
+        let finalUrlString = "nmap://route/\(mode)?\(query)"
+        return URL(string: finalUrlString)
+    }
+
     public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         if let limit = limitsNavigationsToAppBoundDomains {
             configuration.limitsNavigationsToAppBoundDomains = limit;
         }
+        
+        guard let url = navigationAction.request.url else {
+            return nil
+        }
+
+        var urlToOpenInApp: URL?
+
+        if url.scheme == "nmap" {
+            urlToOpenInApp = url
+        } else if url.host?.contains("map.naver.com") == true && url.path.contains("/directions/") {
+            urlToOpenInApp = buildNmapRouteURL(fromWebDirectionsURL: url)
+        }
+        
+        if urlToOpenInApp == nil && url.host?.contains("flextudio.com") != true {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            return nil
+        }
+        
+        if let finalUrl = urlToOpenInApp {
+            if UIApplication.shared.canOpenURL(finalUrl) {
+                UIApplication.shared.open(finalUrl, options: [:], completionHandler: nil)
+            } else {
+                let appStoreURL = URL(string: "http://itunes.apple.com/app/id311867728?mt=8")!
+                UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+            }
+            return nil
+        }
+
         // Create new WKWebView with custom configuration here
         //let configuration = WKWebViewConfiguration()
 //        configuration.userContentController = contentController
