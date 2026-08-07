@@ -1131,6 +1131,39 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         }
     }
     
+    public func webView(_ webView: WKWebView,
+                        decidePolicyFor navigationAction: WKNavigationAction,
+                        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+
+        let internalSchemes = ["http", "https", "about", "assets", "file", "blob", "data"]
+        let scheme = url.scheme?.lowercased() ?? ""
+
+        if !internalSchemes.contains(scheme) {
+            UIApplication.shared.open(url, options: [:]) { success in
+                if !success {
+                    let appStoreUrl: String?
+                    switch scheme {
+                    case "ispmobile":    appStoreUrl = "http://itunes.apple.com/kr/app/id369125087?mt=8"
+                    case "kftc-bankpay": appStoreUrl = "http://itunes.apple.com/us/app/id398456030?mt=8"
+                    default:             appStoreUrl = nil
+                    }
+                    if let storeUrl = appStoreUrl.flatMap(URL.init(string:)) {
+                        UIApplication.shared.open(storeUrl, options: [:], completionHandler: nil)
+                    }
+                }
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        decisionHandler(.allow)
+    }
+    
     /*
     @available(iOS 15.0, *)
     func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
