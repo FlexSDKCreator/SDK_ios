@@ -2514,13 +2514,36 @@ extension MainMasterDetailVC: UIGestureRecognizerDelegate {
 
 extension MainMasterDetailVC: WKUIDelegate {
 
+    //SDK 에 포함된 로컬라이즈 문자열 번들 (podspec 의 FlexSDKStrings resource bundle)
+    private static let sdkStringsBundle: Bundle? = {
+        for candidate in [Bundle(for: MainMasterDetailVC.self), Bundle.main] {
+            if let url = candidate.url(forResource: "FlexSDKStrings", withExtension: "bundle"),
+               let bundle = Bundle(url: url) {
+                return bundle
+            }
+        }
+        return nil
+    }()
+
+    //앱(Bundle.main)에 키가 정의되어 있으면 앱 문자열을 우선 사용하고, 없으면 SDK 번들에서 찾는다
+    static func sdkLocalizedString(_ key: String, comment: String) -> String {
+        let fromApp = NSLocalizedString(key, comment: comment)
+        if fromApp != key {
+            return fromApp
+        }
+        if let bundle = sdkStringsBundle {
+            return NSLocalizedString(key, bundle: bundle, comment: comment)
+        }
+        return fromApp
+    }
+
     public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         guard view.window != nil else {
             completionHandler()
             return
         }
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("ConfirmText", comment: "Confirm"), style: .default) { _ in
+        alert.addAction(UIAlertAction(title: MainMasterDetailVC.sdkLocalizedString("ConfirmText", comment: "Confirm"), style: .default) { _ in
             completionHandler()
         })
         (presentedViewController ?? self).present(alert, animated: true)
