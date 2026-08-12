@@ -2520,7 +2520,7 @@ extension MainMasterDetailVC: WKUIDelegate {
             return
         }
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ConfirmText", comment: "Confirm"), style: .default) { _ in
             completionHandler()
         })
         (presentedViewController ?? self).present(alert, animated: true)
