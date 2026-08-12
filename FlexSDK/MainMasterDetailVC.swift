@@ -2513,6 +2513,19 @@ extension MainMasterDetailVC: UIGestureRecognizerDelegate {
 //}
 
 extension MainMasterDetailVC: WKUIDelegate {
+
+    public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        guard view.window != nil else {
+            completionHandler()
+            return
+        }
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+            completionHandler()
+        })
+        (presentedViewController ?? self).present(alert, animated: true)
+    }
+
     private struct CoordinateConverter {
         private static let earthRadius: Double = 6378137.0
 
