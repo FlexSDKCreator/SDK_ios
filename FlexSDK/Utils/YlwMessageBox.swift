@@ -139,10 +139,10 @@ class YlwMessageBox: UIView, UIAlertViewDelegate {
     
     func returnResultValue() -> Int? {
         
-        let ok = NSLocalizedString("OK", comment: "OK")
-        let cancel = NSLocalizedString("Cancel", comment: "Cancel")
-        let yes = NSLocalizedString("YES", comment: "YES")
-        let no = NSLocalizedString("NO", comment: "NO")
+        let ok = sdkLocalizedString("OK", comment: "OK")
+        let cancel = sdkLocalizedString("Cancel", comment: "Cancel")
+        let yes = sdkLocalizedString("YES", comment: "YES")
+        let no = sdkLocalizedString("NO", comment: "NO")
         
         if let resultValue = buttonTitles?[mButtonIndex] {
             if alertType == "MsgBoxTypeOK" {
@@ -174,10 +174,10 @@ class YlwMessageBox: UIView, UIAlertViewDelegate {
     }
     func getButtonTitles(_ msgBoxType: String) -> [String]? {
         
-        let ok = NSLocalizedString("OK", comment: "OK")
-        let cancel = NSLocalizedString("Cancel", comment: "Cancel")
-        let yes = NSLocalizedString("YES", comment: "YES")
-        let no = NSLocalizedString("NO", comment: "NO")
+        let ok = sdkLocalizedString("OK", comment: "OK")
+        let cancel = sdkLocalizedString("Cancel", comment: "Cancel")
+        let yes = sdkLocalizedString("YES", comment: "YES")
+        let no = sdkLocalizedString("NO", comment: "NO")
         
         if msgBoxType == "MsgBoxTypeOK" {
             return [ok]

@@ -42,7 +42,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
 //            }
 //            else {
 //                locationModule?.setAuthRequestType(authType: .first)
-                locationModule?.fail(.etc, NSLocalizedString("LocationServiceOff", comment: "Please turn on Location Services in Settings > Privacy"))
+                locationModule?.fail(.etc, sdkLocalizedString("LocationServiceOff", comment: "Please turn on Location Services in Settings > Privacy"))
 //            }
             return
         }
@@ -56,7 +56,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
                     locationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey: "AccuracyRequired", completion: { (error) in
                         if error == nil {
                             if self.locationManager.accuracyAuthorization == .reducedAccuracy {
-                                self.locationModule?.fail(.etc, NSLocalizedString("AccuracyRequired", comment: "This app needs accurate location"))
+                                self.locationModule?.fail(.etc, sdkLocalizedString("AccuracyRequired", comment: "This app needs accurate location"))
                             } else {
                                 self.locationManager.requestLocation()
                             }

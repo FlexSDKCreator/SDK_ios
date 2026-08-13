@@ -44,12 +44,12 @@ class WebConst: NSObject {
 //    static let DEMO_ID = "genitfttest"
 //    static let DEMO_PW = "genitft"
 
-    static let DEMO_SERVER_IP = NSLocalizedString("DEMO_SERVER_IP", comment: "http://211.253.14.184/ksystemmobileAppsvc/")
-    static let DEMO_DSN_OPER = NSLocalizedString("DEMO_DSN_OPER_S", comment: "genitft_oper")
-    static let DEMO_DSN_BIS = NSLocalizedString("DEMO_DSN_BIS_S", comment: "genitft_bis")
-    static let DEMO_ID = NSLocalizedString("DEMO_ID_S", comment: "genitfttest")
-    static let DEMO_PW = NSLocalizedString("DEMO_PW_S", comment: "genitft")
-    static let DEMO_LANGUAGE_SEQ = NSLocalizedString("DEMO_LANGUAGE_SEQ", comment: "1")
+    static let DEMO_SERVER_IP = sdkLocalizedString("DEMO_SERVER_IP", comment: "http://211.253.14.184/ksystemmobileAppsvc/")
+    static let DEMO_DSN_OPER = sdkLocalizedString("DEMO_DSN_OPER_S", comment: "genitft_oper")
+    static let DEMO_DSN_BIS = sdkLocalizedString("DEMO_DSN_BIS_S", comment: "genitft_bis")
+    static let DEMO_ID = sdkLocalizedString("DEMO_ID_S", comment: "genitfttest")
+    static let DEMO_PW = sdkLocalizedString("DEMO_PW_S", comment: "genitft")
+    static let DEMO_LANGUAGE_SEQ = sdkLocalizedString("DEMO_LANGUAGE_SEQ", comment: "1")
     static let LOGIN_SERVER_IP = ""
     static let LOGIN_DSN_OPER = ""
     static let LOGIN_DSN_BIS = ""
