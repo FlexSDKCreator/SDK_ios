@@ -8,6 +8,29 @@
 
 import Foundation
 import ObjectMapper
+
+private final class FlexSDKBundleToken {}
+
+private let flexSDKStringsBundle: Bundle? = {
+    for candidate in [Bundle(for: FlexSDKBundleToken.self), Bundle.main] {
+        if let url = candidate.url(forResource: "FlexSDKStrings", withExtension: "bundle"),
+           let bundle = Bundle(url: url) {
+            return bundle
+        }
+    }
+    return nil
+}()
+
+func sdkLocalizedString(_ key: String, comment: String) -> String {
+    let fromApp = Foundation.NSLocalizedString(key, comment: comment)
+    if fromApp != key {
+        return fromApp
+    }
+    if let bundle = flexSDKStringsBundle {
+        return Foundation.NSLocalizedString(key, bundle: bundle, comment: comment)
+    }
+    return fromApp
+}
 import WebKit
 
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
@@ -1200,7 +1223,7 @@ class LoginUtil {
 //                                let lblFrameY = (SCREEN_SIZE.height - DimenConstants.toast_lbl_height - DimenConstants.toast_padding)
 //                                let lbl = UILabel()
 //                                lbl.frame = CGRect(x: lblFrameX, y: lblFrameY, width: DimenConstants.toast_lbl_width2, height: DimenConstants.toast_lbl_height)
-//                                lbl.text = "\(limit_version) 버전 이상으로 업데이트 진행해주세요."//NSLocalizedString("NewForm Text", comment: "New Form ")
+//                                lbl.text = "\(limit_version) 버전 이상으로 업데이트 진행해주세요."//sdkLocalizedString("NewForm Text", comment: "New Form ")
 //                                lbl.textAlignment = .center
 //                                lbl.textColor = UIColor.white
 //                                lbl.backgroundColor = UIColor.black
@@ -1212,7 +1235,7 @@ class LoginUtil {
 //                                    lbl.alpha = 1.0
 //                                },completion:nil)
 //
-//                                //                self.showShortToast(message:NSLocalizedString("NewForm Text", comment: "New Form "))
+//                                //                self.showShortToast(message:sdkLocalizedString("NewForm Text", comment: "New Form "))
 //                            }
 //                        }
 //                    }

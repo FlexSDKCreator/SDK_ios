@@ -100,7 +100,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         if tags.count > 1 {
             // Restart polling in 500ms
             let retryInterval = DispatchTimeInterval.milliseconds(500)
-            session.alertMessage = NSLocalizedString("NFCMultiReadMsg", comment: "More than 1 tag is detected, please remove all tags and try again.")
+            session.alertMessage = sdkLocalizedString("NFCMultiReadMsg", comment: "More than 1 tag is detected, please remove all tags and try again.")
             DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
                 session.restartPolling()
             })
@@ -111,7 +111,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         let tag = tags.first!
         session.connect(to: tag, completionHandler: { (error: Error?) in
             if nil != error {
-                let errMsg = NSLocalizedString("NFCConnErrMsg", comment: "Unable to connect to tag.")
+                let errMsg = sdkLocalizedString("NFCConnErrMsg", comment: "Unable to connect to tag.")
                 session.alertMessage = errMsg
                 session.invalidate()
                 DispatchQueue.main.async {
@@ -124,7 +124,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             
             tag.queryNDEFStatus(completionHandler: { (ndefStatus: NFCNDEFStatus, capacity: Int, error: Error?) in
                 if .notSupported == ndefStatus {
-                    let errMsg = NSLocalizedString("NFCCompErrMsg", comment: "Tag is not NDEF compliant")
+                    let errMsg = sdkLocalizedString("NFCCompErrMsg", comment: "Tag is not NDEF compliant")
                     session.alertMessage = errMsg
                     session.invalidate()
                     DispatchQueue.main.async {
@@ -134,7 +134,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     }
                     return
                 } else if nil != error {
-                    let errMsg = NSLocalizedString("NFCStatusErrMsg", comment: "Unable to query NDEF status of tag")
+                    let errMsg = sdkLocalizedString("NFCStatusErrMsg", comment: "Unable to query NDEF status of tag")
                     session.alertMessage = errMsg
                     session.invalidate()
                     DispatchQueue.main.async {
@@ -148,14 +148,14 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                 tag.readNDEF(completionHandler: { (message: NFCNDEFMessage?, error: Error?) in
                     var statusMessage: String
                     if nil != error || nil == message {
-                        statusMessage = error?.localizedDescription ?? NSLocalizedString("NFCReadFailMsg", comment: "Fail to read NDEF from tag")
+                        statusMessage = error?.localizedDescription ?? sdkLocalizedString("NFCReadFailMsg", comment: "Fail to read NDEF from tag")
                         DispatchQueue.main.async {
                             if let nfcCallbackFn = self.nfcCallbackFn {
                                 self.webView.evaluateJavaScript("\(nfcCallbackFn)('\(statusMessage)')")
                             }
                         }
                     } else {
-                        statusMessage = NSLocalizedString("NFCFoundMsg", comment: "Found 1 NDEF message")
+                        statusMessage = sdkLocalizedString("NFCFoundMsg", comment: "Found 1 NDEF message")
                         DispatchQueue.main.async {
                             // Process detected NFCNDEFMessage objects.
                             var arr = []
@@ -873,9 +873,9 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     
     @IBAction func logOutTapped(_ sender: Any) {
         let alert = UIAlertController(title: StringConstants.LogoutConfirmMsg, message: nil, preferredStyle: UIAlertController.Style.alert)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("NO", comment: "아니오"), style: UIAlertAction.Style.cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: sdkLocalizedString("NO", comment: "아니오"), style: UIAlertAction.Style.cancel, handler: nil)
         alert.addAction(cancelAction)
-        let okAction = UIAlertAction(title: NSLocalizedString("YES", comment: "네"), style: UIAlertAction.Style.default, handler: {(action: UIAlertAction!) in
+        let okAction = UIAlertAction(title: sdkLocalizedString("YES", comment: "네"), style: UIAlertAction.Style.default, handler: {(action: UIAlertAction!) in
             self.executeLogout()
         })
         alert.addAction(okAction)
@@ -1357,7 +1357,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     
     func showFailMessage() {
         let msgBox = YlwMessageBox()
-        let result = msgBox.showDialog(NSLocalizedString("scanarioLoadFailed", comment: "Failed to load scenario"), title: "", msgBoxType: "MsgBoxTypeOK", isSyncMode: true)
+        let result = msgBox.showDialog(sdkLocalizedString("scanarioLoadFailed", comment: "Failed to load scenario"), title: "", msgBoxType: "MsgBoxTypeOK", isSyncMode: true)
         if (result == 1) {
             isMenuLocked = true
             menuWidthConstraint.constant = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
@@ -1501,7 +1501,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                                 let script =  "\(systemCallback)('\(id)',{'status':{'succeed' : true},'data':'\(code ?? "")', 'afterEventName':'\(afterEventName)'});"
                                 self.webView.evaluateJavaScript(script)
                             } else {
-                                let script = "\(systemCallback)('\(id)',{'status':{'succeed' : false,'message':'\(message ?? NSLocalizedString("ScannerDismissed", comment: "Scanner was dismissed"))'},'data':{'afterEventName':'\(afterEventName)'\(!options.isEmpty ? ", options: \(options)" : "")}});"
+                                let script = "\(systemCallback)('\(id)',{'status':{'succeed' : false,'message':'\(message ?? sdkLocalizedString("ScannerDismissed", comment: "Scanner was dismissed"))'},'data':{'afterEventName':'\(afterEventName)'\(!options.isEmpty ? ", options: \(options)" : "")}});"
                                 self.webView.evaluateJavaScript(script)
                             }
                         }
@@ -1523,7 +1523,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                                 }
 
                             } else {
-                                onScannerResult(false, nil, NSLocalizedString("RequestCameraPermission", comment: "You need access permission for the camera"))
+                                onScannerResult(false, nil, sdkLocalizedString("RequestCameraPermission", comment: "You need access permission for the camera"))
                             }
                         }
                         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -1739,13 +1739,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                     case "nfcScan":
                         if let function = callback?["function"] as? String {
                             guard NFCNDEFReaderSession.readingAvailable else {
-                                let error = NSLocalizedString("NFCDeviceErrMsg", comment: "device doesn't support tag scanning")
+                                let error = sdkLocalizedString("NFCDeviceErrMsg", comment: "device doesn't support tag scanning")
                                 webView.evaluateJavaScript("\(function)({'succeed' : false, 'message': '\(error)'})")
                                 return
                             }
                             nfcCallbackFn = function
                             session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
-                            session?.alertMessage = NSLocalizedString("NFCScanMsg", comment: "Hold your iPhone near the nfc tag")
+                            session?.alertMessage = sdkLocalizedString("NFCScanMsg", comment: "Hold your iPhone near the nfc tag")
                             session?.begin()
                         }
                     case "appShare":
@@ -2513,6 +2513,19 @@ extension MainMasterDetailVC: UIGestureRecognizerDelegate {
 //}
 
 extension MainMasterDetailVC: WKUIDelegate {
+
+    public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        guard view.window != nil else {
+            completionHandler()
+            return
+        }
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: sdkLocalizedString("ConfirmText", comment: "Confirm"), style: .default) { _ in
+            completionHandler()
+        })
+        (presentedViewController ?? self).present(alert, animated: true)
+    }
+
     private struct CoordinateConverter {
         private static let earthRadius: Double = 6378137.0
 
