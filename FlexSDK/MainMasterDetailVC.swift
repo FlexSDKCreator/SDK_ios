@@ -365,6 +365,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var customActionDelegate: CustomActionDelegate?
     var customAuthDelegate: CustomAuthDelegate?
     public var onJavaScriptAlert: ((_ message: String, _ completionHandler: @escaping () -> Void) -> Bool)?
+    public var onExternalSchemeURL: ((_ url: URL) -> Bool)?
+    static let internalURLSchemes = ["http", "https", "about", "assets", "file", "blob", "data"]
     var erpAuthToken: String?
     var erpAppID: String?
     var flexAppID: String?
@@ -1141,10 +1143,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             return
         }
 
-        let internalSchemes = ["http", "https", "about", "assets", "file", "blob", "data"]
         let scheme = url.scheme?.lowercased() ?? ""
 
-        if !internalSchemes.contains(scheme) {
+        if !MainMasterDetailVC.internalURLSchemes.contains(scheme) {
+            if onExternalSchemeURL?(url) == true {
+                decisionHandler(.cancel)
+                return
+            }
             UIApplication.shared.open(url, options: [:]) { success in
                 if !success {
                     let appStoreUrl: String?
@@ -2669,6 +2674,10 @@ extension MainMasterDetailVC: WKUIDelegate {
         }
         
         if urlToOpenInApp == nil && url.host?.contains("flextudio.com") != true {
+            let scheme = url.scheme?.lowercased() ?? ""
+            if !MainMasterDetailVC.internalURLSchemes.contains(scheme), onExternalSchemeURL?(url) == true {
+                return nil
+            }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             return nil
         }
