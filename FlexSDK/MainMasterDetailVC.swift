@@ -364,6 +364,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     var nfcCallbackFn: String?
     var customActionDelegate: CustomActionDelegate?
     var customAuthDelegate: CustomAuthDelegate?
+    public var onJavaScriptAlert: ((_ message: String, _ completionHandler: @escaping () -> Void) -> Bool)?
     var erpAuthToken: String?
     var erpAppID: String?
     var flexAppID: String?
@@ -2515,6 +2516,9 @@ extension MainMasterDetailVC: UIGestureRecognizerDelegate {
 extension MainMasterDetailVC: WKUIDelegate {
 
     public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        if onJavaScriptAlert?(message, completionHandler) == true {
+            return
+        }
         guard view.window != nil else {
             completionHandler()
             return
