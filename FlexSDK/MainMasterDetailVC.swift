@@ -459,6 +459,10 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         edgeSwipeGesture.edges = .left // Detect left edge swipes
         edgeSwipeGesture.delegate = self
         webView.addGestureRecognizer(edgeSwipeGesture)
+        let forwardBlockGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(blockForwardSwipe(_:)))
+        forwardBlockGesture.edges = .right
+        forwardBlockGesture.delegate = self
+        webView.addGestureRecognizer(forwardBlockGesture)
         
         #if !RELEASE
         if #available(iOS 16.4, *) {
@@ -603,6 +607,35 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         //TokenHandler().saveTokenToDB()
     }
     var startLocation: CGPoint?
+    enum SwipeMode {
+        case scenario, urlBounded, history
+        var usesNativeHistory: Bool { self == .urlBounded || self == .history }
+    }
+    var swipeMode: SwipeMode = .scenario
+    var swipeViewId: String? = nil
+    var urlModeBoundaryBackCount: Int? = nil
+
+    func enterUrlSwipeMode() {
+        urlModeBoundaryBackCount = nil
+        webView.allowsBackForwardNavigationGestures = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self, self.swipeMode.usesNativeHistory else { return }
+            self.urlModeBoundaryBackCount = self.webView.backForwardList.backList.count
+        }
+    }
+
+    func exitUrlSwipeMode() {
+        urlModeBoundaryBackCount = nil
+        webView.allowsBackForwardNavigationGestures = false
+    }
+
+    func urlModeShouldBlockBackGesture() -> Bool {
+        guard swipeMode == .urlBounded else { return false }
+        guard let boundary = urlModeBoundaryBackCount else { return true }
+        return webView.backForwardList.backList.count <= boundary
+    }
+    @objc func blockForwardSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {}
+
     @objc func handleSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
         let totalWidth = view.bounds.size.width
         let location = gesture.location(in: view)
@@ -631,7 +664,9 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             }
             return
         }
-        
+
+        guard swipeMode == .scenario else { return }
+
         switch gesture.state {
         case .began:
             startLocation = location
@@ -1143,6 +1178,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
             return
         }
 
+        if swipeMode.usesNativeHistory,
+           navigationAction.navigationType == .backForward,
+           navigationAction.targetFrame?.isMainFrame == true {
+            decisionHandler(.cancel)
+            return
+        }
+
         let scheme = url.scheme?.lowercased() ?? ""
 
         if !MainMasterDetailVC.internalURLSchemes.contains(scheme) {
@@ -1427,6 +1469,23 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             let systemColor = (param?["systemColor"] as? String) ?? ""
                             let isDarkBackground = (systemColor == "white")
                             webStatusBarColor(color,isDarkBackground: isDarkBackground)
+                        }
+                    case "setSwipeEnabled":
+                        let enabled = (param?["enabled"] as? Bool) ?? true
+                        let view = param?["view"] as? String
+                        let mode: SwipeMode
+                        switch param?["mode"] as? String {
+                        case "url": mode = .urlBounded
+                        default: mode = enabled ? .scenario : .history
+                        }
+                        let previous = swipeMode
+                        let viewChanged = view != swipeViewId
+                        swipeMode = mode
+                        swipeViewId = view
+                        if mode.usesNativeHistory {
+                            if mode != previous || viewChanged { enterUrlSwipeMode() }
+                        } else if previous.usesNativeHistory {
+                            exitUrlSwipeMode()
                         }
                     case "initdata":
                         if let initData = Util.readFromFile("userInfo"), let function = callback?["function"] as? String {
@@ -2458,6 +2517,17 @@ extension MainMasterDetailVC: UICollectionViewDataSource, UICollectionViewDelega
 extension MainMasterDetailVC: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         return true//touch.view == gestureRecognizer.view
+    }
+
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard otherGestureRecognizer is UIScreenEdgePanGestureRecognizer,
+              otherGestureRecognizer.view?.isDescendant(of: webView) == true else { return false }
+        if (gestureRecognizer as? UIScreenEdgePanGestureRecognizer)?.edges == .right { return true }
+        return urlModeShouldBlockBackGesture()
     }
 }
 
