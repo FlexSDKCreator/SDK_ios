@@ -1951,6 +1951,10 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             }
                         }
                     }
+                case "printPdf":
+                    if let b64 = param?["b64"] as? String, let pdfData = Foundation.Data(base64Encoded: b64, options: .ignoreUnknownCharacters) {
+                        printPdf(data: pdfData, jobName: param?["fileName"] as? String)
+                    }
                 case "download":
                     if let url = param?["url"] as? String, let fileName = param?["fileName"] as? String {
                         downloadUrl(url: url, filename: fileName)
@@ -2109,7 +2113,26 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         objc_setAssociatedObject(picker, &del.associationKey, del, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         self.present(picker, animated: true)
     }
-    
+
+    func printPdf(data: Foundation.Data, jobName: String?) {
+        guard UIPrintInteractionController.canPrint(data) else {
+            print("printPdf: unprintable data")
+            return
+        }
+        let printInfo = UIPrintInfo(dictionary: nil)
+        printInfo.outputType = .general
+        printInfo.jobName = (jobName?.isEmpty == false) ? jobName! : "document.pdf"
+        let printController = UIPrintInteractionController.shared
+        printController.printInfo = printInfo
+        printController.printingItem = data
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let anchor = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 1, height: 1)
+            printController.present(from: anchor, in: view, animated: true, completionHandler: nil)
+        } else {
+            printController.present(animated: true, completionHandler: nil)
+        }
+    }
+
     func downloadUrl(url: String, filename: String) {
         let ext = (filename as NSString).pathExtension.lowercased()
         if let type = UTType(filenameExtension: ext), type.conforms(to: .image) || type.conforms(to: .movie) || type.conforms(to: .video) {

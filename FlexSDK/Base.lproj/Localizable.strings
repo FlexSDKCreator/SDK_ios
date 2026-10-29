@@ -640,3 +640,6 @@
 "NFCCompErrMsg" = "Tag is not NDEF compliant";
 "NFCReadFailMsg" = "Fail to read NDEF from tag";
 "NFCMultiReadMsg" = "More than 1 tag is detected, please remove all tags and try again.";
+
+"LocationPermissionRequired" = "Location permission is required";
+"Settings" = "Settings";
