@@ -57,6 +57,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
                         if error == nil {
                             if self.locationManager.accuracyAuthorization == .reducedAccuracy {
                                 self.locationModule?.fail(.etc, sdkLocalizedString("AccuracyRequired", comment: "This app needs accurate location"))
+                                self.showSettingsSnackbar(message: sdkLocalizedString("AccuracyRequired", comment: "This app needs accurate location"))
                             } else {
                                 self.locationManager.requestLocation()
                             }
@@ -80,9 +81,7 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
 //                }
 //                else {
 //                    locationModule?.setAuthRequestType(authType: .first)
-                    locationModule?.fail(.noAuth)
-                    deinitModule()
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                    handleNoAuth()
 //                }
                 break;
             default:
@@ -113,9 +112,27 @@ class LocationManager:NSObject, CLLocationManagerDelegate {
     }
     
     func onPermissionChange() {
-        if let accuracy = accuracyDesired, CLLocationManager.authorizationStatus() != .notDetermined {
+        guard let accuracy = accuracyDesired else { return }
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            return
+        case .authorizedAlways, .authorizedWhenInUse:
             accuracyDesired = nil
             start(isAccurate: accuracy)
+        default:
+            accuracyDesired = nil
+            handleNoAuth()
+        }
+    }
+    private func handleNoAuth() {
+        locationModule?.fail(.noAuth)
+        deinitModule()
+        showSettingsSnackbar(message: sdkLocalizedString("LocationPermissionRequired", comment: "Location permission is required"))
+    }
+    private func showSettingsSnackbar(message: String) {
+        Snackbar.show(message: message, actionTitle: sdkLocalizedString("Settings", comment: "Settings")) {
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

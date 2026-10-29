@@ -238,3 +238,6 @@
 "dateTimeFormatLocalizedCompanity" = "yyyy年 M月 d日 EEE h:mm a";
 "ChangeAccount" = "アカウントを変更";
 "checkInvites" = "! Please check the invitation message.";
+
+"LocationPermissionRequired" = "アプリの位置情報権限がありません。";
+"Settings" = "設定";

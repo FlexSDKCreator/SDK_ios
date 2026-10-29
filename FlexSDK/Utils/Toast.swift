@@ -170,3 +170,97 @@ fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [Stri
 	guard let input = input else { return nil }
 	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }
+
+final class Snackbar: UIView {
+    private static weak var current: Snackbar?
+    private var dismissTimer: Timer?
+    private var action: (() -> Void)?
+
+    static func show(message: String, actionTitle: String, duration: TimeInterval = 5.0, action: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) ?? UIApplication.shared.windows.first else { return }
+            current?.dismiss(animated: false)
+            let bar = Snackbar(message: message, actionTitle: actionTitle, action: action)
+            current = bar
+            bar.present(in: window, duration: duration)
+        }
+    }
+
+    private init(message: String, actionTitle: String, action: @escaping () -> Void) {
+        super.init(frame: .zero)
+        self.action = action
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = UIColor(red: 0.196, green: 0.196, blue: 0.196, alpha: 1.0)
+
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = message
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(actionTitle, for: .normal)
+        button.setTitleColor(UIColor(red: 0.502, green: 0.796, blue: 0.769, alpha: 1.0), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.setContentCompressionResistancePriority(.required, for: .horizontal)
+        button.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
+
+        addSubview(label)
+        addSubview(button)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 17),
+            label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -17),
+            button.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 16),
+            button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            button.centerYAnchor.constraint(equalTo: label.centerYAnchor)
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        return nil
+    }
+
+    private func present(in window: UIWindow, duration: TimeInterval) {
+        window.addSubview(self)
+        NSLayoutConstraint.activate([
+            leadingAnchor.constraint(equalTo: window.leadingAnchor),
+            trailingAnchor.constraint(equalTo: window.trailingAnchor),
+            bottomAnchor.constraint(equalTo: window.bottomAnchor)
+        ])
+        window.layoutIfNeeded()
+        transform = CGAffineTransform(translationX: 0, y: bounds.height)
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut], animations: {
+            self.transform = .identity
+        }, completion: nil)
+        dismissTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+    }
+
+    @objc private func actionTapped() {
+        let action = self.action
+        dismiss(animated: true)
+        action?()
+    }
+
+    private func dismiss(animated: Bool) {
+        dismissTimer?.invalidate()
+        dismissTimer = nil
+        action = nil
+        guard animated else {
+            removeFromSuperview()
+            return
+        }
+        UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseIn], animations: {
+            self.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)
+        }, completion: { _ in
+            self.removeFromSuperview()
+        })
+    }
+}
