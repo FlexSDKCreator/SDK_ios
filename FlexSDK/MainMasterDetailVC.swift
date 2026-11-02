@@ -1621,8 +1621,13 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         }
                     case "downloadfiledata":
                         let callback = callback?["function"] as? String
-                        if let url = param?["url"] as? String, let xmlns = param?["xmlns"] as? String, let filePath = param?["filePath"] as? String, let token = param?["token"] as? String, let fileName = param?["fileName"] as? String {
-                            postFileDataXml(to : url, path: filePath, token: token, xmlns: xmlns, fileName: fileName){ result in
+                        if let url = param?["url"] as? String, let fileName = param?["fileName"] as? String {
+                            let xmlns = param?["xmlns"] as? String ?? ""
+                            let filePath = param?["filePath"] as? String ?? ""
+                            let token = param?["token"] as? String ?? ""
+                            let sessionId = param?["sessionId"] as? String
+                            let xmlBody = param?["xmlBody"] as? String
+                            postFileDataXml(to : url, path: filePath, token: token, xmlns: xmlns, xmlBody: xmlBody, sessionId: sessionId, fileName: fileName){ result in
                                 if let callback = callback {
                                     switch result {
                                     case .success(let code):
@@ -1984,7 +1989,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
           .replacingOccurrences(of: "'",  with: "&apos;")
     }
 
-    func postFileDataXml(to urlString: String, path: String, token: String, xmlns: String, fileName: String, completion: @escaping (Result<String, FileDataError>) -> Void) {
+    func postFileDataXml(to urlString: String, path: String, token: String, xmlns: String, xmlBody: String?, sessionId: String?, fileName: String, completion: @escaping (Result<String, FileDataError>) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(.failure(FileDataError(message: "파일 다운로드 주소가 유효하지 않습니다.")))
             return
@@ -1992,12 +1997,21 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let xmlPayload = buildFileDataXml(path: path, token: token, xmlns: xmlns)
+        if let sessionId = sessionId, !sessionId.isEmpty {
+            request.setValue(sessionId, forHTTPHeaderField: "fSessionID")
+        }
+
+        let xmlPayload: String
+        if let xmlBody = xmlBody, !xmlBody.isEmpty {
+            xmlPayload = xmlBody
+        } else {
+            xmlPayload = buildFileDataXml(path: path, token: token, xmlns: xmlns)
+        }
         request.httpBody = Foundation.Data(xmlPayload.utf8)
-        
+
         let task = URLSession.shared.downloadTask(with: request) { tempURL, response, error in
             if let error = error {
+                print("FileDownload request failed url=\(urlString) error=\(error)")
                 completion(.failure(FileDataError(message: error.localizedDescription)))
                 return
             }
