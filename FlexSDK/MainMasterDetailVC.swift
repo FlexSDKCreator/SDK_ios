@@ -329,6 +329,7 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
     //@IBOutlet weak var webView: WKWebView!
     var webView: WKWebView!
     @IBOutlet weak var webMenu: WKWebView!
+    weak var scannerVC: CameraViewController?
     
     var reloadBtn: UIButton!
     var indicator: UIActivityIndicatorView!
@@ -1519,12 +1520,14 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                         var isHeightPer: Bool = false
                         var isWidthPer: Bool = false
                         var isUserFacing: Bool = false
+                        var isContinuous: Bool = false
                         if !options.isEmpty, let optionsObject = try? JSONSerialization.jsonObject(with: options.data(using: .utf8)!, options: []) as? [String:Any] {
                             let maxHeight = optionsObject["maxHeight"]
                             let maxWidth = optionsObject["maxWidth"]
                             let facingMode = optionsObject["facingMode"]
                             closeBtnOnVideo = optionsObject["closeBtnOnVideo"] as? Bool ?? false
                             isQR = optionsObject["isQR"] as? Bool ?? false
+                            isContinuous = optionsObject["isContinuous"] as? Bool ?? false
                             if let heightNo = maxHeight as? NSNumber {
                                 height = CGFloat(truncating: heightNo)
                             } else if let heightStr = maxHeight as? String {
@@ -1570,11 +1573,27 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                                 self.webView.evaluateJavaScript(script)
                             }
                         }
+                        if let openScannerVC = self.scannerVC {
+                            if isContinuous && openScannerVC.isContinuous {
+                                openScannerVC.onScannerResult = onScannerResult
+                                openScannerVC.resumeScan()
+                            } else {
+                                onScannerResult(false, nil, sdkLocalizedString("ScannerAlreadyOpen", comment: "Scanner is already open"))
+                            }
+                            break
+                        }
                         func onCameraPermission(_ granted: Bool) {
                             if granted {
                                 DispatchQueue.main.async {
                                     let scannerVC = CameraViewController()
                                     scannerVC.onScannerResult = onScannerResult
+                                    scannerVC.isContinuous = isContinuous
+                                    scannerVC.onClose = { [weak self, weak scannerVC] in
+                                        if self?.scannerVC === scannerVC {
+                                            self?.scannerVC = nil
+                                        }
+                                    }
+                                    self.scannerVC = scannerVC
                                     scannerVC.isMulti = isMulti
                                     scannerVC.height = height
                                     scannerVC.width = width
@@ -1603,6 +1622,8 @@ public class MainMasterDetailVC: UIViewController, WKScriptMessageHandler, WKNav
                             @unknown default:
                                 onCameraPermission(false)
                         }
+                    case "closebarcode":
+                        self.scannerVC?.closeBtnClick(tap: nil)
                     case "loadbeacon":
                         //systemCallback need id
                         //let systemCallback = (callback?["function"] as? String) ?? ""

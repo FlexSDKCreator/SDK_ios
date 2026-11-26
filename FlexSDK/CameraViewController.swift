@@ -43,7 +43,16 @@ class CameraViewController: UIViewController {
     var closeBtnConstrains: [NSLayoutConstraint]?
     var cameraViewConstraints: [NSLayoutConstraint]?
     var onScannerResult: ((Bool, String?, String?) -> Void)?
-    
+    var onClose: (() -> Void)?
+    var isContinuous: Bool = false
+    private var scanPaused = false
+    private var scanCount = 0
+    private var lastScanTime: CFTimeInterval = 0
+    private var resumeWorkItem: DispatchWorkItem?
+    private var scanCountBadge = UIView()
+    private var scanCountLabel = UILabel()
+    private var scannedListStack = UIStackView()
+
     private lazy var annotationOverlayView: UIView = {
         precondition(isViewLoaded)
         let annotationOverlayView = UIView(frame: .zero)
@@ -94,6 +103,8 @@ class CameraViewController: UIViewController {
         cameraView.layer.insertSublayer(previewLayer, at: 0)
         
         setUpAnnotationOverlayView()
+        setUpScanCountBadge()
+        setUpScannedListStack()
         setUpCaptureSessionOutput()
         setUpCaptureSessionInput()
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDismissGesture(_:)))
@@ -179,8 +190,23 @@ class CameraViewController: UIViewController {
         }
     }
     @objc func closeBtnClick(tap: UITapGestureRecognizer?) {
-        onScannerResult?(false, nil, nil)
+        let resultCallback = onScannerResult
+        onScannerResult = nil
+        resultCallback?(false, nil, nil)
         dismiss(animated: true, completion: nil)
+    }
+    func resumeScan() {
+        resumeWorkItem?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.scanPaused = false
+        }
+        resumeWorkItem = workItem
+        let wait = Constant.scanInterval - (CACurrentMediaTime() - lastScanTime)
+        if wait > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + wait, execute: workItem)
+        } else {
+            workItem.perform()
+        }
     }
     @objc func dismissViewController(tap: UITapGestureRecognizer) {
         let location = tap.location(in: view)
@@ -208,8 +234,12 @@ class CameraViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
+
         stopSession()
+        if isBeingDismissed {
+            resumeWorkItem?.cancel()
+            onClose?()
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -303,7 +333,10 @@ class CameraViewController: UIViewController {
                 print("Self is nil!")
                 return
             }
-            
+            if strongSelf.scanPaused {
+                return
+            }
+
             if let scanningError = scanningError {
                 print("Failed to scan barcodes with error: \(scanningError.localizedDescription).")
                 return
@@ -331,7 +364,9 @@ class CameraViewController: UIViewController {
                         fromMetadataOutputRect: normalizedRect
                     )
                     if cameraView.bounds.contains(convertedRect) {
-                        captureSession.stopRunning()
+                            if !isContinuous {
+                                captureSession.stopRunning()
+                            }
                         hasResult = true
                         showBarcode(barcode, strongSelf, width, height, image.orientation)
                         listOfCodes.append(barcode.rawValue ?? (barcode.displayValue ?? ""))
@@ -355,10 +390,27 @@ class CameraViewController: UIViewController {
                 }
                 if (hasResult) {
                     AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) { }
-                    onScannerResult?(true, result, nil)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        // Put your dismiss code here
-                        self.dismiss(animated: true, completion: nil)
+                    if isContinuous {
+                        scanPaused = true
+                        lastScanTime = CACurrentMediaTime()
+                        scanCount += 1
+                        updateScanCountText()
+                        showScannedList(listOfCodes)
+                    }
+                    let resultCallback = onScannerResult
+                    onScannerResult = nil
+                    resultCallback?(true, result, nil)
+                    if isContinuous {
+                        previewLayer.connection?.isEnabled = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Constant.scanFreezeDuration) { [weak self] in
+                            self?.previewLayer.connection?.isEnabled = true
+                            self?.removeDetectionAnnotations()
+                        }
+                    } else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                            // Put your dismiss code here
+                            self.dismiss(animated: true, completion: nil)
+                        }
                     }
                 }
             }
@@ -466,6 +518,92 @@ class CameraViewController: UIViewController {
         ])
     }
     
+    private func setUpScanCountBadge() {
+        scanCountBadge.backgroundColor = UIColor(rgba: "#1B3D2BB3")
+        scanCountBadge.layer.cornerRadius = Constant.scanCountBadgeCornerRadius
+        scanCountBadge.translatesAutoresizingMaskIntoConstraints = false
+        scanCountBadge.isHidden = !isContinuous
+        scanCountLabel.textColor = UIColor(rgba: "#2ECC71")
+        scanCountLabel.font = UIFont.boldSystemFont(ofSize: Constant.scanCountFontSize)
+        scanCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        scanCountBadge.addSubview(scanCountLabel)
+        view.addSubview(scanCountBadge)
+        NSLayoutConstraint.activate([
+            scanCountLabel.topAnchor.constraint(equalTo: scanCountBadge.topAnchor, constant: Constant.scanCountBadgePaddingVertical),
+            scanCountLabel.bottomAnchor.constraint(equalTo: scanCountBadge.bottomAnchor, constant: -Constant.scanCountBadgePaddingVertical),
+            scanCountLabel.leadingAnchor.constraint(equalTo: scanCountBadge.leadingAnchor, constant: Constant.scanCountBadgePaddingHorizontal),
+            scanCountLabel.trailingAnchor.constraint(equalTo: scanCountBadge.trailingAnchor, constant: -Constant.scanCountBadgePaddingHorizontal),
+            scanCountBadge.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constant.scanCountBadgeMarginTop),
+            scanCountBadge.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constant.scanCountBadgeMarginStart)
+        ])
+        updateScanCountText()
+    }
+
+    private func updateScanCountText() {
+        scanCountLabel.text = String(format: sdkLocalizedString("ScannerScanningCount", comment: "Scanning %d"), scanCount)
+    }
+
+    private func setUpScannedListStack() {
+        scannedListStack.axis = .vertical
+        scannedListStack.alignment = .center
+        scannedListStack.spacing = Constant.chipSpacing
+        scannedListStack.isHidden = true
+        scannedListStack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scannedListStack)
+        let topCons = scannedListStack.topAnchor.constraint(equalTo: cameraView.bottomAnchor, constant: Constant.chipListMarginTop)
+        topCons.priority = .defaultLow - 1
+        NSLayoutConstraint.activate([
+            topCons,
+            scannedListStack.topAnchor.constraint(lessThanOrEqualTo: cameraView.bottomAnchor, constant: Constant.chipListMarginTop),
+            scannedListStack.topAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constant.chipListMinHeight),
+            scannedListStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            scannedListStack.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -Constant.chipListMarginHorizontal * 2)
+        ])
+    }
+
+    private func showScannedList(_ values: [String]) {
+        for value in values {
+            let chip = UIView()
+            chip.backgroundColor = UIColor(rgba: "#333333CC")
+            chip.layer.cornerRadius = Constant.chipCornerRadius
+            let icon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.white, UIColor(rgba: "#2ECC71")])))
+            let label = UILabel()
+            label.text = value
+            label.textColor = .white
+            label.font = UIFont.systemFont(ofSize: Constant.chipFontSize)
+            label.lineBreakMode = .byTruncatingMiddle
+            let content = UIStackView(arrangedSubviews: [icon, label])
+            content.axis = .horizontal
+            content.alignment = .center
+            content.spacing = Constant.chipIconPadding
+            content.translatesAutoresizingMaskIntoConstraints = false
+            chip.addSubview(content)
+            NSLayoutConstraint.activate([
+                icon.widthAnchor.constraint(equalToConstant: Constant.chipIconSize),
+                icon.heightAnchor.constraint(equalToConstant: Constant.chipIconSize),
+                content.topAnchor.constraint(equalTo: chip.topAnchor, constant: Constant.chipPaddingVertical),
+                content.bottomAnchor.constraint(equalTo: chip.bottomAnchor, constant: -Constant.chipPaddingVertical),
+                content.leadingAnchor.constraint(equalTo: chip.leadingAnchor, constant: Constant.chipPaddingHorizontal),
+                content.trailingAnchor.constraint(equalTo: chip.trailingAnchor, constant: -Constant.chipPaddingHorizontal)
+            ])
+            scannedListStack.addArrangedSubview(chip)
+            UIView.animate(withDuration: Constant.chipFadeDuration, delay: Constant.chipFadeDelay, options: [], animations: {
+                chip.alpha = 0
+            }, completion: { [weak self] _ in
+                UIView.animate(withDuration: Constant.chipCollapseDuration, animations: {
+                    chip.isHidden = true
+                    self?.view.layoutIfNeeded()
+                }, completion: { _ in
+                    chip.removeFromSuperview()
+                    if let self = self, self.scannedListStack.arrangedSubviews.isEmpty {
+                        self.scannedListStack.isHidden = true
+                    }
+                })
+            })
+        }
+        scannedListStack.isHidden = false
+    }
+
     private func captureDevice(forPosition position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         if #available(iOS 10.0, *) {   
             let discoverySession = AVCaptureDevice.DiscoverySession(
@@ -574,6 +712,9 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
+        if scanPaused {
+            return
+        }
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             print("Failed to get image buffer from sample buffer.")
             return
@@ -614,6 +755,27 @@ private enum Constant {
     static let cancelActionTitleText = "Cancel"
     static let videoDataOutputQueueLabel = "com.google.mlkit.visiondetector.VideoDataOutputQueue"
     static let sessionQueueLabel = "com.google.mlkit.visiondetector.SessionQueue"
+    static let scanInterval: CFTimeInterval = 1.0
+    static let scanFreezeDuration: TimeInterval = 0.4
+    static let scanCountBadgeCornerRadius: CGFloat = 10
+    static let scanCountFontSize: CGFloat = 16
+    static let scanCountBadgePaddingVertical: CGFloat = 8
+    static let scanCountBadgePaddingHorizontal: CGFloat = 14
+    static let scanCountBadgeMarginTop: CGFloat = 10
+    static let scanCountBadgeMarginStart: CGFloat = 16
+    static let chipListMarginTop: CGFloat = 16
+    static let chipListMinHeight: CGFloat = 160
+    static let chipListMarginHorizontal: CGFloat = 16
+    static let chipSpacing: CGFloat = 8
+    static let chipCornerRadius: CGFloat = 8
+    static let chipFontSize: CGFloat = 15
+    static let chipIconSize: CGFloat = 16
+    static let chipIconPadding: CGFloat = 6
+    static let chipPaddingVertical: CGFloat = 6
+    static let chipPaddingHorizontal: CGFloat = 12
+    static let chipFadeDelay: TimeInterval = 2
+    static let chipFadeDuration: TimeInterval = 1
+    static let chipCollapseDuration: TimeInterval = 0.3
     static let noResultsMessage = "No Results"
     static let localModelFile = (name: "bird", type: "tflite")
     static let labelConfidenceThreshold = 0.75
